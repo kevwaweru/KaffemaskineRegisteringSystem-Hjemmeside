@@ -1,6 +1,10 @@
 ﻿namespace CoffeeCrazy.Models.Enums
 {
-    public class NotificationType
+    //Kevin
+    public enum NotificationType
     {
+        Email = 1,
+        SMS = 2,
+        PushNotification = 3
     }
 }
