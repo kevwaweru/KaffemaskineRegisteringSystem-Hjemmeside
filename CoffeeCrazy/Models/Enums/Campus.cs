@@ -5,9 +5,9 @@
     {
         Roskilde = 1,
         Køge = 2,
-        Holbæk = 3,
-        Næstved = 4,
-        Slagelse = 5,
-        NykøbingFalster = 6
+        Næstved = 3,
+        Slagelse = 4,
+        NykøbingFalster = 5,
+        Holbæk = 6
     }
 }
