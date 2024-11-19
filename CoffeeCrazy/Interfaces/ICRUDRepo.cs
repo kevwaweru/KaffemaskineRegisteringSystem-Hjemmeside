@@ -1,0 +1,24 @@
+﻿namespace CoffeeCrazy.Interfaces
+{
+    //Kevin
+    public interface ICRUDRepo<T>
+    {
+        //Create
+        Task CreatAsyncc(T toBeCreatedT);
+
+        //Read
+        Task<List<T>> GetAllAsync();
+        Task<T> GetByIdAsync(int id);
+        //Update
+        Task UpdateAsync(T toBeUpdatedT);
+
+        //Delete
+        Task DeleteAsync(T toBeDeletedT);
+
+
+        
+
+
+
+    }
+}
