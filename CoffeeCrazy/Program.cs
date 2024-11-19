@@ -11,6 +11,8 @@ namespace CoffeeCrazy
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.AddRazorPages();
+
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
             builder.Services.AddScoped<ICRUDRepo<Assignment>, AssignmentRepo>();

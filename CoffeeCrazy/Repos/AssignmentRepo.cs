@@ -13,6 +13,8 @@ namespace CoffeeCrazy.Repos
         {
             _connectionString = configuration.GetConnectionString("DefaultConnection");
         }
+
+        //This Method Creates a Assignment
         public async Task CreateAsync(Assignment assignment)
         {
             try
@@ -20,11 +22,11 @@ namespace CoffeeCrazy.Repos
                 using var connection = new SqlConnection(_connectionString);
 
                 const string query = @"
-                                    INSERT INTO Assignment (Titel, Comment, CreateDate, IsCompleted)
-                                    VALUES (@Titel, @Comment, @CreateDate, @IsCompleted)";
+                                    INSERT INTO Assignment (Title, Comment, CreateDate, IsCompleted)
+                                    VALUES (@Title, @Comment, @CreateDate, @IsCompleted)";
 
                 using var command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@Titel", assignment.Titel);
+                command.Parameters.AddWithValue("@Title", assignment.Title);
                 command.Parameters.AddWithValue("@Comment", assignment.Comment ?? (object)DBNull.Value); //Do not know if needed, it just Makes                                                                                         Comment null-able 
                 command.Parameters.AddWithValue("@CreateDate", assignment.CreateDate);
                 command.Parameters.AddWithValue("@IsCompleted", assignment.IsCompleted);
@@ -45,8 +47,6 @@ namespace CoffeeCrazy.Repos
                 throw;
             }
         }
-
-        //This Method Creates a Assignment
 
 
         public Task DeleteAsync(Assignment toBeDeletedT)
