@@ -1,6 +1,6 @@
 ﻿namespace CoffeeCrazy.Repos
 {
-    public class AssignmentToAssignmentSetRepo
+    public class CompletedAssignmentRepo
     {
     }
 }

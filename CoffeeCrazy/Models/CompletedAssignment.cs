@@ -2,7 +2,7 @@
 
 namespace CoffeeCrazy.Models
 {
-    public class AssignmentLog
+    public class CompletedAssignment
     {
         public int LogId { get; set; }
         public int AssignmentSetId { get; set;  }
