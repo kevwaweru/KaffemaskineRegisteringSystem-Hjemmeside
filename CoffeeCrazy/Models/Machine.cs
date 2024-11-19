@@ -5,6 +5,6 @@
         public int MachineId { get; set; }
         public bool Status { get; set; }        
         public int CampusId { get; set; }
-        public string Placement { get; set; }
+        public string? Placement { get; set; }
     }
 }
