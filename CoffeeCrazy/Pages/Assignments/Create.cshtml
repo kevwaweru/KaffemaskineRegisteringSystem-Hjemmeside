@@ -1,0 +1,21 @@
+﻿@page
+@model CreateModel
+@{
+    ViewData["Title"] = "Opret opgave";
+}
+
+<h1>Opret Opgave</h1>
+
+<form method="post">
+    <div class="form-group">
+        <label for="Titel">Titel</label>
+        <input type="text" class="form-control" id="Titel" asp-for="Assignment.Titel" />
+        <span asp-validation-for="Assignment.Titel" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label for="Comment">Kommentar</label>
+        <textarea class="form-control" id="Comment" asp-for="Assignment.Comment"></textarea>
+        <span asp-validation-for="Assignment.Comment" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Opret</button>
+</form>
