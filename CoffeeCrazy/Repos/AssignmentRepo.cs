@@ -19,18 +19,20 @@ namespace CoffeeCrazy.Repos
 
         public async Task DeleteAsync(Assignment toBeDeletedAssignment)
         {
-            SqlConnection connection = new SqlConnection(_connectionString);
             try
             {
-                await connection.OpenAsync();
-                
-                string sqlQuery = "DELETE FROM Assignments WHERE AssignmentId = @AssignmentId";
+                using (SqlConnection connection = new SqlConnection(_connectionString))
+                {
+                    string sqlQuery = "DELETE FROM Assignments WHERE AssignmentId = @AssignmentId";
 
-                SqlCommand command = new SqlCommand(sqlQuery, connection);
+                    SqlCommand command = new SqlCommand(sqlQuery, connection);
 
-                command.Parameters.AddWithValue("@AssignmentId", toBeDeletedAssignment.AssignmentId);
-                
-                await command.ExecuteNonQueryAsync();
+                    command.Parameters.AddWithValue("@AssignmentId", toBeDeletedAssignment.AssignmentId);
+                    
+                    await connection.OpenAsync();
+                    
+                    await command.ExecuteNonQueryAsync();
+                }
             }
             catch (SqlException sqlEx)
             {
@@ -39,10 +41,6 @@ namespace CoffeeCrazy.Repos
             catch (Exception ex)
             {
                 Console.WriteLine("Error: " + ex.Message);
-            }
-            finally
-            {
-                connection.Close();
             }
         }
     }
