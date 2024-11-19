@@ -19,10 +19,9 @@ namespace CoffeeCrazy.Repos
 
         public async Task DeleteAsync(Assignment toBeDeletedAssignment)
         {
+            SqlConnection connection = new SqlConnection(_connectionString);
             try
             {
-                SqlConnection connection = new SqlConnection(_connectionString);
-          
                 await connection.OpenAsync();
                 
                 string sqlQuery = "DELETE FROM Assignments WHERE AssignmentId = @AssignmentId";
