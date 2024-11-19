@@ -19,20 +19,21 @@ namespace CoffeeCrazy.Repos
         {
             try
             {
-                using var connection = new SqlConnection(_connectionString);
-
-                const string query = @"
+                using (SqlConnection connection = new SqlConnection(_connectionString))
+                {
+                    string SQLquery = @"
                                     INSERT INTO Assignment (Title, Comment, CreateDate, IsCompleted)
                                     VALUES (@Title, @Comment, @CreateDate, @IsCompleted)";
 
-                using var command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@Title", assignment.Title);
-                command.Parameters.AddWithValue("@Comment", assignment.Comment ?? (object)DBNull.Value); //Do not know if needed, it just Makes                                                                                         Comment null-able 
-                command.Parameters.AddWithValue("@CreateDate", assignment.CreateDate);
-                command.Parameters.AddWithValue("@IsCompleted", assignment.IsCompleted);
+                    using var command = new SqlCommand(SQLquery, connection);
+                    command.Parameters.AddWithValue("@Title", assignment.Title);
+                    command.Parameters.AddWithValue("@Comment", assignment.Comment);
+                    command.Parameters.AddWithValue("@CreateDate", assignment.CreateDate);
+                    command.Parameters.AddWithValue("@IsCompleted", assignment.IsCompleted);
 
-                await connection.OpenAsync();
-                await command.ExecuteNonQueryAsync();
+                    await connection.OpenAsync();
+                    await command.ExecuteNonQueryAsync();
+                }
             }
             catch (SqlException ex)
             {
