@@ -7,6 +7,6 @@ namespace CoffeeCrazy.Models
         public int NotificationId { get; set; }
         public string Message { get; set; }
         public int? NotificationTypeId { get; set; }
-
+         
     }
 }
