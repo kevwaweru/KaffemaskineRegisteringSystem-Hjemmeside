@@ -29,7 +29,7 @@ namespace CoffeeCrazy.Pages.Assignments
             }
 
             await _iCRUDRRepo.CreateAsync(Assignment);
-            return RedirectToPage("./Index");
+            return RedirectToPage("/Index");
         }
     }
 }

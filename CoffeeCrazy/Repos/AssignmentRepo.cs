@@ -22,7 +22,7 @@ namespace CoffeeCrazy.Repos
                 using (SqlConnection connection = new SqlConnection(_connectionString))
                 {
                     string SQLquery = @"
-                                    INSERT INTO Assignment (Title, Comment, CreateDate, IsCompleted)
+                                    INSERT INTO Assignments (Title, Comment, CreateDate, IsCompleted)
                                     VALUES (@Title, @Comment, @CreateDate, @IsCompleted)";
 
                     using var command = new SqlCommand(SQLquery, connection);
