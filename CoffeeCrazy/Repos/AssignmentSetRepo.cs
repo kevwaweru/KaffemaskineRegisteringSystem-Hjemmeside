@@ -25,22 +25,21 @@ namespace CoffeeCrazy.Repos
 
                 try
                 {
-                       using (SqlConnection connection = new SqlConnection(_connectionString))
-                       {
-                           string sqlQuery = @"INSERT INTO AssignmentSets 
+                    using (SqlConnection connection = new SqlConnection(_connectionString))
+                    {
+                        string sqlQuery = @"INSERT INTO AssignmentSets 
                                                    (AssignmentSetId, SetCompleted, Deadline) 
                                                VALUES
                                                    (@AssignmentSetId, @SetCompleted, @Deadline)";
 
-                              using var command = new SqlCommand(sqlQuery, connection);
+                        using (SqlCommand command = new SqlCommand(sqlQuery, connection))
+                        {
+                            command.Parameters.Add("@Title", SqlDbType.NVarChar).Value = assignmentSet.AssignmentSetId;
+                            command.Parameters.Add("@SetCompleted", SqlDbType.Bit).Value = assignmentSet.SetCompleted;
+                            command.Parameters.Add("@Deadline", SqlDbType.DateTime).Value = assignmentSet.Deadline;
 
-                    using (SqlCommand command = new SqlCommand(sqlQuery, connection))
-                    {
-                        command.Parameters.Add("@Title", SqlDbType.NVarChar).Value = assignmentSet.AssignmentSetId;
-                        command.Parameters.Add("@SetCompleted", SqlDbType.Bit).Value = assignmentSet.SetCompleted;
-                        command.Parameters.Add("@Deadline", SqlDbType.DateTime).Value = assignmentSet.Deadline;
-
-                        command.ExecuteNonQuery();
+                            command.ExecuteNonQuery();
+                        }
                     }
                 }
                 catch (Exception ex)
