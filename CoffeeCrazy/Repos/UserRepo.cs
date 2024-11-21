@@ -32,7 +32,7 @@ namespace CoffeeCrazy.Repos
                 using (var connection = new SqlConnection(_connectionString))
                 {
                     await connection.OpenAsync();
-                    string query = "SELECT UserId, FirstName, LastName, Password, Role, Campus FROM Users";
+                    string query = "SELECT UserId, FirstName, LastName, Email, Password, RoleId, CampusId FROM Users";
 
                     using (var command = new SqlCommand(query, connection))
                     {
@@ -45,9 +45,10 @@ namespace CoffeeCrazy.Repos
                                     UserId = reader.GetInt32(0),
                                     FirstName = reader.GetString(1),
                                     LastName = reader.GetString(2),
-                                    Passowrd = reader.GetString(3),
-                                    Role = Enum.Parse<Role>(reader.GetString(4)),
-                                    Campus = Enum.Parse<Campus>(reader.GetString(5))
+                                    Email = reader.GetString(3),
+                                    Passowrd = reader.GetString(4),
+                                    Role = (Role)reader.GetInt32(5),
+                                    Campus = (Campus)reader.GetInt32(6)
                                 };
 
                                 users.Add(user);
@@ -76,7 +77,7 @@ namespace CoffeeCrazy.Repos
                 using (var connection = new SqlConnection(_connectionString))
                 {
                     await connection.OpenAsync();
-                    string query = "SELECT UserId, FirstName, LastName, Password, Role, Campus FROM Users WHERE UserId = @UserId";
+                    string query = "SELECT UserId, FirstName, LastName, Email, Password, RoleId, CampusId FROM Users";
 
                     using (var command = new SqlCommand(query, connection))
                     {
@@ -91,9 +92,10 @@ namespace CoffeeCrazy.Repos
                                     UserId = reader.GetInt32(0),
                                     FirstName = reader.GetString(1),
                                     LastName = reader.GetString(2),
-                                    Passowrd = reader.GetString(3),
-                                    Role = Enum.Parse<Role>(reader.GetString(4)),
-                                    Campus = Enum.Parse<Campus>(reader.GetString(5))
+                                    Email = reader.GetString(3),
+                                    Passowrd = reader.GetString(4),
+                                    Role = (Role)reader.GetInt32(5),
+                                    Campus = (Campus)reader.GetInt32(6)
                                 };
                             }
                             else
