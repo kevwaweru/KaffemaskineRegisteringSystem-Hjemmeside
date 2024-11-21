@@ -1,4 +1,9 @@
-﻿namespace CoffeeCrazy.Repos
+﻿using CoffeeCrazy.Model;
+using CoffeeCrazy.Models;
+using Microsoft.Data.SqlClient;
+using System.Data;
+
+namespace CoffeeCrazy.Repos
 {
     public class AssignmentSetRepo
     {
