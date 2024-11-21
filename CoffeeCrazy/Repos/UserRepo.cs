@@ -45,10 +45,6 @@ namespace CoffeeCrazy.Repos
             }
         }
 
-        public Task DeleteAsync(User toBeDeletedT)
-        {
-            throw new NotImplementedException();
-        }
 
         public Task<List<User>> GetAllAsync()
         {
@@ -95,5 +91,38 @@ namespace CoffeeCrazy.Repos
             }
 
         }
+    
+
+    
+
+        public async Task DeleteAsync(User toBeDeletedUser)
+        {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_connectionString))
+                {
+                    string sqlQuery = "DELETE FROM Users WHERE UserId = @UserId";
+
+                    SqlCommand command = new SqlCommand(sqlQuery, connection);
+
+                    command.Parameters.AddWithValue("@UserId", toBeDeletedUser.UserId);
+
+                    await connection.OpenAsync();
+
+                    await command.ExecuteNonQueryAsync();
+                }
+            }
+            catch (SqlException sqlEx)
+            {
+                Console.WriteLine("Error: " + sqlEx.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+            }
+        }
+
+       
+       
     }
 }
