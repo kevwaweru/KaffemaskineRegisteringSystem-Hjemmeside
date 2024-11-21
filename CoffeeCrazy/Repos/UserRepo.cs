@@ -65,9 +65,36 @@ namespace CoffeeCrazy.Repos
             throw new NotImplementedException();
         }
 
-        public Task UpdateAsync(User toBeUpdatedT)
+
+    
+
+        public async Task UpdateAsync(User toBeUpdatedT)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_connectionstring))
+                {
+                    string query = "EXEC AdminUpdateEmployee @UserId, @FirstName, @LastName, @Email, @Password, @CampusId";
+
+                    SqlCommand command = new SqlCommand(query, connection);
+                    command.Parameters.AddWithValue("@Id", (int)toBeUpdatedT.UserId);
+                    command.Parameters.AddWithValue("@FirstName", toBeUpdatedT.FirstName);
+                    command.Parameters.AddWithValue("@LastName", toBeUpdatedT.LastName);
+                    command.Parameters.AddWithValue("@Email", toBeUpdatedT.Email);
+                    command.Parameters.AddWithValue("@Password", toBeUpdatedT.Password);
+                    command.Parameters.AddWithValue("@CampusId", (int)toBeUpdatedT.Campus);
+
+                    await connection.OpenAsync();
+                    await command.ExecuteNonQueryAsync();
+                }
+            }
+            catch (SqlException sqlEx) 
+            {
+                Console.WriteLine("Error:" + sqlEx);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error:" + ex);
+            }
+
         }
-    }
-}

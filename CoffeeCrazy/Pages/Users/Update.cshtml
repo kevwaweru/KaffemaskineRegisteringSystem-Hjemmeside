@@ -2,3 +2,41 @@
 @model CoffeeCrazy.Pages.Users.UpdateModel
 @{
 }
+<h2>Update User</h2>
+
+<form method="post" enctype="multipart/form-data">
+    <div>
+        <label>Fornavn</label>
+        <input asp-for="UserToBeUpdated.FirstName" class="form-control" />
+        <span asp-validation-for="UserToBeUpdated.FirstName" class="text-danger"></span>
+    </div>
+    <div>
+        <label>Efternavn</label>
+        <input asp-for="UserToBeUpdated.LastName" class="form-control" />
+        <span asp-validation-for="UserToBeUpdated.LastName" class="text-danger"></span>
+    </div>
+    <div>
+        <label>Email</label>
+        <input asp-for="UserToBeUpdated.Email" class="form-control" />
+        <span asp-validation-for="UserToBeUpdated.Email" class="text-danger"></span>
+    </div>
+    <div>
+        <label>Adgangskode</label>
+        <input asp-for="UserToBeUpdated.Password" type="password" class="form-control" />
+        <span asp-validation-for="UserToBeUpdated.Password" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label>Campus</label>
+        <select asp-for="UserToBeUpdated.Campus" class="form-control">
+            <option value=1>Roskilde</option>
+            <option value=2>Køge</option>
+            <option value=3>Næstved</option>
+            <option value=4>Slagelse</option>
+            <option value=5>Nykøbing Falster</option>
+            <option value=6>Holbæk</option>
+        </select>
+        <span asp-validation-for="UserToBeUpdated.Campus" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Update</button>
+</form>
