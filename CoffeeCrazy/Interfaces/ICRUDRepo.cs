@@ -13,10 +13,7 @@
         Task UpdateAsync(T toBeUpdatedT);
 
         //Delete
-        Task DeleteAsync(T toBeDeletedT);
-
-
-        
+        Task DeleteAsync(T toBeDeletedT);   
 
 
 
