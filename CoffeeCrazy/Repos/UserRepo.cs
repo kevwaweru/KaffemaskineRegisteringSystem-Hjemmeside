@@ -44,7 +44,7 @@ namespace CoffeeCrazy.Repos
             {
                 using (SqlConnection connection = new SqlConnection(_connectionstring))
                 {
-                    string query = "@Update Users SET FirstName = @FirstName, LastName = @LastName, Email = @Email, Password = @Password, RoleId = @RoleId, CampusId = @CampusId WHERE Id = @Id";
+                    string query = "EXEC AdminUpdateEmployee @UserId, @FirstName, @LastName, @Email, @Password, @CampusId";
 
                     SqlCommand command = new SqlCommand(query, connection);
                     command.Parameters.AddWithValue("@Id", (int)toBeUpdatedT.UserId);
@@ -52,7 +52,6 @@ namespace CoffeeCrazy.Repos
                     command.Parameters.AddWithValue("@LastName", toBeUpdatedT.LastName);
                     command.Parameters.AddWithValue("@Email", toBeUpdatedT.Email);
                     command.Parameters.AddWithValue("@Password", toBeUpdatedT.Password);
-                    command.Parameters.AddWithValue("@RoleId", (int)toBeUpdatedT.Role);
                     command.Parameters.AddWithValue("@CampusId", (int)toBeUpdatedT.Campus);
 
                     await connection.OpenAsync();
