@@ -11,7 +11,7 @@ namespace CoffeeCrazy.Repos
         public MachineRepo(IConfiguration configuration)
         {
             _connectionString = configuration.GetConnectionString("DefaultConnection")
-                ?? throw new InvalidOperationException("Connection string 'VaskEnTidDB' not found.");
+                ?? throw new InvalidOperationException("Connection string 'Kaffe Maskine Database' not found.");
         }
 
 
