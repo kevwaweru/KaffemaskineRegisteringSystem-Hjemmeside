@@ -1,4 +1,45 @@
 ﻿@page
 @model CoffeeCrazy.Pages.Users.IndexModel
-@{
-}
+
+<h1>Users</h1>
+
+<h2>All Users</h2>
+<table>
+    <thead>
+        <tr>
+            <th>UserId</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Role</th>
+            <th>Campus</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model.Users)
+        {
+            <tr>
+                <td>@user.UserId</td>
+                <td>@user.FirstName</td>
+                <td>@user.LastName</td>
+                <td>@user.Role</td>
+                <td>@user.Campus</td>
+                <td>
+                    <a asp-page="UserPage" asp-route-id="@user.UserId">Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@* @if (Model.SelectedUser != null)
+{
+    <h2>User Details</h2>
+    <p><strong>UserId:</strong> @Model.SelectedUser.UserId</p>
+    <p><strong>First Name:</strong> @Model.SelectedUser.FirstName</p>
+    <p><strong>Last Name:</strong> @Model.SelectedUser.LastName</p>
+    <p><strong>Password:</strong> @Model.SelectedUser.Passowrd</p>
+    <p><strong>Role:</strong> @Model.SelectedUser.Role</p>
+    <p><strong>Campus:</strong> @Model.SelectedUser.Campus</p>
+} *@
+
