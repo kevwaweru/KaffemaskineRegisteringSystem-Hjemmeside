@@ -46,16 +46,6 @@ namespace CoffeeCrazy.Repos
         }
 
 
-        public Task<List<User>> GetAllAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<User> GetByIdAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
         public Task<User> GetUserByEmail(string email)
         {
             throw new NotImplementedException();
@@ -120,6 +110,102 @@ namespace CoffeeCrazy.Repos
         }
 
 
+
+    
+        public async Task<List<User>> GetAllAsync()
+        {
+            var users = new List<User>();
+
+            try
+            {
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    await connection.OpenAsync();
+                    string query = "SELECT UserId, FirstName, LastName, Email, Password, RoleId, CampusId FROM Users";
+
+                    using (var command = new SqlCommand(query, connection))
+                    {
+                        using (var reader = await command.ExecuteReaderAsync())
+                        {
+                            while (await reader.ReadAsync())
+                            {
+                                var user = new User
+                                {
+                                    UserId = reader.GetInt32(0),
+                                    FirstName = reader.GetString(1),
+                                    LastName = reader.GetString(2),
+                                    Email = reader.GetString(3),
+                                    Passowrd = reader.GetString(4),
+                                    Role = (Role)reader.GetInt32(5),
+                                    Campus = (Campus)reader.GetInt32(6)
+                                };
+
+                                users.Add(user);
+                            }
+                        }
+                    }
+                }
+                return users;
+            }
+            catch (SqlException ex)
+            {           
+                Console.WriteLine($"Database error: {ex.Message}");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                throw; 
+            }
+        }
+
+        public async Task<User> GetByIdAsync(int userId)
+        {
+            try
+            {
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    await connection.OpenAsync();
+                    string query = "SELECT UserId, FirstName, LastName, Email, Password, RoleId, CampusId FROM Users";
+
+                    using (var command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@UserId", userId);
+
+                        using (var reader = await command.ExecuteReaderAsync())
+                        {
+                            if (await reader.ReadAsync())
+                            {
+                                return new User
+                                {
+                                    UserId = reader.GetInt32(0),
+                                    FirstName = reader.GetString(1),
+                                    LastName = reader.GetString(2),
+                                    Email = reader.GetString(3),
+                                    Passowrd = reader.GetString(4),
+                                    Role = (Role)reader.GetInt32(5),
+                                    Campus = (Campus)reader.GetInt32(6)
+                                };
+                            }
+                            else
+                            {
+                                throw new Exception($"User with ID {userId} does not exist.");
+                            }
+                        }
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {              
+                Console.WriteLine($"Database error: {ex.Message}");
+                throw; 
+            }
+            catch (Exception ex)
+            {            
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                throw; 
+            }
+        }
 
     }
 }

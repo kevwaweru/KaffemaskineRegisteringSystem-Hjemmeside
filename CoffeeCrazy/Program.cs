@@ -14,6 +14,8 @@ namespace CoffeeCrazy
             builder.Services.AddRazorPages();   
             builder.Services.AddTransient<IUserRepo, UserRepo>();
 
+            builder.Services.AddScoped<ICRUDRepo<User>, UserRepo>();        
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
