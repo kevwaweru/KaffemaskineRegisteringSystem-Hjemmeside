@@ -33,7 +33,7 @@ namespace CoffeeCrazy.Repos
                         command.Parameters.Add("@Title", SqlDbType.NVarChar).Value = assignmentSet.AssignmentSetId;
                         command.Parameters.Add("@SetCompleted", SqlDbType.Bit).Value = assignmentSet.SetCompleted;
                         command.Parameters.Add("@Deadline", SqlDbType.DateTime).Value = assignmentSet.Deadline;
-
+                        // der mangler AsignmentId før det her giver mening
                         command.ExecuteNonQuery();
                     }
                 }
