@@ -1,3 +1,7 @@
+using CoffeeCrazy.Interfaces;
+using CoffeeCrazy.Model;
+using CoffeeCrazy.Repos;
+
 namespace CoffeeCrazy
 {
     public class Program
@@ -9,6 +13,11 @@ namespace CoffeeCrazy
             // Add services to the container.
             builder.Services.AddRazorPages();
 
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+            builder.Services.AddScoped<ICRUDRepo<Assignment>, AssignmentRepo>();
+
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -18,6 +27,7 @@ namespace CoffeeCrazy
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+         
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

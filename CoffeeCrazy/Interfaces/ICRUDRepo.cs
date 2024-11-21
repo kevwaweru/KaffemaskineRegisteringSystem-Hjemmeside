@@ -4,7 +4,7 @@
     public interface ICRUDRepo<T>
     {
         //Create
-        Task CreatAsyncc(T toBeCreatedT);
+        Task CreateAsync(T toBeCreatedT);
 
         //Read
         Task<List<T>> GetAllAsync();
