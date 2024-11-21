@@ -91,9 +91,6 @@ namespace CoffeeCrazy.Repos
             }
 
         }
-    
-
-    
 
         public async Task DeleteAsync(User toBeDeletedUser)
         {
@@ -122,7 +119,7 @@ namespace CoffeeCrazy.Repos
             }
         }
 
-       
-       
+
+
     }
 }
