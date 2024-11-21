@@ -1,11 +1,14 @@
-﻿using CoffeeCrazy.Interfaces;
+﻿using System.Reflection.PortableExecutable;
+using CoffeeCrazy.Interfaces;
 using CoffeeCrazy.Model;
 using Microsoft.Data.SqlClient;
 
 namespace CoffeeCrazy.Repos
 {
-    public class MachineRepo 
+    public class MachineRepo : ICRUDRepo<Machine>
     {
+
+        //Standard formalia. Can be deleted on merge.
         private readonly string _connectionString;
         public MachineRepo(IConfiguration configuration)
         {
@@ -13,96 +16,105 @@ namespace CoffeeCrazy.Repos
                 ?? throw new InvalidOperationException("Connection string 'Kaffe Maskine Database' not found.");
         }
 
-        //
-        public async Task<List<Machine>> ReadAsync()
+        //Not implemented
+        public Task CreatAsyncc(Model.Machine toBeCreatedT)
         {
+            throw new NotImplementedException();
+        }
+        //Not implemented
+        public Task DeleteAsync(Model.Machine toBeDeletedT)
+        {
+            throw new NotImplementedException();
+        }
 
-            try
+
+        //Method to get ALL machines from table.
+        public async Task<List<Model.Machine>> GetAllAsync()
+        {
+            var machines = new List<Model.Machine>();
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                using (SqlConnection connection = new SqlConnection(_connectionString))
+                try
                 {
-                    string sqlQuery = @"SELECT 
-                                        MachineId, Status, Placement
-                                        FROM
-                                        Machines
-                                        ";
+                    await connection.OpenAsync();
 
+                    string sqlQuery = @"SELECT MachineId, Status, CampusId, Placement FROM Machines";
 
-                    //    string query = "SELECT Id, Name, Description FROM YourTable";
                     using (SqlCommand command = new SqlCommand(sqlQuery, connection))
-
-                    
-                        
-                        await connection.OpenAsync();
+                    {
+                        using (var reader = await command.ExecuteReaderAsync())
+                        {
+                            while (await reader.ReadAsync())
+                            {
+                                machines.Add(new Model.Machine
+                                {
+                                    MachineId = reader.GetInt32(0),
+                                    Status = reader.GetBoolean(1),
+                                    CampusId = reader.GetInt32(2),
+                                    Placement = reader.GetString(3)
+                                });
+                            }
+                        }
+                    }
                 }
                 catch (SqlException SqlEx)
                 {
-                Console.WriteLine("Sql-Exception Error." + SqlEx);
+                    Console.WriteLine("Sql-Exception Error." + SqlEx);
                 }
                 catch (Exception ex)
                 {
-                Console.WriteLine("Error" + ex);
+                    Console.WriteLine("Error" + ex);
+                }
+                return machines;
+            }
+
+        }
+
+
+        //Get a single machine by its Id.
+        public async Task<Model.Machine> GetByIdAsync(int id)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                try
+                {
+                    await connection.OpenAsync();
+                    
+                    string sqlQuery = @"SELECT MachineId, Status, CampusId, Placement 
+                                FROM Machines 
+                                WHERE MachineId = @MachineId";
+
+                    using (SqlCommand command = new SqlCommand(sqlQuery, connection))
+                    {
+                        command.Parameters.AddWithValue("@MachineId", id);
+
+                        using (var reader = await command.ExecuteReaderAsync())
+                        {
+                            if (await reader.ReadAsync())
+                            {
+                                return new Model.Machine
+                                {
+                                    MachineId = reader.GetInt32(0),
+                                    Status = reader.GetBoolean(1),
+                                    CampusId = reader.GetInt32(2),
+                                    Placement = reader.GetString(3)
+                                };
+                            }
+                            else
+                            {
+                                throw new Exception($"The machine with ID {id} does not exist.");
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error: {ex.Message}");
+                    throw;
+                }
             }
         }
 
-        //public async Task<List<YourEntity>> ReadAsync()
-        //{
-        //    var results = new List<YourEntity>();
-        //
-        //    // Define your SQL query
-        //    string query = "SELECT Id, Name, Description FROM YourTable";
-        //
-        //    // Open SQL connection using SqlConnection
-        //    using (var connection = new SqlConnection(_connectionString))
-        //    {
-        //        // Create the SQL command
-        //        using (var command = new SqlCommand(query, connection))
-        //        {
-        //            // Open the connection
-        //            await connection.OpenAsync();
-        //
-        //            // Execute the query and retrieve results
-        //            using (var reader = await command.ExecuteReaderAsync())
-        //            {
-        //                while (await reader.ReadAsync())
-        //                {
-        //                    // Map data from the database to your entity
-        //                    var entity = new YourEntity
-        //                    {
-        //                        Id = reader.GetInt32(0),             // Example for an int column
-        //                        Name = reader.GetString(1),          // Example for a string column
-        //                        Description = reader.GetString(2)    // Example for another string column
-        //                    };
-        //
-        //                    results.Add(entity);
-        //                }
-        //            }
-        //        }
-        //    }
-        //
-        //    return results;
-        //}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    }
+    }   
 }
