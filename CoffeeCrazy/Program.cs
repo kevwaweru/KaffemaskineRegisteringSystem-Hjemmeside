@@ -12,9 +12,7 @@ namespace CoffeeCrazy
 
             // Add services to the container.
             builder.Services.AddRazorPages();   
-            builder.Services.AddTransient<IUserRepo, UserRepo>();
-
-            builder.Services.AddScoped<ICRUDRepo<User>, UserRepo>();        
+            builder.Services.AddTransient<IUserRepo, UserRepo>();    
 
             var app = builder.Build();
 

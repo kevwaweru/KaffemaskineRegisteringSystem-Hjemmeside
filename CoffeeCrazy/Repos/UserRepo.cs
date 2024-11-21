@@ -1,5 +1,6 @@
 ﻿using CoffeeCrazy.Interfaces;
 using CoffeeCrazy.Model;
+using CoffeeCrazy.Models.Enums;
 using Microsoft.Data.SqlClient;
 using System.Data;
 
@@ -108,9 +109,6 @@ namespace CoffeeCrazy.Repos
                 Console.WriteLine("Error: " + ex.Message);
             }
         }
-
-
-
     
         public async Task<List<User>> GetAllAsync()
         {
@@ -135,7 +133,7 @@ namespace CoffeeCrazy.Repos
                                     FirstName = reader.GetString(1),
                                     LastName = reader.GetString(2),
                                     Email = reader.GetString(3),
-                                    Passowrd = reader.GetString(4),
+                                    Password = reader.GetString(4),
                                     Role = (Role)reader.GetInt32(5),
                                     Campus = (Campus)reader.GetInt32(6)
                                 };
@@ -182,7 +180,7 @@ namespace CoffeeCrazy.Repos
                                     FirstName = reader.GetString(1),
                                     LastName = reader.GetString(2),
                                     Email = reader.GetString(3),
-                                    Passowrd = reader.GetString(4),
+                                    Password = reader.GetString(4),
                                     Role = (Role)reader.GetInt32(5),
                                     Campus = (Campus)reader.GetInt32(6)
                                 };
