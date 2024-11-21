@@ -11,10 +11,5 @@
         public string? Comment { get; set; }
         public DateTime CreateDate { get; set; } = DateTime.Now; 
         public bool IsCompleted { get; set; } = false;
-
-
-
-
-        
     }
 }
