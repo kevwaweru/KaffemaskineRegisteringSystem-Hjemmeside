@@ -1,3 +1,7 @@
+using CoffeeCrazy.Interfaces;
+using CoffeeCrazy.Model;
+using CoffeeCrazy.Repos;
+
 namespace CoffeeCrazy
 {
     public class Program
@@ -8,6 +12,7 @@ namespace CoffeeCrazy
 
             // Add services to the container.
             builder.Services.AddRazorPages();
+            builder.Services.AddTransient<IUserRepo, UserRepo>();
 
             var app = builder.Build();
 
