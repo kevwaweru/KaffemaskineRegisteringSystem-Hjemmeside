@@ -13,3 +13,4 @@ namespace CoffeeCrazy.Model
         public Campus Campus { get; set; }
     }
 }
+    
