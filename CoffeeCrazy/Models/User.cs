@@ -14,7 +14,7 @@ namespace CoffeeCrazy.Model
         [Required]
         public string Email { get; set; }
         [Required]
-        public string Passowrd { get; set; }
+        public string Password { get; set; }
         [Required]
         public Role Role { get; set; }
         [Required]

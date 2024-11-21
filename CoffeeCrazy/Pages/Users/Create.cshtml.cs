@@ -9,14 +9,13 @@ namespace CoffeeCrazy.Pages.Users
     public class CreateModel : PageModel
     {
         [BindProperty]
-        public User NewUser { get; set; }
+        public User NewUser { get; set; } = new User();
 
         private IUserRepo _userRepo;
 
         public CreateModel(IUserRepo userRepo)
         {
             _userRepo = userRepo;
-            NewUser = new User();
         }
 
         public IActionResult OnGet()
