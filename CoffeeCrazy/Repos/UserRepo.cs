@@ -20,14 +20,13 @@ namespace CoffeeCrazy.Repos
             {
                 using (SqlConnection connection = new SqlConnection(_connectionString))
                 {
-                    string query = "INSERT INTO Users (FirstName, LastName, Email, Password, RoleId, CampusId) VALUES (@FirstName, @LastName, @Email, @Password, @RoleId, @CampusId";
+                    string query = "EXEC AdminCreateEmployee @FirstName, @LastName, @Email, @Password, @CampusId";
 
                     SqlCommand command = new SqlCommand(query, connection);
                     command.Parameters.AddWithValue("@FirstName", user.FirstName);
                     command.Parameters.AddWithValue("@LastName", user.LastName);    
                     command.Parameters.AddWithValue("@Email", user.Email);
                     command.Parameters.AddWithValue("@Password", user.Password);
-                    command.Parameters.AddWithValue("@RoleId", (int)user.Role);
                     command.Parameters.AddWithValue("@CampusId", (int)user.Campus);
 
                     await connection.OpenAsync();

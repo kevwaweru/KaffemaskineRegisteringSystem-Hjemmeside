@@ -25,15 +25,7 @@
         <input asp-for="NewUser.Password" type="password" class="form-control" />
         <span asp-validation-for="NewUser.Password" class="text-danger"></span>
     </div>
-    <div>
-        <label>Rolle</label>
-        <select asp-for="NewUser.Role" class="form-control">
-            <option value=1>Master Admin</option>
-            <option value=2>Admin</option>
-            <option value=3>Employee</option>
-        </select>
-        <span asp-validation-for="NewUser.Role" class="text-danger"></span>
-    </div>
+    
     <div>
         <label>Campus</label>
         <select asp-for="NewUser.Campus" class="form-control">
