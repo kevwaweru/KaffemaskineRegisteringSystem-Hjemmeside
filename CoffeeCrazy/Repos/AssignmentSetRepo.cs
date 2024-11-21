@@ -19,21 +19,27 @@ namespace CoffeeCrazy.Repos
             }
 
             // Opret en opgaveliste
-            public void Create(AssignmentSet assignmentSet)
+            public async Task Create(AssignmentSet assignmentSet)
             {
-                SqlConnection connection = new SqlConnection(_connectionString);
+                //SqlConnection connection = new SqlConnection(_connectionString);
 
                 try
                 {
-                    connection.Open();
-                    string sqlQuery = "INSERT INTO AssignmentSets (AssignmentSetId, SetCompleted, Deadline) VALUES (@AssignmentSetId, @SetCompleted, @Deadline)";
+                       using (SqlConnection connection = new SqlConnection(_connectionString))
+                       {
+                           string sqlQuery = @"INSERT INTO AssignmentSets 
+                                                   (AssignmentSetId, SetCompleted, Deadline) 
+                                               VALUES
+                                                   (@AssignmentSetId, @SetCompleted, @Deadline)";
+
+                              using var command = new SqlCommand(sqlQuery, connection);
 
                     using (SqlCommand command = new SqlCommand(sqlQuery, connection))
                     {
                         command.Parameters.Add("@Title", SqlDbType.NVarChar).Value = assignmentSet.AssignmentSetId;
                         command.Parameters.Add("@SetCompleted", SqlDbType.Bit).Value = assignmentSet.SetCompleted;
                         command.Parameters.Add("@Deadline", SqlDbType.DateTime).Value = assignmentSet.Deadline;
-                        // der mangler AsignmentId før det her giver mening
+
                         command.ExecuteNonQuery();
                     }
                 }
@@ -41,11 +47,7 @@ namespace CoffeeCrazy.Repos
                 {
                     Console.WriteLine("Error: " + ex.Message);
                 }
-                finally
-                {
-                    connection.Close();
-                    connection.Dispose();
-                }
+
             }
 
             // Hent alle opgavelister
