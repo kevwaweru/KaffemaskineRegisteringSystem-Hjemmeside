@@ -1,255 +1,240 @@
 ﻿using CoffeeCrazy.Interfaces;
 using CoffeeCrazy.Model;
 using CoffeeCrazy.Models;
+using CoffeeCrazy.Models.Enums;
 using Microsoft.Data.SqlClient;
 using System.Data;
+using System.Reflection.PortableExecutable;
 
 namespace CoffeeCrazy.Repos
 {
     public class AssignmentSetRepo : IAssignmentSetRepo
     {
-        public Task CreateAsync(AssignmentSet toBeCreatedT)
+        private readonly string _connectionString;
+
+
+        public AssignmentSetRepo(IConfiguration configuration)
         {
-            throw new NotImplementedException();
+            _connectionString = configuration.GetConnectionString("DefaultConnection")
+                ?? throw new InvalidOperationException("Connection string 'Kaffe Maskine Database' not found.");
         }
 
-        public Task DeleteAsync(AssignmentSet toBeDeletedT)
+        /// <summary>
+        /// Use to Create an assingmentSet, with diffrent assignments
+        /// </summary>
+        /// <param name="assignmentSet">Takes an objekt of an Assignment, Remember nothing can be null.</param>
+        /// <returns>A Sql Query to the database</returns>
+        public async Task CreateAsync(AssignmentSet assignmentSet)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<List<AssignmentSet>> GetAllAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<AssignmentSet> GetByIdAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task UpdateAsync(AssignmentSet toBeUpdatedT)
-        {
-            throw new NotImplementedException();
-        }
-
-            private readonly string _connectionString;
-
-            // Konstruktor
-            public AssignmentSetRepo(IConfiguration configuration)
+            try
             {
-                _connectionString = configuration.GetConnectionString("DefaultConnection")
-                                    ?? throw new InvalidOperationException("Connection string not found.");
-            }
-        
-            // Opret en opgaveliste
-            //public async Task CreateAsync(AssignmentSet assignmentSet)
-            //{
-            //    //SqlConnection connection = new SqlConnection(_connectionString);
-
-            //    try
-            //    {
-            //        using (SqlConnection connection = new SqlConnection(_connectionString))
-            //        {
-            //            string sqlQuery = @"INSERT INTO AssignmentSets 
-            //                                       (AssignmentSetId, SetCompleted, Deadline) 
-            //                                   VALUES
-            //                                       (@AssignmentSetId, @SetCompleted, @Deadline)";
-
-            //            using (SqlCommand command = new SqlCommand(sqlQuery, connection))
-            //            {
-            //                command.Parameters.Add("@Title", SqlDbType.NVarChar).Value = assignmentSet.AssignmentSetId;
-            //                command.Parameters.Add("@SetCompleted", SqlDbType.Bit).Value = assignmentSet.SetCompleted;
-            //                command.Parameters.Add("@Deadline", SqlDbType.DateTime).Value = assignmentSet.Deadline;
-            //                // der mangler AssignmentId før det her kan virke
-            //                command.ExecuteNonQuery();
-            //            }
-            //        }
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        Console.WriteLine("Error: " + ex.Message);
-            //    }
-
-            //}
-
-            // Hent alle opgavelister
-            public List<AssignmentSet> GetAll()
-            {
-                List<AssignmentSet> assignmentSets = new List<AssignmentSet>();
-
-                SqlConnection connection = new SqlConnection(_connectionString);
-
-                try
+                using (SqlConnection connection = new SqlConnection(_connectionString))
                 {
-                    connection.Open();
-                    string sqlQuery = "SELECT AssignmentSetId, SetCompleted, Deadline FROM AssignmentSets";
+
+                    string sqlQuery = @"
+                                           INSERT INTO AssignmentSets (AssignmentSetId, SetCompleted, Deadline, AssignmentId, MachineId) 
+                                           VALUES (@AssignmentSetId, @SetCompleted, @Deadline, @AssignmentId, @MachineId)";
 
                     using (SqlCommand command = new SqlCommand(sqlQuery, connection))
-                    using (SqlDataReader reader = command.ExecuteReader())
                     {
-                        while (reader.Read())
-                        {
-                            assignmentSets.Add(new AssignmentSet
-                            {
-                                AssignmentSetId = reader.GetInt32(0),
-                                SetCompleted = reader.GetBoolean(1),
-                                Deadline = reader.GetDateTime(2)
-                            });
-                        }
+                        command.Parameters.Add("@Title", SqlDbType.NVarChar).Value = assignmentSet.AssignmentSetId;
+                        command.Parameters.Add("@SetCompleted", SqlDbType.Bit).Value = assignmentSet.SetCompleted;
+                        command.Parameters.Add("@Deadline", SqlDbType.DateTime).Value = assignmentSet.Deadline;
+                        command.Parameters.Add("@AssignmentId", SqlDbType.Int).Value = assignmentSet.AssignmentId;
+                        command.Parameters.Add("@MachineId", SqlDbType.Int).Value = assignmentSet.MachineId;
+                        // der mangler AssignmentId før det her kan virke
+                        command.ExecuteNonQuery();
                     }
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Error: " + ex.Message);
-                }
-                finally
-                {
-                    connection.Close();
-                    connection.Dispose();
-                }
-
-                return assignmentSets;
             }
-
-            // Hent en opgaveliste baseret på ID
-            public AssignmentSet? GetById(int assignmentSetId)
+            catch (SqlException ex)
             {
-                AssignmentSet? assignmentSet = null;
+                // SQL Errors
+                Console.Error.WriteLine($"SQL error: {ex.Message}");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                // Other Errors
+                Console.Error.WriteLine($"Mistakes has happened: {ex.Message}");
+                throw;
+            }
+        }
 
-                SqlConnection connection = new SqlConnection(_connectionString);
+        public async Task<List<AssignmentSet>> GetAllAsync()
+        {
+            var assignmentSets = new List<AssignmentSet>();
 
-                try
+            try
+            {
+                using (var connection = new SqlConnection(_connectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
+                    string query = "SELECT AssignmentSetId, SetCompleted, Deadline, AssignmentId, MachineId FROM AssignmentSets";
 
-                    string sqlQuery = "SELECT AssignmentSetId, SetCompleted, Deadline FROM AssignmentSets WHERE AssignmentSetId = @AssignmentSetId";
-
-                    using (SqlCommand command = new SqlCommand(sqlQuery, connection))
+                    using (var command = new SqlCommand(query, connection))
                     {
-                        command.Parameters.Add("@AssignmentSetId", SqlDbType.Int).Value = assignmentSetId;
-
-                        using (SqlDataReader reader = command.ExecuteReader())
+                        using (var reader = await command.ExecuteReaderAsync())
                         {
-                            if (reader.Read())
+                            while (await reader.ReadAsync())
                             {
-                                assignmentSet = new AssignmentSet
+                                var assignmentSet = new AssignmentSet
                                 {
                                     AssignmentSetId = reader.GetInt32(0),
                                     SetCompleted = reader.GetBoolean(1),
-                                    Deadline = reader.GetDateTime(2)
+                                    Deadline = reader.GetDateTime(2),
+                                    AssignmentId = reader.GetInt32(3),
+                                    MachineId = reader.GetInt32(4),
                                 };
+                                assignmentSets.Add(assignmentSet);
                             }
                         }
                     }
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Error: " + ex.Message);
-                }
-                finally
-                {
-                    connection.Close();
-                    connection.Dispose();
-                }
-
-                return assignmentSet;
+                return assignmentSets;
             }
-
-            // Opdater en opgaveliste
-            public void Update(AssignmentSet assignmentSet)
+            catch (SqlException ex)
             {
-                SqlConnection connection = new SqlConnection(_connectionString);
+                Console.WriteLine($"Database error: {ex.Message}");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                throw;
+            }
+        }
 
-                try
+        // Hent en opgaveliste baseret på ID
+        public async Task<AssignmentSet> GetByIdAsync(int assignmentSetId)
+        {
+            try
+            {
+                using (var connection = new SqlConnection(_connectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
+                    string query = "SELECT AssignmentSetId, SetCompleted, Deadline, AssignmentId, MachineId FROM AssignmentSets";
 
-                    string sqlQuery = "UPDATE AssignmentSets SET AssignmentSetId = @AssignmentSetId, SetCompleted = @SetCompleted, Deadline = @Deadline WHERE AssignmentSetId = @AssignmentSetId";
-
-                    using (SqlCommand command = new SqlCommand(sqlQuery, connection))
+                    using (var command = new SqlCommand(query, connection))
                     {
-                        command.Parameters.Add("@AssignmentSetId", SqlDbType.Int).Value = assignmentSet.AssignmentSetId;
-                        command.Parameters.Add("@SetCompleted", SqlDbType.Bit).Value = assignmentSet.SetCompleted;
-                        command.Parameters.Add("@Deadline", SqlDbType.DateTime).Value = assignmentSet.Deadline;
-
-                        command.ExecuteNonQuery();
+                        using (var reader = await command.ExecuteReaderAsync())
+                        {
+                            if (await reader.ReadAsync())
+                            {
+                                return new AssignmentSet
+                                {
+                                    AssignmentSetId = reader.GetInt32(0),
+                                    SetCompleted = reader.GetBoolean(1),
+                                    Deadline = reader.GetDateTime(2),
+                                    AssignmentId = reader.GetInt32(3),
+                                    MachineId = reader.GetInt32(4),
+                                };
+                            }
+                            else
+                            {
+                                throw new Exception($"User with ID {assignmentSetId} does not exist.");
+                            }
+                        }
                     }
                 }
-                catch (Exception ex)
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine($"Database error: {ex.Message}");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                throw;
+            }
+        }
+        /// <summary>
+        /// Updates an assignmentSet
+        /// </summary>
+        /// <param name="assignmentSetToBeUpdated"> Takes an assignmentSet and updates the data.</param>
+        /// <returns>The A sql query that UPDATES the assignmentSet Data</returns>
+        /// <exception cref="ArgumentNullException">Cast an exception if Id == null</exception>
+        public async Task UpdateAsync(AssignmentSet assignmentSetToBeUpdated)
+        {
+            try
+            {
+                if (assignmentSetToBeUpdated == null)
                 {
-                    Console.WriteLine("Error: " + ex.Message);
+                    throw new ArgumentNullException(nameof(assignmentSetToBeUpdated), "Du bliver nødt til at sende ny data med, hvis du vil have opdateret opgavenSet.");
                 }
-                finally
+
+
+                using (SqlConnection connection = new SqlConnection(_connectionString))
                 {
-                    connection.Close();
-                    connection.Dispose();
+                    string query = @"
+                      Update Assignments
+                      Set 
+                        Title        = @Title
+                        SetCompleted = @SetCompleted
+                        Deadline     = @Deadline
+                        AssignmentId = @AssignmentId
+                        MachineId    = @MachineId
+                      Where
+                          AssignmentSetId = @AssignmentSetId";
+
+                    using (SqlCommand command = connection.CreateCommand())
+                    {
+                        command.Parameters.AddWithValue("@AssignmentSetId", assignmentSetToBeUpdated.AssignmentSetId);
+                        command.Parameters.AddWithValue("@Title", assignmentSetToBeUpdated.AssignmentId);
+                        command.Parameters.AddWithValue("@SetCompleted", assignmentSetToBeUpdated.SetCompleted);
+                        command.Parameters.AddWithValue("@Deadline", (object?)assignmentSetToBeUpdated.Deadline);
+                        command.Parameters.AddWithValue("@AssignmentId", assignmentSetToBeUpdated.AssignmentSetId);
+                        command.Parameters.AddWithValue("@MachineId", assignmentSetToBeUpdated.MachineId);
+
+                        connection.Open();
+                        await command.ExecuteNonQueryAsync(); //
+
+                    }
+
                 }
             }
-
-                    
-            public void Delete(int assignmentSetId)
+            catch (SqlException SqlEx)
             {
-                SqlConnection connection = new SqlConnection(_connectionString);
-
-                try
+                Console.WriteLine("Sql-Exception Error." + SqlEx);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error" + ex);
+            }
+        }
+        /// <summary>
+        /// Deletes an AssignmentSet. From the Database
+        /// </summary>
+        /// <param name="toBeDeletedAssignment">Takes the Id of an AssignmentSet</param>
+        /// <returns>A Sql query that delete assignment with that ID</returns>
+        public async Task DeleteAsync(AssignmentSet toBeDeletedAssignmentSet)
+        {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_connectionString))
                 {
-                    connection.Open();
                     string sqlQuery = "DELETE FROM AssignmentSets WHERE AssignmentSetId = @AssignmentSetId";
 
-                    using (SqlCommand command = new SqlCommand(sqlQuery, connection))
-                    {
-                        command.Parameters.Add("@AssignmentSetId", SqlDbType.Int).Value = assignmentSetId;
-                        command.ExecuteNonQuery();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Error: " + ex.Message);
-                }
-                finally
-                {
-                    connection.Close();
-                    connection.Dispose();
+                    SqlCommand command = new SqlCommand(sqlQuery, connection);
+
+                    command.Parameters.AddWithValue("@AssignmentSetId", toBeDeletedAssignmentSet.AssignmentSetId);
+
+                    await connection.OpenAsync();
+
+                    await command.ExecuteNonQueryAsync();
                 }
             }
-
-            /// <summary>
-            /// This method is used to add a assignment to a set.
-            /// </summary>
-            /// <param name="assignmentSetId">Chose a Id to collect</param>
-            /// <param name="assignment">and chose an assingment to add</param>
-            public void AddAssignmentToSet(int assignmentSetId, Assignment assignment)
+            catch (SqlException sqlEx)
             {
-                SqlConnection connection = new SqlConnection(_connectionString);
-
-                try
-                {
-                    connection.Open();
-
-                    string sqlQuery = "INSERT INTO Assignments (AssignmentSetId, Comment, CreateDate, AssignmentSetId, IsCompleted) VALUES (@Title, @Comment, @CreateDate, @AssignmentSetId, @IsCompleted)";
-
-                    using (SqlCommand command = new SqlCommand(sqlQuery, connection))
-                    {
-                        command.Parameters.Add("@AssignmentSetId", SqlDbType.Int).Value = assignmentSetId;
-                        command.Parameters.Add("@Comment", SqlDbType.NVarChar).Value = assignment.Comment;
-                        command.Parameters.Add("@CreateDate", SqlDbType.DateTime).Value = assignment.CreateDate;
-                        command.Parameters.Add("@IsCompleted", SqlDbType.Bit).Value = assignment.IsCompleted;
-
-                        command.ExecuteNonQuery();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Error: " + ex.Message);
-                }
-                finally
-                {
-                    connection.Close();
-                    connection.Dispose();
-                }
+                Console.WriteLine("Error: " + sqlEx.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
             }
         }
     }
+}
 
 

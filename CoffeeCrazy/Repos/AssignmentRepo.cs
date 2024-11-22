@@ -137,6 +137,56 @@ namespace CoffeeCrazy.Repos
                 Console.WriteLine("Error" + ex);
             }
         }
+        /// <summary>
+        /// Use this to get all assignment in an assignmentSet
+        /// </summary>
+        /// <param name="assignmentSetId">Takes the AssignmentSetId as param.</param>
+        /// <returns>A list of Assignments that is in the assignmentSet</returns>
+        public async Task<List<Assignment>> GetByAssignmentSetIdAsync(int assignmentSetId)
+        {
+            var assignments = new List<Assignment>();
+
+            try
+            {
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    await connection.OpenAsync();
+                    string query = "SELECT AssignmentId, Title, Comment, CreateDate, IsCompleted FROM Assignments WHERE AssignmentSetId = @AssignmentSetId";
+
+                    using (var command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@AssignmentSetId", assignmentSetId);
+                        using (var reader = await command.ExecuteReaderAsync())
+                        {
+                            while (await reader.ReadAsync())
+                            {
+                                var assignment = new Assignment
+                                {
+                                    AssignmentId = reader.GetInt32(0),
+                                    Title = reader.GetString(1),
+                                    Comment = reader.IsDBNull(2) ? null : reader.GetString(2),
+                                    CreateDate = reader.GetDateTime(3),
+                                    IsCompleted = reader.GetBoolean(4),
+                                };
+                                assignments.Add(assignment);
+                            }
+                        }
+                    }
+                }
+                return assignments;
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine($"Database error: {ex.Message}");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                throw;
+            }
+        }
+
 
         public async Task<List<Assignment>> GetAllAsync()
         {
