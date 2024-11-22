@@ -1,6 +1,4 @@
-﻿using CoffeeCrazy.Model;
-
-namespace CoffeeCrazy.Models
+﻿namespace CoffeeCrazy.Models
 {
     public class Notify
     {

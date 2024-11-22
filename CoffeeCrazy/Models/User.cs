@@ -1,7 +1,7 @@
 ﻿using CoffeeCrazy.Models.Enums;
 using System.ComponentModel.DataAnnotations;
 
-namespace CoffeeCrazy.Model
+namespace CoffeeCrazy.Models
 {
     //Kevin
     public class User
