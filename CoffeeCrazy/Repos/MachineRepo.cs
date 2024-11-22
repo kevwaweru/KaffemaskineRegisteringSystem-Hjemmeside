@@ -4,7 +4,7 @@ using Microsoft.Data.SqlClient;
 
 namespace CoffeeCrazy.Repos
 {
-    public class MachineRepo : ICRUDRepo<Machine>
+    public class MachineRepo : IMachineRepo
     {
 
         private readonly string _connectionString;
@@ -13,7 +13,6 @@ namespace CoffeeCrazy.Repos
             _connectionString = configuration.GetConnectionString("DefaultConnection")
                 ?? throw new InvalidOperationException("Connection string 'Kaffe Maskine Database' not found.");
         }
-
 
         public async Task DeleteAsync(Machine toBeDeletedMachine)
         {
@@ -40,26 +39,6 @@ namespace CoffeeCrazy.Repos
             {
                 Console.WriteLine("Error: " + ex.Message);
             }
-        }
-        public Task CreatAsyncc(Machine toBeCreatedT)
-        {
-            throw new NotImplementedException();
-        }
-
-    
-        public Task<List<Machine>> GetAllAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Machine> GetByIdAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task UpdateAsync(Machine toBeUpdatedT)
-        {
-            throw new NotImplementedException();
         }
     }
 }
