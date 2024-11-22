@@ -58,13 +58,6 @@ namespace CoffeeCrazy.Repos
             }
         }
 
-        public Task CreateAsync(User toBeCreatedT)
-        {
-            throw new NotImplementedException();
-        }
-
-
-
         //CRUD Delete
         public async Task DeleteAsync(Assignment toBeDeletedAssignment)
         {
@@ -93,11 +86,6 @@ namespace CoffeeCrazy.Repos
             }
         }
 
-        public Task DeleteAsync(User toBeDeletedT)
-        {
-            throw new NotImplementedException();
-        }
-
         /// <summary>
         /// Den metode opdatere en assingment
         /// </summary>
@@ -108,19 +96,14 @@ namespace CoffeeCrazy.Repos
         {
             try
             {
-                //throw new NotImplementedException();
-                //Ensures that value is sent along the update method
                 if (assignmentToBeUpdated == null)
                 {
                     throw new ArgumentNullException(nameof(assignmentToBeUpdated), "Du bliver nødt til at sende ny data med, hvis du vil have opdateret opgaven.");
                 }
 
-                //We use our connection string again, and with using, we don't have to use the dispose method.
+          
                 using (SqlConnection connection = new SqlConnection(_connectionString))
                 {
-                    //I use the @ to make the string query in a "verbatim string literal", which means the code is read as if in one line and can span multiple lines. Easier to read.
-                    //I then write the SQL commands necessary to update the table.
-
                     string query = @"
                       Update Assignments
                       Set 
@@ -153,11 +136,6 @@ namespace CoffeeCrazy.Repos
             {
                 Console.WriteLine("Error" + ex);
             }
-        }
-
-        public Task UpdateAsync(User toBeUpdatedT)
-        {
-            throw new NotImplementedException();
         }
 
         public async Task<List<Assignment>> GetAllAsync()

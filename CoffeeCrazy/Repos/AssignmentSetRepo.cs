@@ -1,53 +1,77 @@
-﻿using CoffeeCrazy.Model;
+﻿using CoffeeCrazy.Interfaces;
+using CoffeeCrazy.Model;
 using CoffeeCrazy.Models;
 using Microsoft.Data.SqlClient;
 using System.Data;
 
 namespace CoffeeCrazy.Repos
 {
-    public class AssignmentSetRepo
+    public class AssignmentSetRepo : IAssignmentSetRepo
     {
-        public class AssignmentSetRepository
+        public Task CreateAsync(AssignmentSet toBeCreatedT)
         {
+            throw new NotImplementedException();
+        }
+
+        public Task DeleteAsync(AssignmentSet toBeDeletedT)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<AssignmentSet>> GetAllAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<AssignmentSet> GetByIdAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task UpdateAsync(AssignmentSet toBeUpdatedT)
+        {
+            throw new NotImplementedException();
+        }
+
             private readonly string _connectionString;
 
             // Konstruktor
-            public AssignmentSetRepository(IConfiguration configuration)
+            public AssignmentSetRepo(IConfiguration configuration)
             {
                 _connectionString = configuration.GetConnectionString("DefaultConnection")
                                     ?? throw new InvalidOperationException("Connection string not found.");
             }
-
+        
             // Opret en opgaveliste
-            public async Task Create(AssignmentSet assignmentSet)
-            {
-                //SqlConnection connection = new SqlConnection(_connectionString);
+            //public async Task CreateAsync(AssignmentSet assignmentSet)
+            //{
+            //    //SqlConnection connection = new SqlConnection(_connectionString);
 
-                try
-                {
-                    using (SqlConnection connection = new SqlConnection(_connectionString))
-                    {
-                        string sqlQuery = @"INSERT INTO AssignmentSets 
-                                                   (AssignmentSetId, SetCompleted, Deadline) 
-                                               VALUES
-                                                   (@AssignmentSetId, @SetCompleted, @Deadline)";
+            //    try
+            //    {
+            //        using (SqlConnection connection = new SqlConnection(_connectionString))
+            //        {
+            //            string sqlQuery = @"INSERT INTO AssignmentSets 
+            //                                       (AssignmentSetId, SetCompleted, Deadline) 
+            //                                   VALUES
+            //                                       (@AssignmentSetId, @SetCompleted, @Deadline)";
 
-                        using (SqlCommand command = new SqlCommand(sqlQuery, connection))
-                        {
-                            command.Parameters.Add("@Title", SqlDbType.NVarChar).Value = assignmentSet.AssignmentSetId;
-                            command.Parameters.Add("@SetCompleted", SqlDbType.Bit).Value = assignmentSet.SetCompleted;
-                            command.Parameters.Add("@Deadline", SqlDbType.DateTime).Value = assignmentSet.Deadline;
-                            // der mangler AssignmentId før det her kan virke
-                            command.ExecuteNonQuery();
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Error: " + ex.Message);
-                }
+            //            using (SqlCommand command = new SqlCommand(sqlQuery, connection))
+            //            {
+            //                command.Parameters.Add("@Title", SqlDbType.NVarChar).Value = assignmentSet.AssignmentSetId;
+            //                command.Parameters.Add("@SetCompleted", SqlDbType.Bit).Value = assignmentSet.SetCompleted;
+            //                command.Parameters.Add("@Deadline", SqlDbType.DateTime).Value = assignmentSet.Deadline;
+            //                // der mangler AssignmentId før det her kan virke
+            //                command.ExecuteNonQuery();
+            //            }
+            //        }
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        Console.WriteLine("Error: " + ex.Message);
+            //    }
 
-            }
+            //}
 
             // Hent alle opgavelister
             public List<AssignmentSet> GetAll()
@@ -190,7 +214,11 @@ namespace CoffeeCrazy.Repos
                 }
             }
 
-            // Tilføj en opgave til en opgaveliste
+            /// <summary>
+            /// This method is used to add a assignment to a set.
+            /// </summary>
+            /// <param name="assignmentSetId">Chose a Id to collect</param>
+            /// <param name="assignment">and chose an assingment to add</param>
             public void AddAssignmentToSet(int assignmentSetId, Assignment assignment)
             {
                 SqlConnection connection = new SqlConnection(_connectionString);
@@ -223,4 +251,5 @@ namespace CoffeeCrazy.Repos
             }
         }
     }
-}
+
+
