@@ -5,7 +5,6 @@
         public int AssignmentSetId { get ; set; }
         public DateTime Deadline { get; set; }
         public bool SetCompleted { get; set; }
-
         public Machine MachineId { get; set; }
     }
 }
