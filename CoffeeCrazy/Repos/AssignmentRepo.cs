@@ -7,7 +7,7 @@ using System.Reflection.PortableExecutable;
 
 namespace CoffeeCrazy.Repos
 {
-    public class AssignmentRepo : ICRUDRepo<Assignment>
+    public class AssignmentRepo : IAssignmentRepo
     {
         private readonly string _connectionString;
        
@@ -19,7 +19,11 @@ namespace CoffeeCrazy.Repos
         }
 
 
-        //This Method Creates a Assignment
+        /// <summary>
+        /// Brug til at oprette en assignment
+        /// </summary>
+        /// <param name="assignment">SKal udfyldes i gui tak!</param>
+        /// <returns>Sender en sql query op til databasen med valgt info</returns>
         public async Task CreateAsync(Assignment assignment)
         {
             try
@@ -54,6 +58,11 @@ namespace CoffeeCrazy.Repos
             }
         }
 
+        public Task CreateAsync(User toBeCreatedT)
+        {
+            throw new NotImplementedException();
+        }
+
 
 
         //CRUD Delete
@@ -84,17 +93,17 @@ namespace CoffeeCrazy.Repos
             }
         }
 
-        public Task<List<Assignment>> GetAllAsync()
+        public Task DeleteAsync(User toBeDeletedT)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Assignment> GetByIdAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        //CRUD - Update method.
+        /// <summary>
+        /// Den metode opdatere en assingment
+        /// </summary>
+        /// <param name="assignmentToBeUpdated">Angiv hvilke opgave der skal opdateres</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"> den kaster excetion hvis du er dårlig til at kalde den.</exception>
         public async Task UpdateAsync(Assignment assignmentToBeUpdated)
         {
             try
@@ -144,6 +153,21 @@ namespace CoffeeCrazy.Repos
             {
                 Console.WriteLine("Error" + ex);
             }
+        }
+
+        public Task UpdateAsync(User toBeUpdatedT)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<List<Assignment>> GetAllAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public async  Task<Assignment> GetByIdAsync(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

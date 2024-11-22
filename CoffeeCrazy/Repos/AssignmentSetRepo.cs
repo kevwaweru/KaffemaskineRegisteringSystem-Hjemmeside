@@ -163,7 +163,7 @@ namespace CoffeeCrazy.Repos
                 }
             }
 
-            // Slet en opgaveliste
+                    
             public void Delete(int assignmentSetId)
             {
                 SqlConnection connection = new SqlConnection(_connectionString);
