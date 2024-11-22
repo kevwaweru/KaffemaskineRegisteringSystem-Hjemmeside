@@ -1,11 +1,11 @@
-﻿using System.Reflection.PortableExecutable;
-using CoffeeCrazy.Interfaces;
+﻿using CoffeeCrazy.Interfaces;
 using CoffeeCrazy.Model;
+using CoffeeCrazy.Models.Enums;
 using Microsoft.Data.SqlClient;
 
 namespace CoffeeCrazy.Repos
 {
-    public class MachineRepo : ICRUDRepo<Machine>
+    public class MachineRepo : IMachineRepo
     {
 
         //Standard formalia. Can be deleted on merge.
@@ -16,26 +16,14 @@ namespace CoffeeCrazy.Repos
                 ?? throw new InvalidOperationException("Connection string 'Kaffe Maskine Database' not found.");
         }
 
-        //Not implemented
-        public Task CreatAsyncc(Model.Machine toBeCreatedT)
+        //Method to get ALL machines from database.
+        public async Task<List<Machine>> GetAllAsync()
         {
-            throw new NotImplementedException();
-        }
-        //Not implemented
-        public Task DeleteAsync(Model.Machine toBeDeletedT)
-        {
-            throw new NotImplementedException();
-        }
+            var machines = new List<Machine>();
 
-
-        //Method to get ALL machines from table.
-        public async Task<List<Model.Machine>> GetAllAsync()
-        {
-            var machines = new List<Model.Machine>();
-
-            using (SqlConnection connection = new SqlConnection(_connectionString))
+            try
             {
-                try
+                using (SqlConnection connection = new SqlConnection(_connectionString))
                 {
                     await connection.OpenAsync();
 
@@ -51,36 +39,36 @@ namespace CoffeeCrazy.Repos
                                 {
                                     MachineId = reader.GetInt32(0),
                                     Status = reader.GetBoolean(1),
-                                    CampusId = reader.GetInt32(2),
+                                    Campus = (Campus)reader.GetInt32(2),
                                     Placement = reader.GetString(3)
                                 });
                             }
                         }
                     }
                 }
-                catch (SqlException SqlEx)
-                {
-                    Console.WriteLine("Sql-Exception Error." + SqlEx);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Error" + ex);
-                }
-                return machines;
             }
-
+            catch (SqlException SqlEx)
+            {
+                Console.WriteLine("Sql-Exception Error." + SqlEx);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error" + ex);
+            }
+            return machines;
         }
 
 
         //Get a single machine by its Id.
-        public async Task<Model.Machine> GetByIdAsync(int id)
+        public async Task<Machine> GetByIdAsync(int id)
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
+            try
             {
-                try
+                using (SqlConnection connection = new SqlConnection(_connectionString))
                 {
+
                     await connection.OpenAsync();
-                    
+
                     string sqlQuery = @"SELECT MachineId, Status, CampusId, Placement 
                                 FROM Machines 
                                 WHERE MachineId = @MachineId";
@@ -93,11 +81,11 @@ namespace CoffeeCrazy.Repos
                         {
                             if (await reader.ReadAsync())
                             {
-                                return new Model.Machine
+                                return new Machine
                                 {
                                     MachineId = reader.GetInt32(0),
                                     Status = reader.GetBoolean(1),
-                                    CampusId = reader.GetInt32(2),
+                                    Campus = (Campus)reader.GetInt32(2),
                                     Placement = reader.GetString(3)
                                 };
                             }
@@ -108,13 +96,11 @@ namespace CoffeeCrazy.Repos
                         }
                     }
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error: {ex.Message}");
-                    throw;
-                }
             }
-        }
-
-    }   
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                throw;
+            }
+        }    }
 }
