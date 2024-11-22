@@ -191,7 +191,7 @@ namespace CoffeeCrazy.Repos
             {
                 Console.WriteLine("Error" + ex);
             }
-            return new Machine();
+            return null;
         }
 
         public Task<List<Machine>> GetAllByCampusAsync(int campusId)
