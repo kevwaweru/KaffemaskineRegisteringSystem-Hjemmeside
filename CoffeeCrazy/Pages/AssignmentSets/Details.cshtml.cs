@@ -28,7 +28,7 @@ namespace CoffeeCrazy.Pages.AssignmentSets
                 return NotFound();
             }
 
-            Assignments = await _assignmentRepo.GetByAssignmentSetIdAsync(id);
+            Assignments = await _setRepo.GetByAssignmentSetIdAsync(id);
             return Page();
         }
     }

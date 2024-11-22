@@ -233,6 +233,59 @@ namespace CoffeeCrazy.Repos
                 Console.WriteLine("Error: " + ex.Message);
             }
         }
+
+
+        /// <summary>
+        /// ikke tænke på den endu. det skal lige rettes til
+        /// </summary>
+        /// <param name="assignmentSetId"></param>
+        /// <returns></returns>
+        public async Task<List<Assignment>> GetByAssignmentSetIdAsync(int assignmentSetId)
+        {
+            var assignments = new List<Assignment>();
+            string errorMessage = string.Empty;
+            try
+            {
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    await connection.OpenAsync();
+                    string query = "SELECT AssignmentSetId joint, Title, Comment, CreateDate, IsCompleted FROM Assignments WHERE AssignmentSetId = @AssignmentSetId";
+
+                    using (var command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@AssignmentSetId", assignmentSetId);
+                        using (var reader = await command.ExecuteReaderAsync())
+                        {
+                            while (await reader.ReadAsync())
+                            {
+                                var assignment = new Assignment
+                                {
+                                    AssignmentId = reader.GetInt32(0),
+                                    Title = reader.GetString(1),
+                                    Comment = reader.IsDBNull(2) ? null : reader.GetString(2),
+                                    CreateDate = reader.GetDateTime(3),
+                                    IsCompleted = reader.GetBoolean(4),
+                                };
+                                assignments.Add(assignment);
+                            }
+                        }
+                    }
+                }
+
+            }
+            catch (SqlException ex)
+            {
+                errorMessage = "sql error:" + ex.Message;
+
+            }
+            catch (Exception ex)
+            {
+                errorMessage = "Unexpected error:" + ex.Message;
+
+            }
+            return (assignments);
+        }
+
     }
 }
 
