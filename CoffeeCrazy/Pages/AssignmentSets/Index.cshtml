@@ -1,4 +1,36 @@
 ﻿@page
 @model CoffeeCrazy.Pages.AssignmentSets.IndexModel
 @{
+    ViewData["Title"] = "AssignmentSet - Index";
 }
+
+<h1>AssignmentSet - Index</h1>
+<a asp-page="Create">Create New AssignmentSet</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Deadline</th>
+            <th>Completed</th>
+            <th>Machine ID</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.AssignmentSets)
+    {
+        <tr>
+            <td>@item.AssignmentSetId</td>
+            <td>@item.Deadline</td>
+            <td>@(item.SetCompleted ? "Yes" : "No")</td>
+            <td>@item.MachineId</td>
+            <td>
+                <a asp-page="Details" asp-route-id="@item.AssignmentSetId">Details</a> |
+                <a asp-page="Update" asp-route-id="@item.AssignmentSetId">Edit</a> |
+                <a asp-page="Delete" asp-route-id="@item.AssignmentSetId">Delete</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+

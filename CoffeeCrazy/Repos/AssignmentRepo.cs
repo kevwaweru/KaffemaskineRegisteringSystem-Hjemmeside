@@ -58,7 +58,7 @@ namespace CoffeeCrazy.Repos
             }
         }
 
-        //CRUD Delete
+        
         public async Task DeleteAsync(Assignment toBeDeletedAssignment)
         {
             try
@@ -121,7 +121,7 @@ namespace CoffeeCrazy.Repos
                         command.Parameters.AddWithValue("@CreateDate", assignmentToBeUpdated.CreateDate);
                         command.Parameters.AddWithValue("@IsCompleted", assignmentToBeUpdated.IsCompleted);
 
-                        connection.Open(); //we open the connection and because we are using "using" the connection closes automatically after use.
+                        connection.Open(); 
                         await command.ExecuteNonQueryAsync(); //
 
                     }
@@ -145,7 +145,7 @@ namespace CoffeeCrazy.Repos
         public async Task<List<Assignment>> GetByAssignmentSetIdAsync(int assignmentSetId)
         {
             var assignments = new List<Assignment>();
-
+        string errorMessage = string.Empty; 
             try
             {
                 using (var connection = new SqlConnection(_connectionString))
@@ -173,18 +173,19 @@ namespace CoffeeCrazy.Repos
                         }
                     }
                 }
-                return assignments;
+                
             }
             catch (SqlException ex)
             {
-                Console.WriteLine($"Database error: {ex.Message}");
-                throw;
+                errorMessage = "sql error:" + ex.Message;
+                
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-                throw;
+                errorMessage = "Unexpected error:" + ex.Message;
+
             }
+            return (assignments);
         }
 
 

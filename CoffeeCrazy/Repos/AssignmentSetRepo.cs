@@ -12,7 +12,6 @@ namespace CoffeeCrazy.Repos
     {
         private readonly string _connectionString;
 
-
         public AssignmentSetRepo(IConfiguration configuration)
         {
             _connectionString = configuration.GetConnectionString("DefaultConnection")
@@ -42,7 +41,7 @@ namespace CoffeeCrazy.Repos
                         command.Parameters.Add("@Deadline", SqlDbType.DateTime).Value = assignmentSet.Deadline;
                         command.Parameters.Add("@AssignmentId", SqlDbType.Int).Value = assignmentSet.AssignmentId;
                         command.Parameters.Add("@MachineId", SqlDbType.Int).Value = assignmentSet.MachineId;
-                        // der mangler AssignmentId før det her kan virke
+                        
                         command.ExecuteNonQuery();
                     }
                 }
