@@ -1,6 +1,6 @@
 ﻿using CoffeeCrazy.Models.Enums;
 
-namespace CoffeeCrazy.Model
+namespace CoffeeCrazy.Models
 {
     //Kevin
     public class User

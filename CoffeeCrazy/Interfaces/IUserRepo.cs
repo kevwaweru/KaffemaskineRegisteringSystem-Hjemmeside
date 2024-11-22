@@ -1,4 +1,4 @@
-﻿using CoffeeCrazy.Model;
+﻿using CoffeeCrazy.Models;
 
 namespace CoffeeCrazy.Interfaces
 {

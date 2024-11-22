@@ -1,6 +1,4 @@
-﻿using System.Reflection.PortableExecutable;
-
-namespace CoffeeCrazy.Models
+﻿namespace CoffeeCrazy.Models
 {
     public class CompletedAssignment
     {
