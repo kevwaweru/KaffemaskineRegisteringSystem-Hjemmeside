@@ -1,0 +1,25 @@
+﻿@page "{id:int}"
+@model CoffeeCrazy.Pages.AssignmentSets.DetailsModel
+@{
+    ViewData["Title"] = "AssignmentSet Details";
+}
+<h1>AssignmentSet Details</h1>
+<div>
+    <p><strong>ID:</strong> @Model.AssignmentSet.AssignmentSetId</p>
+    <p><strong>Deadline:</strong> @Model.AssignmentSet.Deadline</p>
+    <p><strong>Completed:</strong> @(Model.AssignmentSet.SetCompleted ? "Yes" : "No")</p>
+    <p><strong>Machine ID:</strong> @Model.AssignmentSet.MachineId</p>
+</div>
+
+<h2>Assignments</h2>
+<ul>
+    @foreach (var assignment in Model.Assignments)
+    {
+        <li>
+            <p><strong>Title:</strong> @assignment.Title</p>
+            <p><strong>Comment:</strong> @assignment.Comment</p>
+            <p><strong>Created On:</strong> @assignment.CreateDate</p>
+            <p><strong>Completed:</strong> @(assignment.IsCompleted ? "Yes" : "No")</p>
+        </li>
+    }
+</ul>

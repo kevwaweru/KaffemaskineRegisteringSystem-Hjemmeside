@@ -16,6 +16,7 @@ namespace CoffeeCrazy
 
 
             builder.Services.AddTransient<IAssignmentRepo, AssignmentRepo>();
+            builder.Services.AddTransient<IAssignmentSetRepo, AssignmentSetRepo>();
 
             var app = builder.Build();
 

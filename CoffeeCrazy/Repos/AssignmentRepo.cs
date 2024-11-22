@@ -19,11 +19,11 @@ namespace CoffeeCrazy.Repos
         }
 
 
-        /// <summary>
-        /// Brug til at oprette en assignment
-        /// </summary>
-        /// <param name="assignment">SKal udfyldes i gui tak!</param>
-        /// <returns>Sender en sql query op til databasen med valgt info</returns>
+       /// <summary>
+       /// 
+       /// </summary>
+       /// <param name="assignment"></param>
+       /// <returns></returns>
         public async Task CreateAsync(Assignment assignment)
         {
             try
@@ -58,7 +58,7 @@ namespace CoffeeCrazy.Repos
             }
         }
 
-        //CRUD Delete
+        
         public async Task DeleteAsync(Assignment toBeDeletedAssignment)
         {
             try
@@ -121,7 +121,7 @@ namespace CoffeeCrazy.Repos
                         command.Parameters.AddWithValue("@CreateDate", assignmentToBeUpdated.CreateDate);
                         command.Parameters.AddWithValue("@IsCompleted", assignmentToBeUpdated.IsCompleted);
 
-                        connection.Open(); //we open the connection and because we are using "using" the connection closes automatically after use.
+                        connection.Open(); 
                         await command.ExecuteNonQueryAsync(); //
 
                     }
@@ -137,6 +137,13 @@ namespace CoffeeCrazy.Repos
                 Console.WriteLine("Error" + ex);
             }
         }
+        /// <summary>
+        /// Use this to get all assignment in an assignmentSet
+        /// </summary>
+        /// <param name="assignmentSetId">Takes the AssignmentSetId as param.</param>
+        /// <returns>A list of Assignments that is in the assignmentSet</returns>
+       
+
 
         public async Task<List<Assignment>> GetAllAsync()
         {

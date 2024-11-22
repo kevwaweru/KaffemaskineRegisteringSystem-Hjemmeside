@@ -8,10 +8,10 @@ namespace CoffeeCrazy.Pages.Assignments
 {
     public class CreateModel : PageModel
     {
-        private readonly ICRUDRepo<Assignment> _iCRUDRRepo;
-        public CreateModel(ICRUDRepo<Assignment> assignmentRepo)
+        private readonly IAssignmentRepo _assignmentRepo;
+        public CreateModel(IAssignmentRepo assignmentRepo)
         {
-            _iCRUDRRepo = assignmentRepo;
+            _assignmentRepo = assignmentRepo;
         }
 
         [BindProperty]
@@ -28,7 +28,7 @@ namespace CoffeeCrazy.Pages.Assignments
                 return Page();
             }
 
-            await _iCRUDRRepo.CreateAsync(Assignment);
+            await _assignmentRepo.CreateAsync(Assignment);
             return RedirectToPage("/Index");
         }
     }
