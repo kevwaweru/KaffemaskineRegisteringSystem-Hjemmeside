@@ -1,5 +1,5 @@
 using CoffeeCrazy.Interfaces;
-using CoffeeCrazy.Model;
+using CoffeeCrazy.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 

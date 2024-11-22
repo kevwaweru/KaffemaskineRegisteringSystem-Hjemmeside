@@ -1,7 +1,5 @@
 using CoffeeCrazy.Interfaces;
-using CoffeeCrazy.Model;
-using CoffeeCrazy.Repos;
-using Microsoft.AspNetCore.Mvc;
+using CoffeeCrazy.Models;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CoffeeCrazy.Pages.Users

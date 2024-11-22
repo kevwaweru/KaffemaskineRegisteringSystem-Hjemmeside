@@ -1,9 +1,6 @@
 ﻿using CoffeeCrazy.Interfaces;
-using CoffeeCrazy.Model;
-using Microsoft.AspNetCore.Authentication.OAuth.Claims;
+using CoffeeCrazy.Models;
 using Microsoft.Data.SqlClient;
-using System.Data;
-using System.Reflection.PortableExecutable;
 
 namespace CoffeeCrazy.Repos
 {
@@ -137,14 +134,7 @@ namespace CoffeeCrazy.Repos
                 Console.WriteLine("Error" + ex);
             }
         }
-        /// <summary>
-        /// Use this to get all assignment in an assignmentSet
-        /// </summary>
-        /// <param name="assignmentSetId">Takes the AssignmentSetId as param.</param>
-        /// <returns>A list of Assignments that is in the assignmentSet</returns>
        
-
-
         public async Task<List<Assignment>> GetAllAsync()
         {
             throw new NotImplementedException();
