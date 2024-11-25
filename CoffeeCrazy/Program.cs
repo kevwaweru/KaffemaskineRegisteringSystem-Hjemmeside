@@ -11,11 +11,18 @@ namespace CoffeeCrazy
 
             // Add services to the container.
             builder.Services.AddRazorPages();   
+            // repositories
             builder.Services.AddTransient<IUserRepo, UserRepo>();    
-
-
             builder.Services.AddTransient<IAssignmentRepo, AssignmentRepo>();
             builder.Services.AddTransient<IAssignmentSetRepo, AssignmentSetRepo>();
+            // Session
+            builder.Services.AddDistributedMemoryCache();
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30); 
+                options.Cookie.HttpOnly = true; // Makes Cookies Safe
+                options.Cookie.IsEssential = true; // Reqires "GDPR-samtykke"
+            });
 
             var app = builder.Build();
 
@@ -30,6 +37,8 @@ namespace CoffeeCrazy
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+            app.UseSession();
 
             app.UseRouting();
 

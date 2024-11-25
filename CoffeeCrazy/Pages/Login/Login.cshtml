@@ -1,0 +1,24 @@
+﻿@page
+@model CoffeeCrazy.Pages.Login.LoginModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+<h1>Login</h1>
+
+<form method="post">
+    <div>
+        <label for="Email">Email</label>
+        <input type="text" asp-for="Email" required />
+    </div>
+    <div>
+        <label for="Password">Password</label>
+        <input type="password" asp-for="Password" required />
+    </div>
+    <button type="submit">Login</button>
+</form>
+
+@if (Model.ErrorMessage != null)
+{
+    <div class="text-danger">@Model.ErrorMessage</div>
+}
