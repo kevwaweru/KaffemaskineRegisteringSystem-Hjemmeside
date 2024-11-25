@@ -1,0 +1,13 @@
+﻿@page "{id:int}"
+@model CoffeeCrazy.Pages.AssignmentSets.DeleteModel
+@{
+    ViewData["Title"] = "Delete AssignmentSet";
+}
+
+<h1>Delete AssignmentSet</h1>
+<p>Are you sure you want to delete this AssignmentSet?</p>
+<form method="post">
+    <input type="hidden" asp-for="AssignmentSet.AssignmentSetId" />
+    <button type="submit">Delete</button>
+    <a asp-page="Index">Cancel</a>
+</form>

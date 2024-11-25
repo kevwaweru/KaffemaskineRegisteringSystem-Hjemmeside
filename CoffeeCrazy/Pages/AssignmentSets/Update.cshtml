@@ -1,0 +1,24 @@
+﻿@page "{id:int}"
+@model CoffeeCrazy.Pages.AssignmentSets.UpdateModel
+@{
+    ViewData["Title"] = "Update AssignmentSet";
+}
+
+<h1>Update AssignmentSet</h1>
+
+<form method="post">
+    <input type="hidden" asp-for="AssignmentSet.AssignmentSetId" />
+    <div>
+        <label for="Deadline">Deadline</label>
+        <input type="datetime-local" id="Deadline" asp-for="AssignmentSet.Deadline" required />
+    </div>
+    <div>
+        <label for="SetCompleted">Set Completed</label>
+        <input type="checkbox" id="SetCompleted" asp-for="AssignmentSet.SetCompleted" />
+    </div>
+    <div>
+        <label for="MachineId">Machine ID</label>
+        <input type="number" id="MachineId" asp-for="AssignmentSet.MachineId" required />
+    </div>
+    <button type="submit">Update</button>
+</form>

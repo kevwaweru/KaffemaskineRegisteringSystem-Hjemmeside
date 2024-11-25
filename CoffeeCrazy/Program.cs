@@ -14,7 +14,8 @@ namespace CoffeeCrazy
             builder.Services.AddRazorPages();
 
 
-            builder.Services.AddScoped<ICRUDRepo<Assignment>, AssignmentRepo>();
+            builder.Services.AddTransient<IAssignmentRepo, AssignmentRepo>();
+            builder.Services.AddTransient<IAssignmentSetRepo, AssignmentSetRepo>();
 
             var app = builder.Build();
 
