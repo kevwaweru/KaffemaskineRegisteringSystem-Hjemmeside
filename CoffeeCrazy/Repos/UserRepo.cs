@@ -214,7 +214,7 @@ namespace CoffeeCrazy.Repos
         /// <param name="email"></param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public async Task<(byte[] passwordHash, byte[] passwordSalt, Role role)> GetUserByEmailAsync(string email)
+        public async Task<(byte[] passwordHash, byte[] passwordSalt, Role role, string firstName)> GetUserByEmailAsync(string email)
         {
             try
             {
@@ -222,7 +222,7 @@ namespace CoffeeCrazy.Repos
                 {
                     await connection.OpenAsync();
                     string query = @"
-                SELECT Password, PasswordSalt, RoleId 
+                SELECT Password, PasswordSalt, RoleId, FirstName 
                 FROM Users 
                 WHERE Email = @Email";
 
@@ -242,7 +242,9 @@ namespace CoffeeCrazy.Repos
                                 byte[] passwordSalt = Convert.FromBase64String(saltBase64);
 
                                 Role role = (Role)reader["RoleId"];
-                                return (passwordHash, passwordSalt, role);
+                                string firstName = reader["FirstName"].ToString();
+
+                                return (passwordHash, passwordSalt, role, firstName);
                             }
                         }
                     }
@@ -252,13 +254,11 @@ namespace CoffeeCrazy.Repos
             }
             catch (SqlException sqlEx)
             {
-
                 Console.Error.WriteLine($"SQL Error: {sqlEx.Message}");
                 throw new Exception("A database error occurred. Please try again later.", sqlEx);
             }
             catch (Exception ex)
             {
-
                 Console.Error.WriteLine($"Error: {ex.Message}");
                 throw new Exception("An error occurred while retrieving the user.", ex);
             }
@@ -273,7 +273,6 @@ namespace CoffeeCrazy.Repos
                 {
                     await connection.OpenAsync();
 
-                    // Hent den aktuelle adgangskode og salt
                     string selectQuery = @"
                 SELECT PasswordHash, PasswordSalt 
                 FROM Users 
@@ -290,7 +289,6 @@ namespace CoffeeCrazy.Repos
                                 var storedHash = Convert.FromBase64String((string)reader["PasswordHash"]);
                                 var storedSalt = Convert.FromBase64String((string)reader["PasswordSalt"]);
 
-                                // Validér den aktuelle adgangskode
                                 if (!PasswordHelper.VerifyPasswordHash(currentPassword, storedHash, storedSalt))
                                 {
                                     throw new Exception("Current password is incorrect.");
@@ -303,9 +301,7 @@ namespace CoffeeCrazy.Repos
                         }
                     }
 
-
                     var (newHash, newSalt) = PasswordHelper.CreatePasswordHash(newPassword);
-
 
                     string updateQuery = @"
                 UPDATE Users 

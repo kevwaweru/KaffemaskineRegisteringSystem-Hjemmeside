@@ -26,11 +26,12 @@ namespace CoffeeCrazy.Pages.Users
         {
             var email = HttpContext.Session.GetString("Email");
 
+            // Check if the user is logged in
             if (email == null)
             {
                 ErrorMessage = "Du skal være logget ind. du bliver rediregeret til Login Page";
                 //Måske implem noget tid på 2+ sek så man kan nå at læse fejlbesked.
-                return RedirectToPage("Login");
+                return RedirectToPage("/Login/Login"); 
             }
 
             try

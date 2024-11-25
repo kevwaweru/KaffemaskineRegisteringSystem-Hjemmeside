@@ -24,26 +24,25 @@ namespace CoffeeCrazy.Pages.Login
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid) return Page();
+            if (!ModelState.IsValid) 
+
+                return Page();
 
             try
             {
-                var (storedHash, storedSalt, role) = await _userRepo.GetUserByEmailAsync(Email);
+                var (storedHash, storedSalt, role, firstName) = await _userRepo.GetUserByEmailAsync(Email);
 
                 if (PasswordHelper.VerifyPasswordHash(Password, storedHash, storedSalt))
                 {
                    
                     HttpContext.Session.SetString("Email", Email);
                     HttpContext.Session.SetInt32("RoleId", (int)role);
+                    HttpContext.Session.SetString("FirstName", firstName);
 
-
-
-                    return RedirectToPage("./Index");
+                    return RedirectToPage("/Index");
                 }
                 else
-                {
-                    
-
+                {                    
                     ErrorMessage = "Forkert email eller password.";
                 }
             }

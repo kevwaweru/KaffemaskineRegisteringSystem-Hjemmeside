@@ -9,7 +9,7 @@ namespace CoffeeCrazy.Pages.Login
         public IActionResult OnGet()
         {
             HttpContext.Session.Clear();
-            return RedirectToPage("Login/Login");
+            return RedirectToPage("/Login/Login");
         }
     }
 }
