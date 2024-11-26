@@ -1,5 +1,6 @@
 using CoffeeCrazy.Interfaces;
 using CoffeeCrazy.Repos;
+using CoffeeCrazy.Services;
 
 namespace CoffeeCrazy
 {
@@ -15,6 +16,8 @@ namespace CoffeeCrazy
             builder.Services.AddTransient<IUserRepo, UserRepo>();    
             builder.Services.AddTransient<IAssignmentRepo, AssignmentRepo>();
             builder.Services.AddTransient<IAssignmentSetRepo, AssignmentSetRepo>();
+            // Services
+            builder.Services.AddTransient<IEmailService, EmailService>();
             // Session
             builder.Services.AddDistributedMemoryCache();
             builder.Services.AddSession(options =>
