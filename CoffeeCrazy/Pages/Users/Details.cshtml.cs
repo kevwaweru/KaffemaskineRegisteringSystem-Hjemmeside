@@ -5,21 +5,24 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CoffeeCrazy.Pages.Users
 {
-    public class UserDetailModel : PageModel
+    public class DetailsModel : PageModel
     {
         private readonly IUserRepo _userRepo;
 
-        public UserDetailModel(IUserRepo userRepo)
+        public DetailsModel(IUserRepo userRepo)
         {
             _userRepo = userRepo;
         }
 
         public User User { get; set; }
 
+        // Impl noget det gør så man ikke kan se andres details, men kun den der er logget ind.
+
+
         public async Task<IActionResult> OnGetAsync(int userId)
         {
-            
-            if (HttpContext.Session.GetString("Email") == null)
+
+            if (HttpContext.Session.GetString("UserId") == null)
             {
                 return RedirectToPage("/Login/Login");
             }

@@ -168,7 +168,7 @@ namespace CoffeeCrazy.Repos
                 using (var connection = new SqlConnection(_connectionString))
                 {
                     await connection.OpenAsync();
-                    string query = "SELECT UserId, FirstName, LastName, Email, Password, RoleId, CampusId FROM Users";
+                    string query = "SELECT UserId, FirstName, LastName, Email, Password, RoleId, CampusId FROM Users WHERE UserId = @UserId";
 
                     using (var command = new SqlCommand(query, connection))
                     {
@@ -214,7 +214,7 @@ namespace CoffeeCrazy.Repos
         /// <param name="email"></param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public async Task<(byte[] passwordHash, byte[] passwordSalt, Role role, string firstName)> GetUserByEmailAsync(string email)
+        public async Task<(byte[] passwordHash, byte[] passwordSalt, Role role, string firstName, int userId)> GetUserByEmailAsync(string email)
         {
             try
             {
@@ -222,7 +222,7 @@ namespace CoffeeCrazy.Repos
                 {
                     await connection.OpenAsync();
                     string query = @"
-                SELECT Password, PasswordSalt, RoleId, FirstName 
+                SELECT Password, PasswordSalt, RoleId, FirstName, UserId
                 FROM Users 
                 WHERE Email = @Email";
 
@@ -236,15 +236,17 @@ namespace CoffeeCrazy.Repos
                             {
                             
 
-                                   string passwordBase64 = reader["Password"].ToString();
+                                string passwordBase64 = reader["Password"].ToString();
                                 string saltBase64 = reader["PasswordSalt"].ToString();
+
                                 byte[] passwordHash = Convert.FromBase64String(passwordBase64);
                                 byte[] passwordSalt = Convert.FromBase64String(saltBase64);
 
                                 Role role = (Role)reader["RoleId"];
                                 string firstName = reader["FirstName"].ToString();
+                                int userId = (int)reader["UserId"];
 
-                                return (passwordHash, passwordSalt, role, firstName);
+                                return (passwordHash, passwordSalt, role, firstName, userId);
                             }
                         }
                     }

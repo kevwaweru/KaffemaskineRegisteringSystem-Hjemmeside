@@ -30,14 +30,16 @@ namespace CoffeeCrazy.Pages.Login
 
             try
             {
-                var (storedHash, storedSalt, role, firstName) = await _userRepo.GetUserByEmailAsync(Email);
+                var (storedHash, storedSalt, role, firstName, userId) = await _userRepo.GetUserByEmailAsync(Email);
 
                 if (PasswordHelper.VerifyPasswordHash(Password, storedHash, storedSalt))
                 {
-                   
+                    
                     HttpContext.Session.SetString("Email", Email);
                     HttpContext.Session.SetInt32("RoleId", (int)role);
                     HttpContext.Session.SetString("FirstName", firstName);
+                    HttpContext.Session.SetInt32("UserId",(int)userId);
+
 
                     return RedirectToPage("/Index");
                 }

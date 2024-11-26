@@ -10,7 +10,7 @@
         /// </summary>
         /// <param name="password">Entered Password</param>
         /// <returns>A salt key and Hashed Passwrod</returns>
-        public static (byte[] hash, byte[] salt) CreatePasswordHash(string password)
+        public static (byte[] hash, byte[] salt) CreatePasswordHash( string password)
         {
             using (var hmac = new HMACSHA256())
             {

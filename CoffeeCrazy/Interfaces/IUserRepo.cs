@@ -7,7 +7,7 @@ namespace CoffeeCrazy.Interfaces
 {
     public interface IUserRepo : ICRUDRepo<User>
     {
-        Task<(byte[] passwordHash, byte[] passwordSalt, Role role, string firstName)> GetUserByEmailAsync(string username);
+        Task<(byte[] passwordHash, byte[] passwordSalt, Role role, string firstName, int userId)> GetUserByEmailAsync(string username);
 
         Task ChangePasswordAsync(string email, string currentPassword, string newPassword);
     }

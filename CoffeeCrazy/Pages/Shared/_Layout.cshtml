@@ -23,13 +23,13 @@
                         @if (Context.Session.GetString("Email") != null)
                         {
                             <li class="nav-item">
-                                <a class="nav-link" asp-page="./Index">Index</a>
+                                <a class="nav-link" asp-page="/Index">Index</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" asp-page="./Index">Indux</a>
+                                <a class="nav-link" asp-page="/Index">Indux</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" asp-page="./Index">Indax</a>
+                                <a class="nav-link" asp-page="/Index">Indax</a>
                             </li>
                             <!-- Tilføj fjer links her -->
                         }
@@ -38,7 +38,9 @@
                         @if (Context.Session.GetString("FirstName") != null)
                         {
                             <li class="nav-item">
-                                <a class="nav-link" asp-page="/Users/UserDetail">@Context.Session.GetString("FirstName")'s profil</a>
+                                <a class="nav-link" asp-page="/Users/Details" asp-route-userId="@Context.Session.GetInt32("UserId")">
+                                    @Context.Session.GetString("FirstName")'s profil
+                                </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" asp-page="/Login/Logout">Logout</a>
