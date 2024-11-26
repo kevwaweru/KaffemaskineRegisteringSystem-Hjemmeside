@@ -2,7 +2,7 @@ using CoffeeCrazy.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace CoffeeCrazy.Pages.Users
+namespace CoffeeCrazy.Pages.Login.Password
 {
     public class ChangePasswordModel : PageModel
     {
@@ -18,6 +18,8 @@ namespace CoffeeCrazy.Pages.Users
 
         [BindProperty]
         public string NewPassword { get; set; }
+        [BindProperty]
+        public string RepeatNewPassword { get; set; }
 
         public string ErrorMessage { get; set; }
         public string SuccessMessage { get; set; }
@@ -30,22 +32,24 @@ namespace CoffeeCrazy.Pages.Users
             if (email == null)
             {
                 ErrorMessage = "Du skal være logget ind. du bliver rediregeret til Login Page";
-                //Måske implem noget tid på 2+ sek så man kan nå at læse fejlbesked.
-                return RedirectToPage("/Login/Login"); 
+                Thread.Sleep(2000);
+                return RedirectToPage("/Login/Login");
             }
-
-            try
+            if (NewPassword == RepeatNewPassword)
             {
-                await _userRepo.ChangePasswordAsync(email, CurrentPassword, NewPassword);
-                SuccessMessage = "Nyt password er lavet.";
+                try
+                {
+                    await _userRepo.ChangePasswordAsync(email, CurrentPassword, NewPassword);
+                    SuccessMessage = "Nyt password er lavet.";
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error: {ex.Message}");
+                    ErrorMessage = "An error occurred while changing the password. SQL related";
+                }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-                ErrorMessage = "An error occurred while changing the password. SQL related";
-            }
-
             return Page();
+
         }
     }
 }

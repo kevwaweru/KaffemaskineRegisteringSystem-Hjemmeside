@@ -274,7 +274,7 @@ namespace CoffeeCrazy.Repos
                     await connection.OpenAsync();
 
                     string selectQuery = @"
-                SELECT PasswordHash, PasswordSalt 
+                SELECT Password, PasswordSalt 
                 FROM Users 
                 WHERE Email = @Email";
 
@@ -286,7 +286,7 @@ namespace CoffeeCrazy.Repos
                         {
                             if (await reader.ReadAsync())
                             {
-                                var storedHash = Convert.FromBase64String((string)reader["PasswordHash"]);
+                                var storedHash = Convert.FromBase64String((string)reader["Password"]);
                                 var storedSalt = Convert.FromBase64String((string)reader["PasswordSalt"]);
 
                                 if (!PasswordHelper.VerifyPasswordHash(currentPassword, storedHash, storedSalt))
@@ -305,7 +305,7 @@ namespace CoffeeCrazy.Repos
 
                     string updateQuery = @"
                 UPDATE Users 
-                SET PasswordHash = @NewPasswordHash, PasswordSalt = @NewPasswordSalt
+                SET Password = @NewPasswordHash, PasswordSalt = @NewPasswordSalt
                 WHERE Email = @Email";
 
                     using (var updateCommand = new SqlCommand(updateQuery, connection))
