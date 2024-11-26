@@ -56,21 +56,22 @@ namespace CoffeeCrazy.Repos
             }
         }
 
-        public async Task UpdateAsync(User toBeUpdatedT)
+        public async Task UpdateAsync(User toBeUpdatedUser)
         {
             try
             {
                 using (SqlConnection connection = new SqlConnection(_connectionString))
                 {
-                    string query = "EXEC AdminUpdateEmployee @UserId, @FirstName, @LastName, @Email, @Password, @CampusId";
+                    string query = "EXEC AdminUpdateEmployee @UserId, @FirstName, @LastName, @Email, @Password, @PasswordSalt, @CampusId";
 
                     SqlCommand command = new SqlCommand(query, connection);
-                    command.Parameters.AddWithValue("@Id", (int)toBeUpdatedT.UserId);
-                    command.Parameters.AddWithValue("@FirstName", toBeUpdatedT.FirstName);
-                    command.Parameters.AddWithValue("@LastName", toBeUpdatedT.LastName);
-                    command.Parameters.AddWithValue("@Email", toBeUpdatedT.Email);
-                    command.Parameters.AddWithValue("@Password", toBeUpdatedT.Password);
-                    command.Parameters.AddWithValue("@CampusId", (int)toBeUpdatedT.Campus);
+                    command.Parameters.AddWithValue("@Id", (int)toBeUpdatedUser.UserId);
+                    command.Parameters.AddWithValue("@FirstName", toBeUpdatedUser.FirstName);
+                    command.Parameters.AddWithValue("@LastName", toBeUpdatedUser.LastName);
+                    command.Parameters.AddWithValue("@Email", toBeUpdatedUser.Email);
+                    command.Parameters.AddWithValue("@Password", toBeUpdatedUser.Password);
+                    command.Parameters.AddWithValue("@PasswordSalt", toBeUpdatedUser.PasswordSalt);
+                    command.Parameters.AddWithValue("@CampusId", (int)toBeUpdatedUser.Campus);
 
                     await connection.OpenAsync();
                     await command.ExecuteNonQueryAsync();
