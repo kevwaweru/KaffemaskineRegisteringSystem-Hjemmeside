@@ -9,11 +9,11 @@ namespace CoffeeCrazy.Repos
 {
     public class UserRepo : IUserRepo
     {
-        private readonly string _connectionString;
+        private readonly string? _connectionString;
         public UserRepo(IConfiguration configuration)
         {
-            _connectionString = configuration.GetConnectionString("DefaultConnection")
-                ?? throw new InvalidOperationException("Connection string 'Kaffe maskine database' not found.");
+            // Får forbindelsesstrengen; tillader null og validerer senere
+            _connectionString = configuration.GetConnectionString("DefaultConnection");
         }
 
         public async Task CreateAsync(User user)
