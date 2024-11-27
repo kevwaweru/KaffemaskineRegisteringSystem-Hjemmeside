@@ -37,9 +37,9 @@ namespace CoffeeCrazy.Repos
                                     VALUES (@Email, @Token, @ExpireDate)";
 
                     var command = new SqlCommand(SQLquery, connection);
-                    command.Parameters.AddWithValue("Email", email);
-                    command.Parameters.AddWithValue("Token", token);
-                    command.Parameters.AddWithValue("ExpireDate", DateTime.UtcNow.AddMinutes(30));
+                    command.Parameters.AddWithValue("@Email", email);
+                    command.Parameters.AddWithValue("@Token", token);
+                    command.Parameters.AddWithValue("@ExpireDate", DateTime.UtcNow.AddMinutes(30));
 
                     await connection.OpenAsync();
                     await command.ExecuteNonQueryAsync();
@@ -61,8 +61,8 @@ namespace CoffeeCrazy.Repos
                     string SQLquery = "SELECT Token FROM PasswordResetTokens WHERE Email = @Email AND ExpireDate > @CurrentDate";
 
                     var command = new SqlCommand(SQLquery, connection);
-                    command.Parameters.AddWithValue("Email", email);
-                    command.Parameters.AddWithValue("CurrentDate", DateTime.UtcNow);
+                    command.Parameters.AddWithValue("@Email", email);
+                    command.Parameters.AddWithValue("@CurrentDate", DateTime.UtcNow);
 
                     await connection.OpenAsync();
                     using (var reader = await command.ExecuteReaderAsync())
@@ -92,13 +92,18 @@ namespace CoffeeCrazy.Repos
                     string SQLquery = @"
                 SELECT COUNT(1) 
                 FROM PasswordResetTokens 
-                WHERE Token = @Token AND ExpireDate > GETDATE()";
+                WHERE Token = @Token AND ExpireDate > @CurrentTime";
 
                     var command = new SqlCommand(SQLquery, connection);             
-                    command.Parameters.AddWithValue("Token", token);               
+                    command.Parameters.AddWithValue("@Token", token);
+                    command.Parameters.AddWithValue("@CurrentTime", DateTime.UtcNow);
 
                     await connection.OpenAsync();
+
                     var result = (int)await command.ExecuteScalarAsync();
+
+                    //nedeståene er tilføjet af chatgtp 
+                    int count = result != null ? Convert.ToInt32(result) : 0;
 
                     return result > 0;
                 }

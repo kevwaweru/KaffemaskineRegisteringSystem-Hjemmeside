@@ -30,7 +30,7 @@ namespace CoffeeCrazy.Pages.Login.Password
         [BindProperty]
         [Required]
         [DataType(DataType.Password)]
-        [Compare(nameof(NewPassword), ErrorMessage = "Passwords do not match.")]
+        [Compare(nameof(NewPassword), ErrorMessage = "Du har ikke skrevet det samme...")]
         public string ConfirmPassword { get; set; }
 
         public string Message { get; set; }
@@ -70,13 +70,13 @@ namespace CoffeeCrazy.Pages.Login.Password
 
                 if (isResetSuccessful)
                 {
-                    Message = "Your password has been reset successfully.";
+                    Message = "Nyt kodeord er opretter du bliver diregeret til Login siden.";
                     Thread.Sleep(2000);
                     return RedirectToPage("/Login/Login");
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Invalid or expired token.");
+                    ModelState.AddModelError("", "Udløbet engangskode. Ansøg om ny");
                     Thread.Sleep(2000);
                     return RedirectToPage("/Login/Password/ForgotPassword");
                 }

@@ -80,7 +80,10 @@ namespace CoffeeCrazy.Services
                                 <p>Din kode:{token}</p>
                                 <p>Koden er gyldig i 30 min.</p>
                                 <br/>
-                                <p>Mvh. Support.</p>";
+                                <p>Hvis du ikke har ansøgt om ny mail</p>
+                                <p>kontakt JB på 112 </p>
+                                <p>Mvh.</p>
+                                <p>Support.</p>";
 
 
                 return await SendEmailAsync(email, subject, body);
