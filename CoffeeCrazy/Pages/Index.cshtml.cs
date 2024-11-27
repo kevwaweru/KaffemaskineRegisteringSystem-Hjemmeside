@@ -8,7 +8,7 @@ namespace CoffeeCrazy.Pages
 
         ITokenGeneratorRepo _repo;
         public string Email = "wawerukew@gmail.com";
-        public int? Token;
+        public string Token;
 
         public IndexModel(ITokenGeneratorRepo repo)
         {

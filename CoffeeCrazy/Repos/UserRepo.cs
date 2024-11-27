@@ -327,6 +327,9 @@ namespace CoffeeCrazy.Repos
             }
         }
 
+        public async Task<> ResetPasswordAsync(string token, string newPassword)
+        {
 
+        }
     }
 }

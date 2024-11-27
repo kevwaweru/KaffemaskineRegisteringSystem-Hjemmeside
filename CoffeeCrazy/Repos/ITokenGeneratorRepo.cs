@@ -3,6 +3,6 @@
     public interface ITokenGeneratorRepo
     {
         Task CreateAsync(string email);
-        Task<int?> GetTokenAsync(string email);
+        Task<string> GetTokenAsync(string email);
     }
 }

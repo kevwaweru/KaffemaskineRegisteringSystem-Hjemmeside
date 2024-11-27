@@ -1,5 +1,7 @@
 ﻿using CoffeeCrazy.Interfaces;
 using CoffeeCrazy.Models.Enums;
+using CoffeeCrazy.Repos;
+using Microsoft.Identity.Client;
 using System.Net;
 using System.Net.Mail;
 
@@ -8,11 +10,14 @@ namespace CoffeeCrazy.Services
     public class EmailService : IEmailService
     {
         private readonly IConfiguration _configuration;
+        private readonly ITokenGeneratorRepo _tokenGeneratorRepo;
 
-        public EmailService(IConfiguration configuration)
+        public EmailService(IConfiguration configuration, ITokenGeneratorRepo tokenGeneratorRepo)
         {
             _configuration = configuration;
+            _tokenGeneratorRepo = tokenGeneratorRepo;
         }
+
         /// <summary>
         /// 
         /// </summary>
@@ -54,6 +59,36 @@ namespace CoffeeCrazy.Services
             catch (Exception)
             {
                return false;
+            }
+        }
+
+        public async Task<bool> GenerateTokenAndSendResetEmail(string email)
+        {
+            try
+            {
+                await _tokenGeneratorRepo.CreateAsync(email);
+
+                string token = await _tokenGeneratorRepo.GetTokenAsync(email);
+
+                if (token == null)
+                {
+                    throw new Exception("Failed to generate token");        
+                }
+
+                string subject = "Nyt password?";
+                string body = $@"
+                                <p>Din kode:{token}</p>
+                                <p>Koden er gyldig i 30 min.</p>
+                                <br/>
+                                <p>Mvh. Support.</p>";
+
+
+                return await SendEmailAsync(email, subject, body);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"error: {ex.Message}");
+                return false;
             }
         }
     }

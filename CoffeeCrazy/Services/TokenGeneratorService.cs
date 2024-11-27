@@ -18,13 +18,10 @@ namespace CoffeeCrazy.Services
             int nr;
             for (int i = 0; i < 6; i++)
             {
-                nr = RandomNumberGenerator.GetInt32(100);
+                nr = RandomNumberGenerator.GetInt32(9);
                 token.Append(Convert.ToString(nr));
-
             }
             return token.ToString();
         }
-
-
     }
 }

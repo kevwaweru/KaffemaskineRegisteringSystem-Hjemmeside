@@ -27,7 +27,7 @@ namespace CoffeeCrazy.Repos
 
             try
             {
-                int token = Convert.ToInt32(_tokenService.GenerateToken());
+               string token = _tokenService.GenerateToken();
 
                 using (var connection = new SqlConnection(_connectionString))
                 {
@@ -39,7 +39,7 @@ namespace CoffeeCrazy.Repos
                     var command = new SqlCommand(SQLquery, connection);
                     command.Parameters.AddWithValue("Email", email);
                     command.Parameters.AddWithValue("Token", token);
-                    command.Parameters.AddWithValue("ExpireDate", DateTime.Now.AddMinutes(30));
+                    command.Parameters.AddWithValue("ExpireDate", DateTime.UtcNow.AddMinutes(30));
 
                     await connection.OpenAsync();
                     await command.ExecuteNonQueryAsync();
@@ -52,10 +52,8 @@ namespace CoffeeCrazy.Repos
             }
         }
 
-        public async Task<int?> GetTokenAsync(string email)
+        public async Task<string> GetTokenAsync(string email)
         {
-            int token;
-
             try
             {
                 using (var connection = new SqlConnection(_connectionString))
@@ -71,7 +69,7 @@ namespace CoffeeCrazy.Repos
                     {
                         if (await reader.ReadAsync())
                         {
-                            return token = (int)reader["Token"];
+                            return (string)reader["Token"];
                         }
                     }
                 }
