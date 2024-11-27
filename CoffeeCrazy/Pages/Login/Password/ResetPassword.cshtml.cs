@@ -15,10 +15,6 @@ namespace CoffeeCrazy.Pages.Login.Password
             _userRepo = userRepo;
             _tokenGeneratorRepo = tokenGeneratorRepo;
         }
-
-        //[BindProperty]
-        //public string Email { get; set; }
-
         [BindProperty]
         public string Token { get; set; }
 

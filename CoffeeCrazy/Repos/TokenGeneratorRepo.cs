@@ -90,21 +90,18 @@ namespace CoffeeCrazy.Repos
                 using (var connection = new SqlConnection(_connectionString))
                 {
                     string SQLquery = @"
-                SELECT COUNT(1) 
+                SELECT COUNT(1)  
                 FROM PasswordResetTokens 
-                WHERE Token = @Token AND ExpireDate > @CurrentTime";
+                WHERE Token = @Token";
 
                     var command = new SqlCommand(SQLquery, connection);             
                     command.Parameters.AddWithValue("@Token", token);
-                    command.Parameters.AddWithValue("@CurrentTime", DateTime.UtcNow);
+                   
 
                     await connection.OpenAsync();
 
                     var result = (int)await command.ExecuteScalarAsync();
-
-                    //nedeståene er tilføjet af chatgtp 
-                    int count = result != null ? Convert.ToInt32(result) : 0;
-
+                
                     return result > 0;
                 }
             }
