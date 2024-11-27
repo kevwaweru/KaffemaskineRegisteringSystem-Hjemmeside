@@ -28,7 +28,7 @@ namespace CoffeeCrazy.Pages.Login.Password
                 
                bool emailSent = await _emailService.GenerateTokenAndSendResetEmail(email);
 
-            if (emailSent)
+            if (emailSent == true)
             {
                 Message = "En mail med nyt password er sendt til dig.";
                 Thread.Sleep(5000);

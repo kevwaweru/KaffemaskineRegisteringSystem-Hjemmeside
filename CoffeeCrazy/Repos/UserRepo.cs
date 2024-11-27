@@ -10,10 +10,12 @@ namespace CoffeeCrazy.Repos
     public class UserRepo : IUserRepo
     {
         private readonly string _connectionString;
-        public UserRepo(IConfiguration configuration)
+        private readonly ITokenGeneratorRepo _tokenGeneratorRepo;
+        public UserRepo(IConfiguration configuration, ITokenGeneratorRepo tokenGeneratorRepo)
         {
             _connectionString = configuration.GetConnectionString("DefaultConnection")
                 ?? throw new InvalidOperationException("Connection string 'Kaffe maskine database' not found.");
+            _tokenGeneratorRepo = tokenGeneratorRepo;
         }
 
         public async Task CreateAsync(User user)
@@ -234,7 +236,7 @@ namespace CoffeeCrazy.Repos
                         {
                             if (await reader.ReadAsync())
                             {
-                            
+
 
                                 string passwordBase64 = reader["Password"].ToString();
                                 string saltBase64 = reader["PasswordSalt"].ToString();
@@ -327,9 +329,68 @@ namespace CoffeeCrazy.Repos
             }
         }
 
-        public async Task<> ResetPasswordAsync(string token, string newPassword)
+        public async Task<bool> ResetPasswordAsync(string token, string newPassword)
         {
+            try
+            {
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    await connection.OpenAsync();
 
+                    string getEmailQuery = @"
+                                            SELECT Email 
+                                            FROM PasswordResetTokens 
+                                            WHERE Token = @Token AND ExpireDate > GETDATE()";
+
+                    string email = null;
+                    using (var command = new SqlCommand(getEmailQuery, connection))
+                    {
+                        command.Parameters.AddWithValue("@Token", token);
+
+                        using (var reader = await command.ExecuteReaderAsync())
+                        {
+                            if (await reader.ReadAsync())
+                            {
+                                email = reader["Email"].ToString();
+                            }
+                        }
+                    }
+
+                    if (email == null)
+                    {
+                        return false;
+                    }
+
+                    var (hash, salt) = PasswordHelper.CreatePasswordHash(newPassword);
+                 
+                    string updateQuery = @"
+                                           UPDATE Users 
+                                           SET Password = @Password, PasswordSalt = @PasswordSalt
+                                           WHERE Email = @Email";
+
+                    using (var updateCommand = new SqlCommand(updateQuery, connection))
+                    {
+                        updateCommand.Parameters.AddWithValue("@Password", Convert.ToBase64String(hash));
+                        updateCommand.Parameters.AddWithValue("@PasswordSalt", Convert.ToBase64String(salt));
+                        updateCommand.Parameters.AddWithValue("@Email", email);
+
+                        await updateCommand.ExecuteNonQueryAsync();
+                    }
+
+                    // Slet token fra databasen
+                    // man kunne smide en metode ind her.??? 
+                    // man burde også overveje at smide den her ind i mindre metoder...
+                    
+
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error resetting password: {ex.Message}");
+                return false;
+            }
         }
     }
 }

@@ -10,14 +10,19 @@
     <div>
         <label for="Email">Email</label>
         <input type="text" asp-for="Email" required />
+        <span asp-validation-for="Email" class="text-danger"></span>
     </div>
     <div>
         <label for="Password">Password</label>
         <input type="password" asp-for="Password" required />
+        <span asp-validation-for="Email" class="text-danger"></span>
     </div>
     <button type="submit">Login</button>
 </form>
 
+<div>
+    <a asp-page="/Login/Password/ForgotPassword" class="btn btn-link">Glemt din password?</a>
+</div>
 
 
 @if (Model.ErrorMessage != null)

@@ -27,7 +27,7 @@ namespace CoffeeCrazy.Repos
 
             try
             {
-               string token = _tokenService.GenerateToken();
+                string token = _tokenService.GenerateToken();
 
                 using (var connection = new SqlConnection(_connectionString))
                 {
@@ -62,7 +62,7 @@ namespace CoffeeCrazy.Repos
 
                     var command = new SqlCommand(SQLquery, connection);
                     command.Parameters.AddWithValue("Email", email);
-                    command.Parameters.AddWithValue("CurrentDate", DateTime.Now);
+                    command.Parameters.AddWithValue("CurrentDate", DateTime.UtcNow);
 
                     await connection.OpenAsync();
                     using (var reader = await command.ExecuteReaderAsync())
@@ -83,5 +83,32 @@ namespace CoffeeCrazy.Repos
             return null;
         }
 
+        public async Task<bool> ValidateTokenAsync( string token)
+        {
+            try
+            {
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    string SQLquery = @"
+                SELECT COUNT(1) 
+                FROM PasswordResetTokens 
+                WHERE Token = @Token AND ExpireDate > GETDATE()";
+
+                    var command = new SqlCommand(SQLquery, connection);             
+                    command.Parameters.AddWithValue("Token", token);               
+
+                    await connection.OpenAsync();
+                    var result = (int)await command.ExecuteScalarAsync();
+
+                    return result > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                throw;
+            }
+        }
     }
 }
+
