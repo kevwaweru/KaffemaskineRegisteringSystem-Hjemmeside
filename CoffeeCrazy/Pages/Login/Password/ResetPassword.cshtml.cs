@@ -20,22 +20,25 @@ namespace CoffeeCrazy.Pages.Login.Password
 
         [BindProperty]
         [Required]
+        [DataType(DataType.Password)]
         public string NewPassword { get; set; }
 
         [BindProperty]
         [Required]
+        [DataType(DataType.Password)]
         [Compare(nameof(NewPassword), ErrorMessage = "Du har ikke skrevet det samme...")]
         public string ConfirmPassword { get; set; }
         [BindProperty]
+        [TempData]
         public bool IsTokenValidated { get; set; } = false;
         public string Message { get; set; }       
         
         public async Task<IActionResult> OnPostAsync()
         {
+            Console.WriteLine($"IsTokenValidated: {IsTokenValidated}");
             //Første del af if statement i HTML.
             if (!IsTokenValidated)
             {
-
                 if (string.IsNullOrEmpty(Token))
                 {
                     ModelState.AddModelError("", "Indsæt en gyldig engangskode.");
@@ -58,6 +61,14 @@ namespace CoffeeCrazy.Pages.Login.Password
             if (!ModelState.IsValid)
             {
                 return Page();
+            }
+
+            bool isStillValid = await _tokenGeneratorRepo.ValidateTokenAsync(Token);
+            if (!isStillValid)
+            {
+                ModelState.AddModelError("", "Engangskoden er udløbet. Ansøg om en ny.");
+                Thread.Sleep(1000);
+                return RedirectToPage("/Login/Password/ForgotPassword");
             }
 
             try
