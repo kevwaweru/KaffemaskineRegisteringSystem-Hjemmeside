@@ -4,32 +4,34 @@ using Microsoft.Data.SqlClient;
 
 namespace CoffeeCrazy.Repos
 {
-    public class TokenGeneratorRepo 
+    public class TokenGeneratorRepo : ITokenGeneratorRepo
     {
         private readonly string _connectionString;
-        private readonly ITokenGeneratorService _ITokenGeneratorService;
-        public TokenGeneratorRepo(IConfiguration configuration)
+        private readonly ITokenGeneratorService _tokenService;
+        public TokenGeneratorRepo(IConfiguration configuration, ITokenGeneratorService tokenService)
         {
             _connectionString = configuration.GetConnectionString("DefaultConnection")
                 ?? throw new InvalidOperationException("Connection string 'Kaffe Maskine Database' not found.");
+
+            _tokenService = tokenService;
         }
-   
+
 
         /// <summary>
         /// This creates a token. with an expiredate and connect with User Email.
         /// </summary>
         /// <param name="email">Users Email</param>
         /// <returns>Dunno?</returns>
-        public async Task Create(string email)
+        public async Task CreateAsync(string email)
         {
-            
+
             try
             {
-                int token = _ITokenGeneratorService.GenerateToken();
+                int token = Convert.ToInt32(_tokenService.GenerateToken());
 
                 using (var connection = new SqlConnection(_connectionString))
                 {
-                    
+
                     string SQLquery = @"
                                     INSERT INTO PasswordResetTokens (Email, Token, ExpireDate)
                                     VALUES (@Email, @Token, @ExpireDate)";
@@ -49,8 +51,39 @@ namespace CoffeeCrazy.Repos
                 throw;
             }
         }
-        
 
+        public async Task<int?> GetTokenAsync(string email)
+        {
+            int token;
+
+            try
+            {
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    string SQLquery = "SELECT Token FROM PasswordResetTokens WHERE Email = @Email AND ExpireDate > @CurrentDate";
+
+                    var command = new SqlCommand(SQLquery, connection);
+                    command.Parameters.AddWithValue("Email", email);
+                    command.Parameters.AddWithValue("CurrentDate", DateTime.Now);
+
+                    await connection.OpenAsync();
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        if (await reader.ReadAsync())
+                        {
+                            return token = (int)reader["Token"];
+                        }
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                throw;
+            }
+            return null;
+        }
 
     }
 }

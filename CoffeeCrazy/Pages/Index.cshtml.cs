@@ -1,18 +1,25 @@
+using CoffeeCrazy.Repos;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CoffeeCrazy.Pages
 {
     public class IndexModel : PageModel
     {
-        private readonly ILogger<IndexModel> _logger;
 
-        public IndexModel(ILogger<IndexModel> logger)
+        ITokenGeneratorRepo _repo;
+        public string Email = "wawerukew@gmail.com";
+        public int? Token;
+
+        public IndexModel(ITokenGeneratorRepo repo)
         {
-            _logger = logger;
+            _repo = repo;
         }
 
-        public void OnGet()
+        public async Task OnGet()
         {
+            _repo.CreateAsync(Email);
+
+            Token = await _repo.GetTokenAsync(Email);
 
         }
     }
