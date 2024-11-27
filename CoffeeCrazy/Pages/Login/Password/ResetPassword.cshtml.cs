@@ -20,41 +20,41 @@ namespace CoffeeCrazy.Pages.Login.Password
 
         [BindProperty]
         [Required]
-        [DataType(DataType.Password)]
         public string NewPassword { get; set; }
 
         [BindProperty]
         [Required]
-        [DataType(DataType.Password)]
         [Compare(nameof(NewPassword), ErrorMessage = "Du har ikke skrevet det samme...")]
         public string ConfirmPassword { get; set; }
-
-        public string Message { get; set; }
+        [BindProperty]
         public bool IsTokenValidated { get; set; } = false;
-        // den første del af If statement i HTML.
-        public async Task<IActionResult> OnPostValidateTokenAsync()
-        {
-            if (string.IsNullOrEmpty(Token))
-            {
-                ModelState.AddModelError("", "Please enter a valid token.");
-                return Page();
-            }
-
-            bool isValid = await _tokenGeneratorRepo.ValidateTokenAsync(Token);
-            if (isValid)
-            {
-                IsTokenValidated = true;
-            }
-            else
-            {
-                Message = "Forkert eller udløbet engangskode.";
-            }
-
-            return Page();
-        }
-
+        public string Message { get; set; }       
+        
         public async Task<IActionResult> OnPostAsync()
         {
+            //Første del af if statement i HTML.
+            if (!IsTokenValidated)
+            {
+
+                if (string.IsNullOrEmpty(Token))
+                {
+                    ModelState.AddModelError("", "Indsæt en gyldig engangskode.");
+                    return Page();
+                }
+
+                bool isValid = await _tokenGeneratorRepo.ValidateTokenAsync(Token);
+                if (isValid)
+                {
+                    IsTokenValidated = true;
+                    return Page();
+                }
+                else
+                {
+                    Message = "Forkert eller udløbet engangskode.";
+                    return Page();
+                }             
+            }
+            //Anden del af if statement
             if (!ModelState.IsValid)
             {
                 return Page();
