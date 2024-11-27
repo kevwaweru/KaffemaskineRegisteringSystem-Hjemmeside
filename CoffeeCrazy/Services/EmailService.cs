@@ -13,8 +13,14 @@ namespace CoffeeCrazy.Services
         {
             _configuration = configuration;
         }
-
-        public async Task<bool> SendEmailAsync(string toEmail, string subject, string body)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="emailToResive"></param>
+        /// <param name="subject"></param>
+        /// <param name="body"></param>
+        /// <returns></returns>
+        public async Task<bool> SendEmailAsync(string emailToResive, string subject, string body)
         {
             try
             {
@@ -39,7 +45,7 @@ namespace CoffeeCrazy.Services
                     IsBodyHtml = true,
                 };
 
-                mailMessage.To.Add(toEmail);
+                mailMessage.To.Add(emailToResive);
 
                 await smtpClient.SendMailAsync(mailMessage);
 
