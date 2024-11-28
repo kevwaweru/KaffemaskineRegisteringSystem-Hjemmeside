@@ -9,13 +9,20 @@ namespace CoffeeCrazy.Repos
 {
     public class AssignmentJunctionRepo : IAssignmentJunctionRepo
     {
+        //mangler adskillige af metoderne i IAssignmentRepo.
+        
         private readonly string _connectionString;
+        private readonly IAssignmentSetRepo _assignmentSetRepo;
+        private readonly IAssignmentRepo _assignmentRepo;
 
         //CTOR
-        public AssignmentJunctionRepo(IConfiguration configuration)
+        public AssignmentJunctionRepo(IConfiguration configuration, IAssignmentSetRepo assignmentSetRepo, IAssignmentRepo assignmentRepo)
         {
             _connectionString = configuration.GetConnectionString("DefaultConnection")
                 ?? throw new InvalidOperationException("Connection string 'Kaffe Maskine Database' not found.");
+            _assignmentRepo = assignmentRepo;
+            _assignmentSetRepo = assignmentSetRepo;
+
         }
 
         /// <summary>
@@ -116,41 +123,33 @@ namespace CoffeeCrazy.Repos
         /// <returns> return createListToGetAll </returns>
         public async Task GetAllObjectsFromAssignmentJunctionsAsync(int assignmentSetId)
         {
+            //Valideringstest af databasen og om AssignmentSetId eksisterer.
+            if (!await DoesAssignmentIdExistAsync(assignmentSetId))
+            {
+                throw new InvalidOperationException($"The assignment Id {assignmentSetId}  does not exist.");
+            }
             try
             {
                 using (SqlConnection connection = new SqlConnection(_connectionString))
                 {
                     await connection.OpenAsync();
 
+                    //await _assignmentSetRepo.GetByAssignmentSetIdAsync(assignmentSetId);
+
                     string getAssignmentsQuery = @"
                                     SELECT AssignmentId 
                                     FROM AssignmentJunction 
                                     WHERE AssignmentSetId = @AssignmentSetId";
 
+
                     List<int> assignmentIds = new List<int>();
 
-                    using (SqlCommand command = new SqlCommand(getAssignmentsQuery, connection))
-                    {
-                        command.Parameters.AddWithValue("@AssignmentSetId", assignmentSetId);
-
-                        using (SqlDataReader reader = await command.ExecuteReaderAsync())
-                        {
-                            while (await reader.ReadAsync())
-                            {
-                                Console.WriteLine($"AssignmentSetId: {reader.GetInt32(0)}");
-                                Console.WriteLine($"SetTitle: {reader.GetString(1)}");
-                                Console.WriteLine($"SetDescription: {(reader.IsDBNull(2) ? "No description" : reader.GetString(2))}");
-                                Console.WriteLine($"SetCreateDate: {reader.GetDateTime(3)}");
-                                Console.WriteLine("---------------------------------");
-                            }
-                        }
-                    }
                     foreach (var assignmentId in assignmentIds)
                     {
                         string getAssignmentQuery = @"
-                                    SELECT AssignmentId, Title, Comment, CreateDate, IsCompleted
-                                    FROM Assignments
-                                    WHERE AssignmentId = @AssignmentId";
+                                        SELECT AssignmentId, Title, Comment, CreateDate, IsCompleted
+                                        FROM Assignments
+                                        WHERE AssignmentId = @AssignmentId";
 
                         using (SqlCommand command = new SqlCommand(getAssignmentQuery, connection))
                         {
@@ -171,9 +170,9 @@ namespace CoffeeCrazy.Repos
 
                         }
                     }
+
                 }
             }
-            
             catch (SqlException ex)
             {
                 Console.WriteLine($"Database error: {ex.Message}");
