@@ -11,7 +11,6 @@
 
         public int MachineId { get; set; }
         public int AssignmentId { get; set; }
-
         public string Title { get; set; }
     }
 }
