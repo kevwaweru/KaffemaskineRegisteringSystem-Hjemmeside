@@ -11,7 +11,7 @@ namespace CoffeeCrazy.Interfaces
         Task GetAllObjectsFromAssignmentJunctionsAsync(int assignmentSetId);
 
         //CRUD - Update one Assignment in an AssignmentSet in AssignmentJunction.
-        Task UpdateAssignmentAsync(int assignmentSetId);
+        Task UpdateAssignmentAsync(int oldAssignmentSetId, int newAssignmentId);
 
         //CRUD - Delete an AssignmentJunction.
         Task DeleteAsync(int assignmentId, int assignmentSetId);
