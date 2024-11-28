@@ -114,21 +114,24 @@ namespace CoffeeCrazy.Repos
             }
         }
 
-        public async Task DeleteAsync(string email)
+        public async Task DeleteAsync(string token)
         {
             try
             {
                 using (SqlConnection connection = new SqlConnection(_connectionString))
                 {
-                    string sqlQuery = @"DELETE FROM PasswordResetTokens WHERE Email = @Email";
+                    string sqlQuery = @"
+                                        DELETE FROM PasswordResetTokens 
+                                        WHERE Token = @Token";
 
-                    SqlCommand command = new SqlCommand();
 
-                    command.Parameters.AddWithValue("@Email", email);
+                    SqlCommand command = new SqlCommand(sqlQuery, connection);
+
+                    command.Parameters.AddWithValue("@Token", token);
 
                     await connection.OpenAsync();
 
-                    await command.ExecuteScalarAsync();
+                    await command.ExecuteNonQueryAsync();
                 }
             }
             catch (SqlException sqlEx)
@@ -155,7 +158,7 @@ namespace CoffeeCrazy.Repos
 
                     await connection.OpenAsync();
 
-                    await command.ExecuteScalarAsync();
+                    await command.ExecuteNonQueryAsync();
                 }
             }
             catch (SqlException sqlEx)
