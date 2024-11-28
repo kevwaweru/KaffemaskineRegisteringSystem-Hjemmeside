@@ -43,6 +43,8 @@ namespace CoffeeCrazy.Repos
 
                     await connection.OpenAsync();
                     await command.ExecuteNonQueryAsync();
+
+                    await DeleteTokenAfter30MinutesAsync(email);
                 }
             }
             catch (Exception ex)
@@ -83,7 +85,7 @@ namespace CoffeeCrazy.Repos
             return null;
         }
 
-        public async Task<bool> ValidateTokenAsync( string token)
+        public async Task<bool> ValidateTokenAsync(string token)
         {
             try
             {
@@ -94,14 +96,14 @@ namespace CoffeeCrazy.Repos
                 FROM PasswordResetTokens 
                 WHERE Token = @Token";
 
-                    var command = new SqlCommand(SQLquery, connection);             
+                    var command = new SqlCommand(SQLquery, connection);
                     command.Parameters.AddWithValue("@Token", token);
-                   
+
 
                     await connection.OpenAsync();
 
                     var result = (int)await command.ExecuteScalarAsync();
-                
+
                     return result > 0;
                 }
             }
@@ -111,6 +113,60 @@ namespace CoffeeCrazy.Repos
                 throw;
             }
         }
-    }
-}
 
+        public async Task DeleteAsync(string email)
+        {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_connectionString))
+                {
+                    string sqlQuery = @"DELETE FROM PasswordResetTokens WHERE Email = @Email";
+
+                    SqlCommand command = new SqlCommand();
+
+                    command.Parameters.AddWithValue("@Email", email);
+
+                    await connection.OpenAsync();
+
+                    await command.ExecuteScalarAsync();
+                }
+            }
+            catch (SqlException sqlEx)
+            {
+                Console.WriteLine("Error: " + sqlEx.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+            }
+        }
+
+        private async Task DeleteTokenAfter30MinutesAsync(string email)
+        {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_connectionString))
+                {
+                    string sqlQuery = "EXEC DeleteExpiredTokensAfterDelay @Email";
+
+                    SqlCommand command = new SqlCommand(sqlQuery, connection);
+
+                    command.Parameters.AddWithValue("@Email", email);
+
+                    await connection.OpenAsync();
+
+                    await command.ExecuteScalarAsync();
+                }
+            }
+            catch (SqlException sqlEx)
+            {
+                Console.WriteLine("Error: " + sqlEx.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+            }
+        }
+    }
+
+}
