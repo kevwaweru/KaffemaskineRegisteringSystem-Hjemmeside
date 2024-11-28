@@ -198,7 +198,7 @@ namespace CoffeeCrazy.Repos
                 using (var connection = new SqlConnection(_connectionString))
                 {
                     await connection.OpenAsync();
-                    string query = "SELECT * FROM Assignments";
+                    string query = "SELECT * FROM Assignments WHERE AssignmentId = @AssignmentId";
 
                     using (var command = new SqlCommand(query, connection))
                     {
