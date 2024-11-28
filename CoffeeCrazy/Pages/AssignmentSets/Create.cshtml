@@ -1,20 +1,28 @@
 ﻿@page
 @model CoffeeCrazy.Pages.AssignmentSets.CreateModel
 @{
-    ViewData["Title"] = "Create AssignmentSet";
+    ViewData["Title"] = "Opret opgavesæt";
 }
 
-<h1>Create AssignmentSet</h1>
+<h1>Opret Opgavesæt</h1>
 
 <form method="post">
- 
-    <div>
-        <label for="MachineId">Machine ID</label>
-        <input type="number" id="MachineId" name="MachineId" required />
+
+    <div class="form-group">
+           <label for="Titel">Titel</label>
+        <input type="text" class="form-control" id="Titel" asp-for="AssignmentSet.Title" />
+        <span asp-validation-for="AAssignmentSet.Title" class="text-danger"></span>
     </div>
-    <div>
-        <label for="AssignmentId">Assignment ID</label>
-        <input type="number" id="AssignmentId" name="AssignmentId" required />
+
+    <div class="form-group">
+        <label>Assignments</label>
+        @foreach (var assignment in Model.Assignments)
+        {
+            <div>
+                <input type="checkbox" name="SelectedAssignments" value="@assignment.AssignmentId" />
+                @assignment.Title
+            </div>
+        }
     </div>
-    <button type="submit">Create</button>
+        <button type="submit" class="btn btn-primary">Create</button>
 </form>
