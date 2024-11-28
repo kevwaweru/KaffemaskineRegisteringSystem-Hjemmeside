@@ -1,5 +1,6 @@
 ﻿using CoffeeCrazy.Interfaces;
 using CoffeeCrazy.Model;
+using CoffeeCrazy.Models.Enums;
 using Microsoft.AspNetCore.Authentication.OAuth.Claims;
 using Microsoft.Data.SqlClient;
 using System.Data;
@@ -142,17 +143,99 @@ namespace CoffeeCrazy.Repos
         /// </summary>
         /// <param name="assignmentSetId">Takes the AssignmentSetId as param.</param>
         /// <returns>A list of Assignments that is in the assignmentSet</returns>
-       
+
 
 
         public async Task<List<Assignment>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            var assignments = new List<Assignment>();
+
+            try
+            {
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    await connection.OpenAsync();
+                    string query = "SELECT * FROM Assignments";
+
+                    using (var command = new SqlCommand(query, connection))
+                    {
+                        using (var reader = await command.ExecuteReaderAsync())
+                        {
+                            while (await reader.ReadAsync())
+                            {
+                                var assignment = new Assignment
+                                {
+                                    AssignmentId = reader.GetInt32(0),
+                                    Title = reader.GetString(1),
+                                    Comment = reader.GetString(2),
+                                    CreateDate = reader.GetDateTime(3),
+                                    IsCompleted = reader.GetBoolean(4)
+                                };
+
+                                assignments.Add(assignment);
+                            }
+                        }
+                    }
+                }
+                return assignments;
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine($"Database error: {ex.Message}");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                throw;
+            }
         }
 
-        public async  Task<Assignment> GetByIdAsync(int id)
+        public async Task<Assignment> GetByIdAsync(int assignmentId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    await connection.OpenAsync();
+                    string query = "SELECT * FROM Assignments";
+
+                    using (var command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@AssignmentId", assignmentId);
+
+                        using (var reader = await command.ExecuteReaderAsync())
+                        {
+                            if (await reader.ReadAsync())
+                            {
+                                return new Assignment
+                                {
+                                    AssignmentId = reader.GetInt32(0),
+                                    Title = reader.GetString(1),
+                                    Comment = reader.GetString(2),
+                                    CreateDate = reader.GetDateTime(3),
+                                    IsCompleted = reader.GetBoolean(4)
+                                };
+                            }
+                            else
+                            {
+                                throw new Exception($"Assignment with ID {assignmentId} does not exist.");
+                            }
+                        }
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine($"Database error: {ex.Message}");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                throw;
+            }
         }
+
     }
 }
