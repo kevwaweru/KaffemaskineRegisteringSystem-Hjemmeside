@@ -9,11 +9,13 @@ namespace CoffeeCrazy.Pages.AssignmentSets
     {
         private readonly IAssignmentSetRepo _setRepo;
         private readonly IAssignmentRepo _assignmentRepo;
+        private readonly IAssignmentJunctionRepo _assignmentJunctionRepo;
 
-        public DetailsModel(IAssignmentSetRepo setRepo, IAssignmentRepo assignmentRepo)
+        public DetailsModel(IAssignmentSetRepo setRepo, IAssignmentRepo assignmentRepo, IAssignmentJunctionRepo assignmentJunctionRepo)
         {
             _setRepo = setRepo;
             _assignmentRepo = assignmentRepo;
+            _assignmentJunctionRepo = assignmentJunctionRepo;
         }
         public AssignmentSet AssignmentSet { get; set; }
         public List<Assignment> Assignments { get; set; }
@@ -27,7 +29,7 @@ namespace CoffeeCrazy.Pages.AssignmentSets
                 return NotFound();
             }
 
-            Assignments = await _setRepo.GetByAssignmentSetIdAsync(id);
+            Assignments = await _assignmentJunctionRepo.GetAllObjectsFromAssignmentJunctionsAsync(id);
             return Page();
         }
     }

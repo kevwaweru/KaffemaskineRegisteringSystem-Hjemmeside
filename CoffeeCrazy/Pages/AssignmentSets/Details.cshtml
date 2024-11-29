@@ -3,23 +3,25 @@
 @{
     ViewData["Title"] = "AssignmentSet Details";
 }
-<h1>AssignmentSet Details</h1>
+<h1>OpgaveSet Detailjer</h1>
 <div>
-    <p><strong>ID:</strong> @Model.AssignmentSet.AssignmentSetId</p>
+    <p><strong>Titel:</strong> @Model.AssignmentSet.Title</p>
     <p><strong>Deadline:</strong> @Model.AssignmentSet.Deadline</p>
-    <p><strong>Completed:</strong> @(Model.AssignmentSet.SetCompleted ? "Yes" : "No")</p>
-    <p><strong>Machine ID:</strong> @Model.AssignmentSet.MachineId</p>
+    <p><strong>Udført:</strong> @(Model.AssignmentSet.SetCompleted ? "Ja" : "Nej")</p>
+    <p><strong>Maskine ID:</strong> @Model.AssignmentSet.MachineId</p>
 </div>
 
-<h2>Assignments</h2>
+<h2>Opgaver</h2>
 <ul>
     @foreach (var assignment in Model.Assignments)
     {
         <li>
-            <p><strong>Title:</strong> @assignment.Title</p>
-            <p><strong>Comment:</strong> @assignment.Comment</p>
-            <p><strong>Created On:</strong> @assignment.CreateDate</p>
-            <p><strong>Completed:</strong> @(assignment.IsCompleted ? "Yes" : "No")</p>
+            <p><strong>Titel:</strong> @assignment.Title</p>
+            <p><strong>Kommentar:</strong> @assignment.Comment</p>
+            <p><strong>Oprettet:</strong> @assignment.CreateDate</p>
+            <p><strong>Udført:</strong> @(assignment.IsCompleted ? "Ja" : "Nej")</p>
         </li>
     }
 </ul>
+<a asp-page="/Index" class="btn btn-secondary">Tilbage til alle opgavesæts</a>
+<a asp-page="/Update" asp-route-id="@Model.AssignmentSet.AssignmentSetId" class="btn btn-primary">Ret i opgavesæt</a>

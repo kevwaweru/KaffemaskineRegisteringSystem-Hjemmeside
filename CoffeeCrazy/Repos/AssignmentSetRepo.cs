@@ -28,16 +28,16 @@ namespace CoffeeCrazy.Repos
                 {
 
                     string sqlQuery = @"
-                                           INSERT INTO AssignmentSets (AssignmentSetId, SetCompleted, Deadline, AssignmentId, MachineId) 
+                                           INSERT INTO AssignmentSets (Title, SetCompleted, Deadline, AssignmentId, MachineId) 
                                            VALUES (@AssignmentSetId, @SetCompleted, @Deadline, @AssignmentId, @MachineId)";
 
                     using (SqlCommand command = new SqlCommand(sqlQuery, connection))
                     {
-                        command.Parameters.Add("@Title", SqlDbType.NVarChar).Value = assignmentSet.AssignmentSetId;
-                        command.Parameters.Add("@SetCompleted", SqlDbType.Bit).Value = assignmentSet.SetCompleted;
-                        command.Parameters.Add("@Deadline", SqlDbType.DateTime).Value = assignmentSet.Deadline;
-                        command.Parameters.Add("@AssignmentId", SqlDbType.Int).Value = assignmentSet.AssignmentId;
-                        command.Parameters.Add("@MachineId", SqlDbType.Int).Value = assignmentSet.MachineId;
+                        command.Parameters.AddWithValue("@Title", SqlDbType.NVarChar).Value = assignmentSet.Title;
+                        command.Parameters.AddWithValue("@SetCompleted", SqlDbType.Bit).Value = assignmentSet.SetCompleted;
+                        command.Parameters.AddWithValue("@Deadline", SqlDbType.DateTime).Value = assignmentSet.Deadline;
+                        command.Parameters.AddWithValue("@AssignmentId", SqlDbType.Int).Value = assignmentSet.AssignmentId;
+                        command.Parameters.AddWithValue("@MachineId", SqlDbType.Int).Value = assignmentSet.MachineId;
                         
                         command.ExecuteNonQuery();
                     }

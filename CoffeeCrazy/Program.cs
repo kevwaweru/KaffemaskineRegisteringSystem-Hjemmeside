@@ -17,6 +17,7 @@ namespace CoffeeCrazy
             builder.Services.AddTransient<IAssignmentRepo, AssignmentRepo>();
             builder.Services.AddTransient<IAssignmentSetRepo, AssignmentSetRepo>();
             builder.Services.AddScoped<ITokenGeneratorRepo, TokenGeneratorRepo>();
+            builder.Services.AddScoped<IAssignmentJunctionRepo, AssignmentJunctionRepo>();
 
             // Services
             builder.Services.AddTransient<IEmailService, EmailService>();
