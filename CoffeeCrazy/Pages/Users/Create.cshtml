@@ -2,7 +2,7 @@
 @model CoffeeCrazy.Pages.Users.CreateModel
 @{
 }
-<h2>Create User</h2>
+<h2>Opret bruger</h2>
 
 <form method="post" enctype="multipart/form-data">
     <div>
@@ -37,6 +37,15 @@
             <option value=6>Holbæk</option>
         </select>
         <span asp-validation-for="NewUser.Campus" class="text-danger"></span>
+    </div>
+    <div>
+        <label>Roles</label>
+        <select asp-for="NewUser.Role" class="form-control">
+            <option value=1>Master Admin</option>
+            <option value=2>Admin</option>
+            <option value=3>User</option>
+        </select>
+        <span asp-validation-for="NewUser.Role" class="text-danger"></span>
     </div>
     <button type="submit" class="btn btn-primary">Create</button>
 </form>

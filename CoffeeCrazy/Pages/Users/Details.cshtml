@@ -1,0 +1,23 @@
+﻿@page 
+@model CoffeeCrazy.Pages.Users.DetailsModel
+@{
+    ViewData["Title"] = "Bruger detajler";
+}
+
+<h1>Bruger Detaljer</h1>
+
+<div>
+    <h3>@Model.User.FirstName @Model.User.LastName</h3>
+    <dl class="row">
+        <dt class="col-sm-2">Email:</dt>
+        <dd class="col-sm-10">@Model.User.Email</dd>
+
+        <dt class="col-sm-2">Rolle:</dt>
+        <dd class="col-sm-10">@Model.User.Role</dd>
+
+        <dt class="col-sm-2">Campus:</dt>
+        <dd class="col-sm-10">@Model.User.Campus</dd>
+    </dl>
+</div>
+
+<a class="btn btn-primary" asp-page="/Users/Index">Tilbage til Index</a>
