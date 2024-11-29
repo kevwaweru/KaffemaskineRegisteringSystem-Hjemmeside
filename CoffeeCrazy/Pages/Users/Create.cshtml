@@ -1,0 +1,42 @@
+﻿@page
+@model CoffeeCrazy.Pages.Users.CreateModel
+@{
+}
+<h2>Create User</h2>
+
+<form method="post" enctype="multipart/form-data">
+    <div>
+        <label>Fornavn</label>
+        <input asp-for="NewUser.FirstName" class="form-control" />
+        <span asp-validation-for="NewUser.FirstName" class="text-danger"></span>
+    </div>
+    <div>
+        <label>Efternavn</label>
+        <input asp-for="NewUser.LastName" class="form-control" />
+        <span asp-validation-for="NewUser.LastName" class="text-danger"></span>
+    </div>
+    <div>
+        <label>Email</label>
+        <input asp-for="NewUser.Email" class="form-control" />
+        <span asp-validation-for="NewUser.Email" class="text-danger"></span>
+    </div>
+    <div>
+        <label>Adgangskode</label>
+        <input asp-for="NewUser.Password" type="password" class="form-control" />
+        <span asp-validation-for="NewUser.Password" class="text-danger"></span>
+    </div>
+    
+    <div>
+        <label>Campus</label>
+        <select asp-for="NewUser.Campus" class="form-control">
+            <option value=1>Roskilde</option>
+            <option value=2>Køge</option>
+            <option value=3>Næstved</option>
+            <option value=4>Slagelse</option>
+            <option value=5>Nykøbing Falster</option>
+            <option value=6>Holbæk</option>
+        </select>
+        <span asp-validation-for="NewUser.Campus" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Create</button>
+</form>

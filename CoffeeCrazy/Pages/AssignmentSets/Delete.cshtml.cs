@@ -1,6 +1,5 @@
 using CoffeeCrazy.Interfaces;
 using CoffeeCrazy.Models;
-using CoffeeCrazy.Repos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -8,11 +7,11 @@ namespace CoffeeCrazy.Pages.AssignmentSets
 {
     public class DeleteModel : PageModel
     {
-        private readonly IAssignmentSetRepo _AssignemntSetrepo;
+        private readonly IAssignmentSetRepo _assignmentSetRepo;
 
-        public DeleteModel(IAssignmentSetRepo repo)
+        public DeleteModel(IAssignmentSetRepo assignmentSetRepo)
         {
-            _AssignemntSetrepo = repo;
+            _assignmentSetRepo = assignmentSetRepo;
         }
 
         [BindProperty]
@@ -20,13 +19,11 @@ namespace CoffeeCrazy.Pages.AssignmentSets
 
         public async Task<IActionResult> OnGetAsync(int id)
         {
-            AssignmentSet = await _AssignemntSetrepo.GetByIdAsync(id);
-
+            AssignmentSet = await _assignmentSetRepo.GetByIdAsync(id);
             if (AssignmentSet == null)
             {
                 return NotFound();
             }
-
             return Page();
         }
 
@@ -37,8 +34,8 @@ namespace CoffeeCrazy.Pages.AssignmentSets
                 return NotFound();
             }
 
-            await _AssignemntSetrepo.DeleteAsync(AssignmentSet);
-            return RedirectToPage("Index");
+            await _assignmentSetRepo.DeleteAsync(AssignmentSet);
+            return RedirectToPage("/Index");
         }
     }
 }

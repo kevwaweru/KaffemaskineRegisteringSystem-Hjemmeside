@@ -1,6 +1,4 @@
-﻿using CoffeeCrazy.Model;
-
-namespace CoffeeCrazy.Models
+﻿namespace CoffeeCrazy.Models
 {
     /// <summary>
     /// This class is used to hold alot of assignments in a set of assignments
@@ -13,5 +11,6 @@ namespace CoffeeCrazy.Models
 
         public int MachineId { get; set; }
         public int AssignmentId { get; set; }
+        public string Title { get; set; }
     }
 }

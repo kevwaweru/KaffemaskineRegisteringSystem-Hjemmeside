@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace CoffeeCrazy.Pages
+namespace CoffeeCrazy.Pages.Users
 {
-    public class TestUpdateModel : PageModel
+    public class DeleteModel : PageModel
     {
         public void OnGet()
         {

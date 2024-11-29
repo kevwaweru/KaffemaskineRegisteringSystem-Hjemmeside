@@ -1,0 +1,36 @@
+﻿@page
+@model CoffeeCrazy.Pages.Users.IndexModel
+
+<h1>Brugere</h1>
+
+<h2>Alle Brugere</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Brugerens ID</th>
+            <th>Fornavn</th>
+            <th>Efternavn</th>
+            <th>Email</th>
+            <th>Roller</th>
+            <th>Campus</th>
+            <th>Din mor HUSK AT RET</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model.Users)
+        {
+            <tr>
+                <td>@user.UserId</td>
+                <td>@user.FirstName</td>
+                <td>@user.LastName</td>
+                <td>@user.Email</td>
+                <td>@user.Role</td>
+                <td>@user.Campus</td>
+                <td>
+                    <a asp-page="Index" asp-route-id="@user.UserId">Gå Til Profil</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

@@ -1,6 +1,4 @@
-﻿using CoffeeCrazy.Models.Enums;
-
-namespace CoffeeCrazy.Models
+﻿namespace CoffeeCrazy.Models
 {
     public class Notification
     {

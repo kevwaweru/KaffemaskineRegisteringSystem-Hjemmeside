@@ -1,5 +1,4 @@
 using CoffeeCrazy.Interfaces;
-using CoffeeCrazy.Model;
 using CoffeeCrazy.Repos;
 
 namespace CoffeeCrazy
@@ -11,7 +10,9 @@ namespace CoffeeCrazy
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddRazorPages();
+            builder.Services.AddRazorPages();   
+            builder.Services.AddTransient<IUserRepo, UserRepo>();
+            builder.Services.AddScoped<IAssignmentJunctionRepo, AssignmentJunctionRepo>();
 
 
             builder.Services.AddTransient<IAssignmentRepo, AssignmentRepo>();

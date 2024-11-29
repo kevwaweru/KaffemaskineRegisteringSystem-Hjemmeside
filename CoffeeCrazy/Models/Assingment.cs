@@ -1,4 +1,4 @@
-﻿namespace CoffeeCrazy.Model
+﻿namespace CoffeeCrazy.Models
 {
     /// <summary>
     /// 
