@@ -199,12 +199,12 @@ namespace CoffeeCrazy.Repos
             }
         }
 
-        public async Task<bool> DeleteUserAsync(int userId, int currentAdminUserId)
+        public async Task<bool> DeleteUserAsync(int userId, int currentUserId)
         {
             try
             {
-                // Prevent admin from deleting their own account
-                if (userId == currentAdminUserId)
+                
+                if (userId == currentUserId)
                 {
                     return false;
                 }
