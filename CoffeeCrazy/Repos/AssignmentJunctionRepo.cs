@@ -76,47 +76,6 @@ namespace CoffeeCrazy.Repos
             }
         }
 
-        //Olivers Add to Junction metode.
-        //public async Task AddAssignmentsToSetAsync(int assignmentSetId, List<int> assignmentIds)
-        //{
-        //    if (assignmentIds == null || !assignmentIds.Any())
-        //    {
-        //        throw new Exception("No assignments provided to add to the set.");
-        //    }
-        //
-        //    try
-        //    {
-        //        using (SqlConnection connection = new SqlConnection(_connectionString))
-        //        {
-        //            await connection.OpenAsync();
-        //            // vær ops på at Assignment til assignmentMellemManden ikke er lavet endnu husk at ret til.
-        //            string query = @"
-        //        INSERT INTO AssignmentSetAssignments (AssignmentSetId, AssignmentId) 
-        //        VALUES (@AssignmentSetId, @AssignmentId)";
-        //
-        //            foreach (var assignmentId in assignmentIds)
-        //            {
-        //                using (SqlCommand command = new SqlCommand(query, connection))
-        //                {
-        //                    command.Parameters.AddWithValue("@AssignmentSetId", assignmentSetId);
-        //                    command.Parameters.AddWithValue("@AssignmentId", assignmentId);
-        //                    await command.ExecuteNonQueryAsync();
-        //                }
-        //            }
-        //        }
-        //    }
-        //    catch (SqlException ex)
-        //    {
-        //        Console.WriteLine($"SQL error: {ex.Message}");
-        //        throw;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine($"An error occurred: {ex.Message}");
-        //        throw;
-        //    }
-        //}
-
         /// <summary>
         /// Method to retrieve and read all attributes inside all objects stored in an AssignmentJunction object.
         /// </summary>
@@ -126,7 +85,7 @@ namespace CoffeeCrazy.Repos
             //Valideringstest af databasen og om AssignmentSetId eksisterer.
             if (!await DoesAssignmentIdExistAsync(assignmentSetId))
             {
-                throw new InvalidOperationException($"The assignment Id {assignmentSetId}  does not exist.");
+                throw new InvalidOperationException($"The assignment Id {assignmentSetId} does not exist.");
             }
             try
             {
@@ -159,13 +118,13 @@ namespace CoffeeCrazy.Repos
                             {
                                 if (await reader.ReadAsync())
                                 {
-                                    Console.WriteLine($"AssignmentId: {reader.GetInt32(0)}");
-                                    Console.WriteLine($"Title: {reader.GetString(1)}");
-                                    Console.WriteLine($"Comment: {(reader.IsDBNull(2) ? "No comment" : reader.GetString(2))}");
-                                    Console.WriteLine($"CreateDate: {reader.GetDateTime(3)}");
-                                    Console.WriteLine($"IsCompleted: {reader.GetBoolean(4)}");
-                                    Console.WriteLine("---------------------------------");
-                                }
+                                    AssignmentId = reader.GetInt32(0),
+                                    Title: reader.GetString(1),
+                                    Comment: (reader.IsDBNull(2) ?: reader.GetString(2)),
+                                    CreateDate: reader.GetDateTime(3),
+                                    IsCompleted: reader.GetBoolean(4),
+                                   
+                                };
                             }
 
                         }
