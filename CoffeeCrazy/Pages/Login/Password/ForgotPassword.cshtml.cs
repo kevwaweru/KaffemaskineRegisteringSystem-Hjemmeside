@@ -6,11 +6,11 @@ namespace CoffeeCrazy.Pages.Login.Password
 {
     public class ForgotPasswordModel : PageModel
     {
-        private readonly IUserRepo _userRepo;
+        private readonly IEmailService _emailService;
 
-        public ForgotPasswordModel(IUserRepo userRepo)
+        public ForgotPasswordModel( IEmailService emailService)
         {
-            _userRepo = userRepo;
+            _emailService = emailService;
         }
 
         [BindProperty]
@@ -18,25 +18,29 @@ namespace CoffeeCrazy.Pages.Login.Password
 
         public string Message { get; set; }
 
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(string email)
         {
-            if (!ModelState.IsValid) return Page();
-
-            try
+            if (string.IsNullOrEmpty(email))
             {
+                ModelState.AddModelError("","Venligst intast email.");
+                return Page(); 
+            }   
+                
+               bool emailSent = await _emailService.GenerateTokenAndSendResetEmail(email);
 
-                // en metode der genere en token af en slags
-                // en metode der sender email med token
-
+            if (emailSent)
+            {
                 Message = "En mail med nyt password er sendt til dig.";
+                Thread.Sleep(5000);
+                return RedirectToPage("/Login/Password/ResetPassword");
             }
-            catch (Exception ex)
+            else
             {
-                ModelState.AddModelError("", "Der er sket en fejl prøv igen..");
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+                Message = "Der er sket en fejl Token bliv ikke sendt prøv igen";
+                Thread.Sleep(5000);
 
-            return Page();
+                return Page();
+            }                  
         }
     }
 }

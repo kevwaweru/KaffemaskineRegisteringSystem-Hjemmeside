@@ -10,10 +10,12 @@ namespace CoffeeCrazy.Repos
     public class UserRepo : IUserRepo
     {
         private readonly string _connectionString;
-        public UserRepo(IConfiguration configuration)
+        private readonly ITokenGeneratorRepo _tokenGeneratorRepo;
+        public UserRepo(IConfiguration configuration, ITokenGeneratorRepo tokenGeneratorRepo)
         {
             _connectionString = configuration.GetConnectionString("DefaultConnection")
                 ?? throw new InvalidOperationException("Connection string 'Kaffe maskine database' not found.");
+            _tokenGeneratorRepo = tokenGeneratorRepo;
         }
 
         public async Task CreateAsync(User user)
@@ -234,7 +236,7 @@ namespace CoffeeCrazy.Repos
                         {
                             if (await reader.ReadAsync())
                             {
-                            
+
 
                                 string passwordBase64 = reader["Password"].ToString();
                                 string saltBase64 = reader["PasswordSalt"].ToString();
@@ -326,6 +328,91 @@ namespace CoffeeCrazy.Repos
                 throw;
             }
         }
+
+        public async Task<bool> ResetPasswordAsync(string token, string newPassword)
+        {
+            try
+            {
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    await connection.OpenAsync();
+
+                    string email = await GetEmailByTokenAsync(token, connection);
+                    if (email == null)
+                    {
+                        return false;
+                    }
+
+                    var (hash, salt) = PasswordHelper.CreatePasswordHash(newPassword);
+              
+                    await UpdateUserPasswordAsync(email, hash, salt, connection);
+
+                    // Slet token fra databasen
+                    // skal bare implamenteres
+                  
+                   await _tokenGeneratorRepo.DeleteAsync(token);
+                }
+
+                return true; 
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                return false;
+            }
+        }
+        /// <summary>
+        /// A
+        /// </summary>
+        /// <param name="token"></param>
+        /// <param name="connection"></param>
+        /// <returns></returns>
+        private async Task<string?> GetEmailByTokenAsync(string token, SqlConnection connection)
+        {
+            string query = @"
+        SELECT Email 
+        FROM PasswordResetTokens 
+        WHERE Token = @Token";
+
+            using (var command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@Token", token);
+
+                using (var reader = await command.ExecuteReaderAsync())
+                {
+                    if (await reader.ReadAsync())
+                    {
+                        return reader["Email"].ToString();
+                    }
+                }
+            }
+            return null; 
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="hash"></param>
+        /// <param name="salt"></param>
+        /// <param name="connection"></param>
+        /// <returns></returns>
+        private async Task UpdateUserPasswordAsync(string email, byte[] hash, byte[] salt, SqlConnection connection)
+        {
+            string query = @"
+        UPDATE Users 
+        SET Password = @Password, PasswordSalt = @PasswordSalt
+        WHERE Email = @Email";
+
+            using (var command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@Password", Convert.ToBase64String(hash));
+                command.Parameters.AddWithValue("@PasswordSalt", Convert.ToBase64String(salt));
+                command.Parameters.AddWithValue("@Email", email);
+
+                await command.ExecuteNonQueryAsync();
+            }
+        }
+
 
     }
 }
