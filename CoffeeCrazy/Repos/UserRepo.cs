@@ -87,6 +87,8 @@ namespace CoffeeCrazy.Repos
                 Console.WriteLine("Error:" + ex);
             }
         }
+
+
         public async Task DeleteAsync(User toBeDeletedUser)
         {
             try
@@ -208,6 +210,7 @@ namespace CoffeeCrazy.Repos
                 throw;
             }
         }
+        
         /// <summary>
         /// 
         /// </summary>
@@ -359,6 +362,7 @@ namespace CoffeeCrazy.Repos
                 return false;
             }
         }
+
         /// <summary>
         /// A
         /// </summary>
@@ -397,9 +401,9 @@ namespace CoffeeCrazy.Repos
         private async Task UpdateUserPasswordAsync(string email, byte[] hash, byte[] salt, SqlConnection connection)
         {
             string query = @"
-        UPDATE Users 
-        SET Password = @Password, PasswordSalt = @PasswordSalt
-        WHERE Email = @Email";
+                    UPDATE Users 
+                    SET Password = @Password, PasswordSalt = @PasswordSalt
+                    WHERE Email = @Email";
 
             using (var command = new SqlCommand(query, connection))
             {
@@ -410,6 +414,15 @@ namespace CoffeeCrazy.Repos
                 await command.ExecuteNonQueryAsync();
             }
         }
+
+        public async Task<bool> DeleteUserAsync(int userId, int currentUserId)
+        {
+            try
+            {
+                if (userId == currentUserId)
+                {
+                    return false;
+                }
 
 
                 using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -437,5 +450,15 @@ namespace CoffeeCrazy.Repos
                 return false;
             }
         }
+
     }
+ 
+
+
+
+
+
+
+
+
 }
