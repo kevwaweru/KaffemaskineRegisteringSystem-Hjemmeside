@@ -8,6 +8,7 @@ namespace CoffeeCrazy.Repos
     public class UserRepo : IUserRepo
     {
         private readonly string _connectionString;
+
         public UserRepo(IConfiguration configuration)
         {
             _connectionString = configuration.GetConnectionString("DefaultConnection")
@@ -30,7 +31,6 @@ namespace CoffeeCrazy.Repos
                     command.Parameters.AddWithValue("@CampusId", (int)user.Campus);
 
                     await connection.OpenAsync();
-
                     await command.ExecuteNonQueryAsync();
                 }
             }
@@ -41,11 +41,8 @@ namespace CoffeeCrazy.Repos
             catch (Exception ex)
             {
                 Console.WriteLine("Error: " + ex.Message);
-
             }
         }
-
-
         public Task<User> GetUserByEmail(string email)
         {
             throw new NotImplementedException();
@@ -79,9 +76,7 @@ namespace CoffeeCrazy.Repos
             {
                 Console.WriteLine("Error:" + ex);
             }
-
         }
-
         public async Task DeleteAsync(User toBeDeletedUser)
         {
             try
@@ -108,7 +103,7 @@ namespace CoffeeCrazy.Repos
                 Console.WriteLine("Error: " + ex.Message);
             }
         }
-    
+
         public async Task<List<User>> GetAllAsync()
         {
             var users = new List<User>();
@@ -145,14 +140,14 @@ namespace CoffeeCrazy.Repos
                 return users;
             }
             catch (SqlException ex)
-            {           
+            {
                 Console.WriteLine($"Database error: {ex.Message}");
                 throw;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"An error occurred: {ex.Message}");
-                throw; 
+                throw;
             }
         }
 
@@ -163,7 +158,7 @@ namespace CoffeeCrazy.Repos
                 using (var connection = new SqlConnection(_connectionString))
                 {
                     await connection.OpenAsync();
-                    string query = "SELECT UserId, FirstName, LastName, Email, Password, RoleId, CampusId FROM Users";
+                    string query = "SELECT UserId, FirstName, LastName, Email, Password, RoleId, CampusId FROM Users WHERE UserId = @UserId";
 
                     using (var command = new SqlCommand(query, connection))
                     {
@@ -193,16 +188,51 @@ namespace CoffeeCrazy.Repos
                 }
             }
             catch (SqlException ex)
-            {              
+            {
                 Console.WriteLine($"Database error: {ex.Message}");
-                throw; 
+                throw;
             }
             catch (Exception ex)
-            {            
+            {
                 Console.WriteLine($"An error occurred: {ex.Message}");
-                throw; 
+                throw;
             }
         }
 
+        public async Task<bool> DeleteUserAsync(int userId, int currentUserId)
+        {
+            try
+            {
+                
+                if (userId == currentUserId)
+                {
+                    return false;
+                }
+
+                using (SqlConnection connection = new SqlConnection(_connectionString))
+                {
+                    string sqlQuery = "DELETE FROM Users WHERE UserId = @UserId";
+
+                    SqlCommand command = new SqlCommand(sqlQuery, connection);
+                    command.Parameters.AddWithValue("@UserId", userId);
+
+                    await connection.OpenAsync();
+                    int affectedRows = await command.ExecuteNonQueryAsync();
+
+                    // Check if any rows were deleted
+                    return affectedRows > 0;
+                }
+            }
+            catch (SqlException sqlEx)
+            {
+                Console.WriteLine("Error: " + sqlEx.Message);
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+                return false;
+            }
+        }
     }
 }
