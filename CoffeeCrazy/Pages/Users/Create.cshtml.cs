@@ -17,7 +17,6 @@ namespace CoffeeCrazy.Pages.Users
         }
 
         [BindProperty]
-        [Required]
         public User NewUser { get; set; } = new User();
 
         public IActionResult OnGet()

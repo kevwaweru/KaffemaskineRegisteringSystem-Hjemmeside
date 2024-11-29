@@ -8,6 +8,8 @@ namespace CoffeeCrazy.Pages
     [IgnoreAntiforgeryToken]
     public class ErrorModel : PageModel
     {
+        public string? ErrorMessage { get; private set; }
+
         public string? RequestId { get; set; }
 
         public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
@@ -19,9 +21,10 @@ namespace CoffeeCrazy.Pages
             _logger = logger;
         }
 
-        public void OnGet()
+        public void OnGet(string? message)
         {
             RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
+            ErrorMessage = message ?? "En ukendt fejl opstod.";
         }
     }
 

@@ -1,6 +1,9 @@
 using CoffeeCrazy.Interfaces;
 using CoffeeCrazy.Models;
+using CoffeeCrazy.Repos;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Data.SqlClient;
 
 namespace CoffeeCrazy.Pages.Users
 {
@@ -14,9 +17,18 @@ namespace CoffeeCrazy.Pages.Users
 
         public List<User> Users { get; private set; }
 
-        public async Task OnGetAsync()
+        public async Task<IActionResult> OnGetAsync()
         {
-            Users = await _UserRepo.GetAllAsync();      
+            try
+            {
+                Users = await _UserRepo.GetAllAsync();
+                return Page();
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Unhandled error: {ex.Message}");
+                return RedirectToPage("/Error", new { message = "Noget gik galt under hentning af brugere. Kontakt administrator." });
+            }
         }
     }
 }
