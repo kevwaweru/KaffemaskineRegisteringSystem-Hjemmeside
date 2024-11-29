@@ -26,7 +26,7 @@ namespace CoffeeCrazy.Repos
         }
 
         /// <summary>
-        /// Uses both assignmentId and AssignmentSetId as parameters to create a new AssignmentJunction
+        /// ADD METHOD: Uses both assignmentId and AssignmentSetId as parameters to create a new AssignmentJunction
         /// </summary>
         /// <param name="assignmentId"></param>
         /// <param name="assignmentSetId"></param>
