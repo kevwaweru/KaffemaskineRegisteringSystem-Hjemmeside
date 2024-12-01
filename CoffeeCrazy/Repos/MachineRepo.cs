@@ -15,7 +15,7 @@ namespace CoffeeCrazy.Repos
                 ?? throw new InvalidOperationException("Connection string 'Kaffe maskine database' not found.");
         }
 
-        public async Task CreateAsync(Machine machine)
+        public async System.Threading.Tasks.Task CreateAsync(Machine machine)
         {
             try
             {
@@ -45,7 +45,7 @@ namespace CoffeeCrazy.Repos
             }
         }
 
-        public async Task UpdateAsync(Machine machine)
+        public async System.Threading.Tasks.Task UpdateAsync(Machine machine)
         {
             try
             {
@@ -76,7 +76,7 @@ namespace CoffeeCrazy.Repos
             }
         }
 
-        public async Task DeleteAsync(Machine toBeDeletedMachine)
+        public async System.Threading.Tasks.Task DeleteAsync(Machine toBeDeletedMachine)
         {
             try
             {

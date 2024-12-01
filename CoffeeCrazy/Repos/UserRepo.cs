@@ -18,7 +18,7 @@ namespace CoffeeCrazy.Repos
             _tokenGeneratorRepo = tokenGeneratorRepo;
         }
 
-        public async Task CreateAsync(User user)
+        public async System.Threading.Tasks.Task CreateAsync(User user)
         {
             try
             {
@@ -57,7 +57,7 @@ namespace CoffeeCrazy.Repos
             }
         }
 
-        public async Task UpdateAsync(User toBeUpdatedUser)
+        public async System.Threading.Tasks.Task UpdateAsync(User toBeUpdatedUser)
         {
             try
             {
@@ -89,7 +89,7 @@ namespace CoffeeCrazy.Repos
         }
 
 
-        public async Task DeleteAsync(User toBeDeletedUser)
+        public async System.Threading.Tasks.Task DeleteAsync(User toBeDeletedUser)
         {
             try
             {
@@ -270,7 +270,7 @@ namespace CoffeeCrazy.Repos
 
         }
 
-        public async Task ChangePasswordAsync(string email, string currentPassword, string newPassword)
+        public async System.Threading.Tasks.Task ChangePasswordAsync(string email, string currentPassword, string newPassword)
         {
             try
             {
@@ -390,6 +390,8 @@ namespace CoffeeCrazy.Repos
             }
             return null; 
         }
+      
+        
         /// <summary>
         /// 
         /// </summary>
@@ -398,7 +400,7 @@ namespace CoffeeCrazy.Repos
         /// <param name="salt"></param>
         /// <param name="connection"></param>
         /// <returns></returns>
-        private async Task UpdateUserPasswordAsync(string email, byte[] hash, byte[] salt, SqlConnection connection)
+        private async System.Threading.Tasks.Task UpdateUserPasswordAsync(string email, byte[] hash, byte[] salt, SqlConnection connection)
         {
             string query = @"
                     UPDATE Users 

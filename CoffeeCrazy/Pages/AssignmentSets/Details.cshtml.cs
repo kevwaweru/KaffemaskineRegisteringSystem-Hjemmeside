@@ -7,18 +7,18 @@ namespace CoffeeCrazy.Pages.AssignmentSets
 {
     public class DetailsModel : PageModel
     {
-        private readonly IAssignmentSetRepo _setRepo;
-        private readonly IAssignmentRepo _assignmentRepo;
+        private readonly ITaskTemplateRepo _setRepo;
+        private readonly ITaskRepo _assignmentRepo;
         private readonly IAssignmentJunctionRepo _assignmentJunctionRepo;
 
-        public DetailsModel(IAssignmentSetRepo setRepo, IAssignmentRepo assignmentRepo, IAssignmentJunctionRepo assignmentJunctionRepo)
+        public DetailsModel(ITaskTemplateRepo setRepo, ITaskRepo assignmentRepo, IAssignmentJunctionRepo assignmentJunctionRepo)
         {
             _setRepo = setRepo;
             _assignmentRepo = assignmentRepo;
             _assignmentJunctionRepo = assignmentJunctionRepo;
         }
-        public AssignmentSet AssignmentSet { get; set; }
-        public List<Assignment> Assignments { get; set; }
+        public TaskTemplate AssignmentSet { get; set; }
+        public List<Models.Task> Assignments { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int id)
         {

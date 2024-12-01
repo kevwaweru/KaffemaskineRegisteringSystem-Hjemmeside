@@ -2,7 +2,7 @@
 
 namespace CoffeeCrazy.Interfaces
 {
-    public interface IAssignmentRepo : ICRUDRepo<Assignment>
+    public interface ITaskRepo : ICRUDRepo<Models.Task>
     {
         
     }

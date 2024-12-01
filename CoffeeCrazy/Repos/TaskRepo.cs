@@ -3,15 +3,16 @@ using CoffeeCrazy.Models;
 using CoffeeCrazy.Models.Enums;
 using Microsoft.AspNetCore.Authentication.OAuth.Claims;
 using Microsoft.Data.SqlClient;
+using Task = System.Threading.Tasks.Task;
 
 namespace CoffeeCrazy.Repos
 {
-    public class AssignmentRepo : IAssignmentRepo
+    public class TaskRepo : ITaskRepo
     {
         private readonly string _connectionString;
        
 
-        public AssignmentRepo(IConfiguration configuration)
+        public TaskRepo(IConfiguration configuration)
         {
             _connectionString = configuration.GetConnectionString("DefaultConnection")
                 ?? throw new InvalidOperationException("Connection string 'Kaffe Maskine Database' not found.");
@@ -21,23 +22,26 @@ namespace CoffeeCrazy.Repos
        /// <summary>
        /// 
        /// </summary>
-       /// <param name="assignment"></param>
+       /// <param name="task"></param>
        /// <returns></returns>
-        public async Task CreateAsync(Assignment assignment)
+        public async System.Threading.Tasks.Task CreateAsync(Models.Task task)
         {
             try
             {
                 using (SqlConnection connection = new SqlConnection(_connectionString))
                 {
                     string SQLquery = @"
-                                    INSERT INTO Assignments (Title, Comment, CreateDate, IsCompleted)
-                                    VALUES (@Title, @Comment, @CreateDate, @IsCompleted)";
+                                    INSERT INTO Tasks 
+                                    (TaskTemplate, Comment, CreateDate, IsCompleted, MachineId, FrequencyId)
+                                    VALUES 
+                                    (@TaskTemplate, @Comment, @CreateDate, @IsCompleted, @MachineId, @FrequencyId)";
 
+         //TaskId og TaskTemplateId skal ikke sendes med pga. de contraints vi har lavet vel? E.g. (1,1).
                     using var command = new SqlCommand(SQLquery, connection);
-                    command.Parameters.AddWithValue("@Title", assignment.Title);
-                    command.Parameters.AddWithValue("@Comment", assignment.Comment);
-                    command.Parameters.AddWithValue("@CreateDate", assignment.CreateDate);
-                    command.Parameters.AddWithValue("@IsCompleted", assignment.IsCompleted);
+                    command.Parameters.AddWithValue("@TaskTemplateId", task.TaskTemplateId);
+                    command.Parameters.AddWithValue("@Comment", task.Comment);
+                    command.Parameters.AddWithValue("@CreateDate", task.CreateDate);
+                    command.Parameters.AddWithValue("@IsCompleted", task.IsCompleted);
 
                     await connection.OpenAsync();
                     await command.ExecuteNonQueryAsync();
@@ -58,7 +62,7 @@ namespace CoffeeCrazy.Repos
         }
 
         
-        public async Task DeleteAsync(Assignment toBeDeletedAssignment)
+        public async System.Threading.Tasks.Task DeleteAsync(Models.Task toBeDeletedAssignment)
         {
             try
             {
@@ -68,7 +72,7 @@ namespace CoffeeCrazy.Repos
 
                     SqlCommand command = new SqlCommand(sqlQuery, connection);
 
-                    command.Parameters.AddWithValue("@AssignmentId", toBeDeletedAssignment.AssignmentId);
+                    command.Parameters.AddWithValue("@AssignmentId", toBeDeletedAssignment.TaskId);
                     
                     await connection.OpenAsync();
                     
@@ -91,7 +95,7 @@ namespace CoffeeCrazy.Repos
         /// <param name="assignmentToBeUpdated">Angiv hvilke opgave der skal opdateres</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"> den kaster excetion hvis du er dårlig til at kalde den.</exception>
-        public async Task UpdateAsync(Assignment assignmentToBeUpdated)
+        public async System.Threading.Tasks.Task UpdateAsync(Models.Task assignmentToBeUpdated)
         {
             try
             {
@@ -137,9 +141,9 @@ namespace CoffeeCrazy.Repos
             }
         }
        
-        public async Task<List<Assignment>> GetAllAsync()
+        public async Task<List<Models.Task>> GetAllAsync()
         {
-            var assignments = new List<Assignment>();
+            var assignments = new List<Models.Task>();
 
             try
             {
@@ -154,9 +158,9 @@ namespace CoffeeCrazy.Repos
                         {
                             while (await reader.ReadAsync())
                             {
-                                var assignment = new Assignment
+                                var assignment = new Models.Task
                                 {
-                                    AssignmentId = reader.GetInt32(0),
+                                    TaskId = reader.GetInt32(0),
                                     Title = reader.GetString(1),
                                     Comment = reader.GetString(2),
                                     CreateDate = reader.GetDateTime(3),
@@ -182,7 +186,7 @@ namespace CoffeeCrazy.Repos
             }
         }
 
-        public async Task<Assignment> GetByIdAsync(int assignmentId)
+        public async Task<Task> GetByIdAsync(int assignmentId)
         {
             try
             {
@@ -199,7 +203,7 @@ namespace CoffeeCrazy.Repos
                         {
                             if (await reader.ReadAsync())
                             {
-                                return new Assignment
+                                return new Models.Task
                                 {
                                     AssignmentId = reader.GetInt32(0),
                                     Title = reader.GetString(1),
@@ -210,7 +214,7 @@ namespace CoffeeCrazy.Repos
                             }
                             else
                             {
-                                throw new Exception($"Assignment with ID {assignmentId} does not exist.");
+                                throw new Exception($"Tasks with ID {assignmentId} does not exist.");
                             }
                         }
                     }

@@ -229,9 +229,9 @@ namespace CoffeeCrazy.Repos
                             {
                                 DateCreated = reader.GetDateTime(0),
                                 Status = reader.GetBoolean(1),
-                                AssignmentId = reader.GetInt32(2),
+                                TaskId = reader.GetInt32(2),
                                 UserId = reader.GetInt32(3),
-                                AssignmentSetId = reader.GetInt32(4),
+                                TaskTemplateId = reader.GetInt32(4),
                                 NotificationId = reader.GetInt32(5)
                             });
                         }

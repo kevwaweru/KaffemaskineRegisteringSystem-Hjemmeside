@@ -14,10 +14,10 @@ namespace CoffeeCrazy
             builder.Services.AddRazorPages();   
             // repositories
             builder.Services.AddTransient<IUserRepo, UserRepo>();    
-            builder.Services.AddTransient<IAssignmentRepo, AssignmentRepo>();
-            builder.Services.AddTransient<IAssignmentSetRepo, AssignmentSetRepo>();
+            builder.Services.AddTransient<ITaskRepo, TaskRepo>();
+            builder.Services.AddTransient<ITaskTemplateRepo, TaskTemplateRepo>();
             builder.Services.AddScoped<ITokenGeneratorRepo, TokenGeneratorRepo>();
-            builder.Services.AddScoped<IAssignmentJunctionRepo, AssignmentJunctionRepo>();
+            builder.Services.AddScoped<IAssignmentJunctionRepo, ValidateDatabaseMethods>();
 
             // Services
             builder.Services.AddTransient<IEmailService, EmailService>();

@@ -5,11 +5,11 @@ using System.Data;
 
 namespace CoffeeCrazy.Repos
 {
-    public class AssignmentSetRepo : IAssignmentSetRepo
+    public class TaskTemplateRepo : ITaskTemplateRepo
     {
         private readonly string _connectionString;
 
-        public AssignmentSetRepo(IConfiguration configuration)
+        public TaskTemplateRepo(IConfiguration configuration)
         {
             _connectionString = configuration.GetConnectionString("DefaultConnection")
                 ?? throw new InvalidOperationException("Connection string 'Kaffe Maskine Database' not found.");
@@ -18,9 +18,9 @@ namespace CoffeeCrazy.Repos
         /// <summary>
         /// Use to Create an assingmentSet, with diffrent assignments
         /// </summary>
-        /// <param name="assignmentSet">Takes an objekt of an Assignment, Remember nothing can be null.</param>
+        /// <param name="assignmentSet">Takes an objekt of an Tasks, Remember nothing can be null.</param>
         /// <returns>A Sql Query to the database</returns>
-        public async Task CreateAsync(AssignmentSet assignmentSet)
+        public async System.Threading.Tasks.Task CreateAsync(TaskTemplate assignmentSet)
         {
             try
             {
@@ -57,9 +57,9 @@ namespace CoffeeCrazy.Repos
             }
         }
 
-        public async Task<List<AssignmentSet>> GetAllAsync()
+        public async Task<List<TaskTemplate>> GetAllAsync()
         {
-            var assignmentSets = new List<AssignmentSet>();
+            var assignmentSets = new List<TaskTemplate>();
 
             try
             {
@@ -74,7 +74,7 @@ namespace CoffeeCrazy.Repos
                         {
                             while (await reader.ReadAsync())
                             {
-                                var assignmentSet = new AssignmentSet
+                                var assignmentSet = new TaskTemplate
                                 {
                                     AssignmentSetId = reader.GetInt32(0),
                                     SetCompleted = reader.GetBoolean(1),
@@ -102,7 +102,7 @@ namespace CoffeeCrazy.Repos
         }
 
         // Hent en opgaveliste baseret på ID
-        public async Task<AssignmentSet> GetByIdAsync(int assignmentSetId)
+        public async Task<TaskTemplate> GetByIdAsync(int assignmentSetId)
         {
             try
             {
@@ -117,7 +117,7 @@ namespace CoffeeCrazy.Repos
                         {
                             if (await reader.ReadAsync())
                             {
-                                return new AssignmentSet
+                                return new TaskTemplate
                                 {
                                     AssignmentSetId = reader.GetInt32(0),
                                     SetCompleted = reader.GetBoolean(1),
@@ -151,7 +151,7 @@ namespace CoffeeCrazy.Repos
         /// <param name="assignmentSetToBeUpdated"> Takes an assignmentSet and updates the data.</param>
         /// <returns>The A sql query that UPDATES the assignmentSet Data</returns>
         /// <exception cref="ArgumentNullException">Cast an exception if Id == null</exception>
-        public async Task UpdateAsync(AssignmentSet assignmentSetToBeUpdated)
+        public async System.Threading.Tasks.Task UpdateAsync(TaskTemplate assignmentSetToBeUpdated)
         {
             try
             {
@@ -204,7 +204,7 @@ namespace CoffeeCrazy.Repos
         /// </summary>
         /// <param name="toBeDeletedAssignment">Takes the Id of an AssignmentSet</param>
         /// <returns>A Sql query that delete assignment with that ID</returns>
-        public async Task DeleteAsync(AssignmentSet toBeDeletedAssignmentSet)
+        public async System.Threading.Tasks.Task DeleteAsync(TaskTemplate toBeDeletedAssignmentSet)
         {
             try
             {
@@ -214,7 +214,7 @@ namespace CoffeeCrazy.Repos
 
                     SqlCommand command = new SqlCommand(sqlQuery, connection);
 
-                    command.Parameters.AddWithValue("@AssignmentSetId", toBeDeletedAssignmentSet.AssignmentSetId);
+                    command.Parameters.AddWithValue("@AssignmentSetId", toBeDeletedAssignmentSet.TaskTemplateId);
 
                     await connection.OpenAsync();
 
@@ -237,9 +237,9 @@ namespace CoffeeCrazy.Repos
         /// </summary>
         /// <param name="assignmentSetId"></param>
         /// <returns></returns>
-        public async Task<List<Assignment>> GetByAssignmentSetIdAsync(int assignmentSetId)
+        public async Task<List<Models.Task>> GetByAssignmentSetIdAsync(int assignmentSetId)
         {
-            var assignments = new List<Assignment>();
+            var assignments = new List<Models.Task>();
             string errorMessage = string.Empty;
             try
             {
@@ -255,7 +255,7 @@ namespace CoffeeCrazy.Repos
                         {
                             while (await reader.ReadAsync())
                             {
-                                var assignment = new Assignment
+                                var assignment = new Models.Task
                                 {
                                     AssignmentId = reader.GetInt32(0),
                                     Title = reader.GetString(1),

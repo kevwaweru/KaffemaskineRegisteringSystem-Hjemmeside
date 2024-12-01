@@ -7,14 +7,14 @@ namespace CoffeeCrazy.Pages.Assignments
 {
     public class CreateModel : PageModel
     {
-        private readonly IAssignmentRepo _assignmentRepo;
-        public CreateModel(IAssignmentRepo assignmentRepo)
+        private readonly ITaskRepo _assignmentRepo;
+        public CreateModel(ITaskRepo assignmentRepo)
         {
             _assignmentRepo = assignmentRepo;
         }
 
         [BindProperty]
-        public Assignment Assignment { get; set; }
+        public Models.Task Assignment { get; set; }
 
         public IActionResult OnGet()
         {
