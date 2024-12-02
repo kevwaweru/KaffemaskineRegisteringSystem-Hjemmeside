@@ -106,15 +106,7 @@ namespace CoffeeCrazy.Repos
                 {
                     throw new ArgumentNullException(nameof(assignmentToBeUpdated), "Du bliver nødt til at sende ny data med, hvis du vil have opdateret opgaven.");
                 }
-                ,[TaskTemplateId]
-      ,[Comment]
-      ,[CreatedDate]
-      ,[Deadline]
-      ,[IsCompleted]
-      ,[MachineId]
-      ,[UserId]
-      ,[FrequencyId]
-
+               
                 using (SqlConnection connection = new SqlConnection(_connectionString))
                 {
                     string query = @"
