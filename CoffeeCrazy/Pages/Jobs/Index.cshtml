@@ -1,4 +1,6 @@
 ﻿@page
+@using CoffeeCrazy.Models
+@using CoffeeCrazy.Models.Enums
 @model CoffeeCrazy.Pages.Jobs.IndexModel
 @{
 
@@ -6,34 +8,67 @@
 <table class="table">
     <thead>
         <tr>
-            <th>Titel</th>
-            <th>Description</th>
-            <th>Comment</th>
-            <th>Is Completed</th>
+            <th>Maskine ID</th>
+            <th>Opgave Titel</th>
+            <th>Beskrivelse</th>
+            <th>Kommentar</th>
+            <th>Oprettet dato</th>
             <th>Deadline</th>
-            <th>User Id</th>
-            <th>udført</th>
-            <th>Maskine Ide</th>
-            <th>Hvad VIL DU!</th>
+            <th>Hyppighed</th>
+            <th>Medarbejder Navn</th>
+            <th>Er Udført?</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var job in Model.Jobs)
+        @foreach (Job currentJob in Model.Jobs)
         {
-            @foreach (var jobTemplate in Model.JobTemplates)
+            JobTemplate jobTemplate = Model.JobTemplates.FirstOrDefault(jobTemplateParameter => jobTemplateParameter.JobTemplateId == currentJob.JobTemplateId);
+            Frequency frequency = Model.frequencies.FirstOrDefault(frequencyParameter => (int)frequencyParameter == currentJob.FrequencyId);
+            User user = Model.Users.FirstOrDefault(userParameter => userParameter.UserId == currentJob.UserId);
+
+            if (jobTemplate != null && frequency != null)
             {
-                if (job.JobTemplateId == jobTemplate.JobTemplateId)
-                {
-                    <tr>
-                        <td>@jobTemplate.Title</td>
-                        <td>@jobTemplate.Description</td>
-                        <td>@job.Comment</td>
-                        <td>@job.IsCompleted</td>
-                        <td>@job.MachineId</td>
-                        <td>@job.UserId</td>
-                    </tr>
-                }
+                string rowClass = currentJob.Deadline < DateTime.Now && !currentJob.IsCompleted ? "table-danger" :
+                currentJob.IsCompleted ? "table-success" : "table-light";
+
+                <tr class="@rowClass">
+                    <td>@currentJob.MachineId</td>
+
+                    <td>@jobTemplate.Title</td>
+
+                    <td>@jobTemplate.Description</td>
+
+                    @if (currentJob.Comment != null)
+                    {
+                        <td>@currentJob.Comment</td>
+                    }
+                    else
+                    {
+                        <td>Ingen kommentar</td>
+                    }
+
+                    <td>@currentJob.CreatedDate</td>
+
+                    <td>@currentJob.Deadline</td>
+
+                    <td>@frequency</td>
+
+                    @if (currentJob.UserId != null)
+                    {
+                        <td>@user.FirstName @user.LastName</td>
+                    }
+                    else if (currentJob.UserId == null && currentJob.Deadline > DateTime.Now)
+                    {
+                        <td class="text-warning">Venter på at blive udført</td>
+                    }
+                    else
+                    {
+                    <td class="text-danger">Ikke udført af nogen</td>
+                    }
+                    <td>@currentJob.IsCompleted</td>
+                </tr>
             }
         }
     </tbody>
+
 </table>

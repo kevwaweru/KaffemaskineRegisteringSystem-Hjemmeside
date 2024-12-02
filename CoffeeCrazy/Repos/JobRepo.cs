@@ -223,6 +223,7 @@ namespace CoffeeCrazy.Repos
                                     Deadline = reader.GetDateTime(4),
                                     IsCompleted = reader.GetBoolean(5),
                                     MachineId = reader.GetInt32(6),
+                                    UserId = reader.IsDBNull(7) ? (int?)null : reader.GetInt32(7),
                                     FrequencyId = reader.GetInt32(8)
                                 };
 
@@ -278,7 +279,7 @@ namespace CoffeeCrazy.Repos
                                     Deadline = reader.GetDateTime(4),
                                     IsCompleted = reader.GetBoolean(5),
                                     MachineId = reader.GetInt32(6),
-                                    UserId = reader.GetInt32(7),
+                                    UserId = reader.IsDBNull(7) ? (int?)null : reader.GetInt32(7),
                                     FrequencyId = reader.GetInt32(8),
 
                                     
