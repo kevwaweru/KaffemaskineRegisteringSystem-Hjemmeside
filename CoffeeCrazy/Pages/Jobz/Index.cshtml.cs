@@ -1,9 +1,9 @@
 using CoffeeCrazy.Interfaces;
 using CoffeeCrazy.Models;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Security.AccessControl;
 
-namespace CoffeeCrazy.Pages.Jobs
+namespace CoffeeCrazy.Pages.Jobz
 {
     public class IndexModel : PageModel
     {
@@ -25,5 +25,6 @@ namespace CoffeeCrazy.Pages.Jobs
             Jobs = await _jobRepo.GetAllAsync();
         }
     }
-}
 
+
+}

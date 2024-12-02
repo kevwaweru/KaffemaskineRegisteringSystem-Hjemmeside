@@ -1,8 +1,11 @@
 ﻿@page
-@model CoffeeCrazy.Pages.Jobs.IndexModel
+@model CoffeeCrazy.Pages.Jobz.IndexModel
 @{
-
+    ViewData["Title"] = "Jobs - Index";
 }
+
+<h1>Jobs - Index</h1>
+<a asp-page="Create">Create New Job</a>
 <table class="table">
     <thead>
         <tr>
@@ -18,8 +21,8 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var job in Model.Jobs)
-        {
+    @foreach (var job in Model.Jobs)
+    {
             @foreach (var jobTemplate in Model.JobTemplates)
             {
                 if (job.JobTemplateId == jobTemplate.JobTemplateId)
@@ -34,6 +37,7 @@
                     </tr>
                 }
             }
-        }
+    }
     </tbody>
 </table>
+
