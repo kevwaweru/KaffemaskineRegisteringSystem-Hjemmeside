@@ -28,8 +28,13 @@
 
             if (jobTemplate != null && frequency != null)
             {
+                /*denne string holder en bootstrap klasse for table <tr>
+                  Ved godt vi ikke kommer til at bruge bootstrap men her ville vi fx. skrive en CSS klasse*/
                 string rowClass = currentJob.Deadline < DateTime.Now && !currentJob.IsCompleted ? "table-danger" :
-                currentJob.IsCompleted ? "table-success" : "table-light";
+                /*hvis job er udført er rækken grøn*/
+                currentJob.IsCompleted ? "table-success" : 
+                /*hvis ingen af ovenstående er sandtm så er rækken bare hvid*/
+                "table-light";
 
                 <tr class="@rowClass">
                     <td>@currentJob.MachineId</td>
