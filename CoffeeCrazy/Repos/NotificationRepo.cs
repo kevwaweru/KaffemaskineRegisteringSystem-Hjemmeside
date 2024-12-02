@@ -29,7 +29,6 @@ namespace CoffeeCrazy.Repos
                     using (SqlCommand command = new SqlCommand(sqlQuery, connection))
                     {
                         command.Parameters.Add("@Message", SqlDbType.NVarChar).Value = notification.Message;
-                        command.Parameters.Add("@NotificationTypeId", SqlDbType.Int).Value = notification.NotificationTypeId ?? (object)DBNull.Value;
 
                         command.ExecuteNonQuery();
                     }
@@ -55,7 +54,6 @@ namespace CoffeeCrazy.Repos
                     {
                         command.Parameters.Add("@NotificationId", SqlDbType.Int).Value = notification.NotificationId;
                         command.Parameters.Add("@Message", SqlDbType.NVarChar).Value = notification.Message;
-                        command.Parameters.Add("@NotificationTypeId", SqlDbType.Int).Value = notification.NotificationTypeId ?? (object)DBNull.Value;
 
                         command.ExecuteNonQuery();
                     }
@@ -111,7 +109,6 @@ namespace CoffeeCrazy.Repos
                             {
                                 NotificationId = reader.GetInt32(0),
                                 Message = reader.GetString(1),
-                                NotificationTypeId = reader.IsDBNull(2) ? (int?)null : reader.GetInt32(2)
                             });
                         }
                     }
@@ -141,9 +138,7 @@ namespace CoffeeCrazy.Repos
                     {
                         command.Parameters.Add("@DateCreated", SqlDbType.DateTime).Value = notify.DateCreated;
                         command.Parameters.Add("@Status", SqlDbType.Bit).Value = notify.Status;
-                        command.Parameters.Add("@AssignmentId", SqlDbType.Int).Value = notify.AssignmentId;
                         command.Parameters.Add("@UserId", SqlDbType.Int).Value = notify.UserId;
-                        command.Parameters.Add("@AssignmentSetId", SqlDbType.Int).Value = notify.AssignmentSetId;
                         command.Parameters.Add("@NotificationId", SqlDbType.Int).Value = notify.NotificationId;
 
                         command.ExecuteNonQuery();
@@ -170,9 +165,7 @@ namespace CoffeeCrazy.Repos
                     {
                         command.Parameters.Add("@DateCreated", SqlDbType.DateTime).Value = notify.DateCreated;
                         command.Parameters.Add("@Status", SqlDbType.Bit).Value = notify.Status;
-                        command.Parameters.Add("@AssignmentId", SqlDbType.Int).Value = notify.AssignmentId;
                         command.Parameters.Add("@UserId", SqlDbType.Int).Value = notify.UserId;
-                        command.Parameters.Add("@AssignmentSetId", SqlDbType.Int).Value = notify.AssignmentSetId;
                         command.Parameters.Add("@NotificationId", SqlDbType.Int).Value = notify.NotificationId;
 
                         command.ExecuteNonQuery();
@@ -231,7 +224,6 @@ namespace CoffeeCrazy.Repos
                                 Status = reader.GetBoolean(1),
                                 TaskId = reader.GetInt32(2),
                                 UserId = reader.GetInt32(3),
-                                TaskTemplateId = reader.GetInt32(4),
                                 NotificationId = reader.GetInt32(5)
                             });
                         }

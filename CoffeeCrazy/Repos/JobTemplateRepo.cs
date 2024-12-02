@@ -61,7 +61,7 @@ namespace CoffeeCrazy.Repos
                 using (var connection = new SqlConnection(_connectionString))
                 {
                     await connection.OpenAsync();
-                    string query = "SELECT TaskTemplateId, Title, Description FROM TaskTemplate";
+                    string query = "SELECT * FROM TaskTemplates";
 
                     using (var command = new SqlCommand(query, connection))
                     {
@@ -73,7 +73,7 @@ namespace CoffeeCrazy.Repos
                                 {
                                     JobTemplateId = reader.GetInt32(0),
                                     Title = reader.GetString(1),
-                                    Description = reader.GetString(2),                             
+                                    Description = reader.GetString(2)                           
                                 };
                                 JobTemplates.Add(JobTemplate);
                             }

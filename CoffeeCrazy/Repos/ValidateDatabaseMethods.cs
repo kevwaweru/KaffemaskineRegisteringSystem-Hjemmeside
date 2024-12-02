@@ -19,8 +19,7 @@ namespace CoffeeCrazy.Repos
         {
             _connectionString = configuration.GetConnectionString("DefaultConnection")
                 ?? throw new InvalidOperationException("Connection string 'Kaffe Maskine Database' not found.");
-            _assignmentRepo = assignmentRepo;
-            _assignmentSetRepo = assignmentSetRepo;
+
 
         }
 
