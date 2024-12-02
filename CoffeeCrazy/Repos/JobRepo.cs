@@ -159,11 +159,13 @@ namespace CoffeeCrazy.Repos
                 {
                     await connection.OpenAsync();
 
-                    // Query to retrieve all jobs from the Tasks table.
+                    // Query to retrieve all jobs and include TaskTemplate data using INNER JOIN
                     const string getJobsQuery = @"
-                SELECT TaskId, TaskTemplateId, Comment, CreatedDate, Deadline, 
-                       IsCompleted, MachineId, UserId, FrequencyId 
-                FROM Tasks";
+            SELECT t.TaskId, t.TaskTemplateId, t.Comment, t.CreatedDate, t.Deadline, 
+                   t.IsCompleted, t.MachineId, t.UserId, t.FrequencyId,
+                   tt.Title AS TaskTemplateTitle, tt.Description AS TaskTemplateDescription
+            FROM Tasks t
+            INNER JOIN TaskTemplates tt ON t.TaskTemplateId = tt.TaskTemplateId";
 
                     using (var command = new SqlCommand(getJobsQuery, connection))
                     {
@@ -183,6 +185,14 @@ namespace CoffeeCrazy.Repos
                                     MachineId = reader.GetInt32(6),
                                     UserId = reader.GetInt32(7),
                                     FrequencyId = reader.GetInt32(8),
+
+                                    // Including TaskTemplate data
+                                    JobTemplate = new JobTemplate
+                                    {
+                                        TaskTemplateId = reader.GetInt32(1),
+                                        Title = reader.GetString(9),
+                                        Description = reader.IsDBNull(10) ? null : reader.GetString(10)
+                                    }
                                 };
 
                                 // Add the job to the list.
@@ -217,12 +227,14 @@ namespace CoffeeCrazy.Repos
                 {
                     await connection.OpenAsync();
 
-                    // SQL query to get a task by ID.
+                    // SQL query to retrieve data from Tasks and TaskTemplates.
                     const string query = @"
-                SELECT TaskId, TaskTemplateId, Comment, CreatedDate, Deadline, 
-                       IsCompleted, MachineId, UserId, FrequencyId 
-                FROM Tasks 
-                WHERE TaskId = @TaskId";
+                SELECT t.TaskId, t.TaskTemplateId, t.Comment, t.CreatedDate, t.Deadline, 
+                       t.IsCompleted, t.MachineId, t.UserId, t.FrequencyId,
+                       tt.Title AS TaskTemplateTitle, tt.Description AS TaskTemplateDescription
+                FROM Tasks t
+                INNER JOIN TaskTemplates tt ON t.TaskTemplateId = tt.TaskTemplateId
+                WHERE t.TaskId = @TaskId";
 
                     using (var command = new SqlCommand(query, connection))
                     {
@@ -245,6 +257,14 @@ namespace CoffeeCrazy.Repos
                                     MachineId = reader.GetInt32(6),
                                     UserId = reader.GetInt32(7),
                                     FrequencyId = reader.GetInt32(8),
+
+                                    // Including TaskTemplate data
+                                    JobTemplate = new JobTemplate
+                                    {
+                                        TaskTemplateId = reader.GetInt32(1),
+                                        Title = reader.GetString(9),
+                                        Description = reader.IsDBNull(10) ? null : reader.GetString(10)
+                                    }
                                 };
                             }
                             else
