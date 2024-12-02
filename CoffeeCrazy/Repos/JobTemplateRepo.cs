@@ -73,8 +73,7 @@ namespace CoffeeCrazy.Repos
                                 {
                                     JobTemplateId = reader.GetInt32(0),
                                     Title = reader.GetString(1),
-                                    Description = reader.GetString(2),
-                                
+                                    Description = reader.GetString(2),                             
                                 };
                                 JobTemplates.Add(JobTemplate);
                             }

@@ -14,7 +14,5 @@
         public int MachineId { get; set; }
         public int FrequencyId { get; set; }
         public int UserId { get; set; }
-
-
     }
 }

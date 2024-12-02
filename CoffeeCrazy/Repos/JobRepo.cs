@@ -20,9 +20,9 @@ namespace CoffeeCrazy.Repos
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="task"></param>
+        /// <param name="Job"></param>
         /// <returns></returns>
-        public async Task CreateAsync(Job task)
+        public async Task CreateAsync(Job Job)
         {
             try
             {
@@ -35,14 +35,14 @@ namespace CoffeeCrazy.Repos
                                      (@TaskTemplateId, @Comment, @CreateDate, @Deadline, @IsCompleted, @MachineId, @UserId, @FrequencyId)";
 
                     using var command = new SqlCommand(SQLquery, connection);
-                    command.Parameters.AddWithValue("@TaskTemplateId", task.JobTemplateId);
-                    command.Parameters.AddWithValue("@Comment", task.Comment);
-                    command.Parameters.AddWithValue("@CreateDate", task.CreatedDate);
-                    command.Parameters.AddWithValue("@Deadline", task.Deadline);
-                    command.Parameters.AddWithValue("@IsCompleted", task.IsCompleted);
-                    command.Parameters.AddWithValue("@MachineId", task.MachineId);
-                    command.Parameters.AddWithValue("@UserId", task.UserId);
-                    command.Parameters.AddWithValue("@FrequencyId", task.FrequencyId);
+                    command.Parameters.AddWithValue("@TaskTemplateId", Job.JobTemplateId);
+                    command.Parameters.AddWithValue("@Comment", Job.Comment);
+                    command.Parameters.AddWithValue("@CreateDate", Job.CreatedDate);
+                    command.Parameters.AddWithValue("@Deadline", Job.Deadline);
+                    command.Parameters.AddWithValue("@IsCompleted", Job.IsCompleted);
+                    command.Parameters.AddWithValue("@MachineId", Job.MachineId);
+                    command.Parameters.AddWithValue("@UserId", Job.UserId);
+                    command.Parameters.AddWithValue("@FrequencyId", Job.FrequencyId);
 
 
                     await connection.OpenAsync();
