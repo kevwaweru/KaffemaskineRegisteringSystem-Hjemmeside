@@ -13,77 +13,97 @@
 <p>Hvis ingen af ovenstående er sand, er rækken bare hvid</p>
 <br />
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Maskine ID</th>
-            <th>Opgave Titel</th>
-            <th>Beskrivelse</th>
-            <th>Kommentar</th>
-            <th>Oprettet dato</th>
-            <th>Deadline</th>
-            <th>Hyppighed</th>
-            <th>Medarbejder Navn</th>
-            <th>Er Udført?</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (Job currentJob in Model.Jobs)
+
+<div class="container">
+    <div class="row">
+        @foreach (var machine in Model.Machines)
         {
-            JobTemplate jobTemplate = Model.JobTemplates.FirstOrDefault(jobTemplateParameter => jobTemplateParameter.JobTemplateId == currentJob.JobTemplateId);
-            Frequency frequency = Model.frequencies.FirstOrDefault(frequencyParameter => (int)frequencyParameter == currentJob.FrequencyId);
-            User user = Model.Users.FirstOrDefault(userParameter => userParameter.UserId == currentJob.UserId);
+            <div class="col">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Job ID</th>
+                            <th>Maskine ID</th>
+                            <th>Opgave Titel</th>
+                            <th>Beskrivelse</th>
+                            <th>Kommentar</th>
+                            <th>Oprettet dato</th>
+                            <th>Deadline</th>
+                            <th>Hyppighed</th>
+                            <th>Medarbejder Navn</th>
+                            <th>Er Udført?</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (Job currentJob in Model.Jobs)
+                        {
+                            if (machine.MachineId == currentJob.MachineId)
+                            {
 
-            if (jobTemplate != null && frequency != null)
-            {
-                /*denne string holder en bootstrap klasse for table <tr>
-                  Jed godt vi ikke kommer til at bruge bootstrap men her ville vi fx. skrive en CSS klasse*/
-                string rowClass =
-                /*Hvis deadline er overskredet og jobbet er ikke udført af nogen, så er rækken rød*/
-                currentJob.Deadline < DateTime.Now && !currentJob.IsCompleted ? "table-danger" :
-                /*Hvis jobbet er udført, er rækken grøn*/
-                currentJob.IsCompleted ? "table-success" :
-                /*Hvis ingen af ovenstående er sand, er rækken bare hvid*/
-                "table-light";
 
-                <tr class="@rowClass">
-                    <td>@currentJob.MachineId</td>
+                                JobTemplate jobTemplate = Model.JobTemplates.FirstOrDefault(jobTemplateParameter => jobTemplateParameter.JobTemplateId == currentJob.JobTemplateId);
+                                Frequency frequency = Model.frequencies.FirstOrDefault(frequencyParameter => (int)frequencyParameter == currentJob.FrequencyId);
+                                User user = Model.Users.FirstOrDefault(userParameter => userParameter.UserId == currentJob.UserId);
 
-                    <td>@jobTemplate.Title</td>
+                                if (jobTemplate != null && frequency != null)
+                                {
+                                    /*denne string holder en bootstrap klasse for table <tr>
+                                    Jed godt vi ikke kommer til at bruge bootstrap men her ville vi fx. skrive en CSS klasse*/
+                                    string rowClass =
+                                    /*Hvis deadline er overskredet og jobbet er ikke udført af nogen, så er rækken rød*/
+                                    currentJob.Deadline < DateTime.Now && !currentJob.IsCompleted ? "table-danger" :
+                                    /*Hvis jobbet er udført, er rækken grøn*/
+                                    currentJob.IsCompleted ? "table-success" :
+                                    /*Hvis ingen af ovenstående er sand, er rækken bare hvid*/
+                                    "table-light";
 
-                    <td>@jobTemplate.Description</td>
+                                    <tr class="@rowClass">
+                                        <td>@currentJob.JobId</td>
+                                        <td>@currentJob.MachineId</td>
 
-                    @if (currentJob.Comment != null)
-                    {
-                        <td>@currentJob.Comment</td>
-                    }
-                    else
-                    {
-                        <td>Ingen kommentar</td>
-                    }
+                                        <td>@jobTemplate.Title</td>
 
-                    <td>@currentJob.CreatedDate</td>
+                                        <td>@jobTemplate.Description</td>
 
-                    <td>@currentJob.Deadline</td>
+                                        @if (currentJob.Comment != null)
+                                        {
+                                            <td>@currentJob.Comment</td>
+                                        }
+                                        else
+                                        {
+                                            <td>Ingen kommentar</td>
+                                        }
 
-                    <td>@frequency</td>
+                                        <td>@currentJob.CreatedDate</td>
 
-                    @if (currentJob.UserId != null)
-                    {
-                        <td>@user.FirstName @user.LastName</td>
-                    }
-                    else if (currentJob.UserId == null && currentJob.Deadline > DateTime.Now)
-                    {
-                        <td class="text-warning">Venter på at blive udført</td>
-                    }
-                    else
-                    {
-                    <td class="text-danger">Ikke udført af nogen</td>
-                    }
-                    <td>@currentJob.IsCompleted</td>
-                </tr>
-            }
+                                        <td>@currentJob.Deadline</td>
+
+                                        <td>@frequency</td>
+
+                                        @if (currentJob.UserId != null)
+                                        {
+                                            <td>@user.FirstName @user.LastName</td>
+                                        }
+                                        else if (currentJob.UserId == null && currentJob.Deadline > DateTime.Now)
+                                        {
+                                            <td class="text-warning">Venter på at blive udført</td>
+                                        }
+                                        else
+                                        {
+                                            <td class="text-danger">Ikke udført af nogen</td>
+                                        }
+                                        <td>@currentJob.IsCompleted</td>
+                                    </tr>
+                                }
+                            }
+                        }
+                    </tbody>
+
+                </table>
+
+            </div>
+
         }
-    </tbody>
 
-</table>
+    </div>
+</div>
