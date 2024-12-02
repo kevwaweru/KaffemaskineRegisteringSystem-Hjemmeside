@@ -5,6 +5,14 @@
 @{
 
 }
+<h1>Camillas Overblik Side</h1>
+
+<br />
+<p class="text-danger">Hvis deadline er overskredet og jobbet er ikke udført af nogen, så er rækken rød</p>
+<p class="text-success">Hvis jobbet er udført, er rækken grøn</p>
+<p>Hvis ingen af ovenstående er sand, er rækken bare hvid</p>
+<br />
+
 <table class="table">
     <thead>
         <tr>
@@ -29,11 +37,13 @@
             if (jobTemplate != null && frequency != null)
             {
                 /*denne string holder en bootstrap klasse for table <tr>
-                  Ved godt vi ikke kommer til at bruge bootstrap men her ville vi fx. skrive en CSS klasse*/
-                string rowClass = currentJob.Deadline < DateTime.Now && !currentJob.IsCompleted ? "table-danger" :
-                /*hvis job er udført er rækken grøn*/
-                currentJob.IsCompleted ? "table-success" : 
-                /*hvis ingen af ovenstående er sandtm så er rækken bare hvid*/
+                  Jed godt vi ikke kommer til at bruge bootstrap men her ville vi fx. skrive en CSS klasse*/
+                string rowClass =
+                /*Hvis deadline er overskredet og jobbet er ikke udført af nogen, så er rækken rød*/
+                currentJob.Deadline < DateTime.Now && !currentJob.IsCompleted ? "table-danger" :
+                /*Hvis jobbet er udført, er rækken grøn*/
+                currentJob.IsCompleted ? "table-success" :
+                /*Hvis ingen af ovenstående er sand, er rækken bare hvid*/
                 "table-light";
 
                 <tr class="@rowClass">
