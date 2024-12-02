@@ -8,26 +8,24 @@ namespace CoffeeCrazy.Pages.AssignmentSets
 {
     public class CreateModel : PageModel
     {
-        private readonly ITaskTemplateRepo _AssignmentSetRepo;
-        private readonly IAssignmentJunctionRepo _AssignmentJunctionRepo;
-        private readonly IJobRepo _AssignmentRepo;
+        private readonly IJobTemplateRepo _jobTemplateRepo;
+        private readonly IJobRepo _jobRepository;
 
-        public CreateModel(ITaskTemplateRepo AssignmentSetRepo, IAssignmentJunctionRepo assignmentJunctionRepo, IJobRepo assignmentRepo)
+        public CreateModel(IJobTemplateRepo AssignmentSetRepo, IJobRepo assignmentRepo)
         {
-            _AssignmentSetRepo = AssignmentSetRepo;
-            _AssignmentJunctionRepo = assignmentJunctionRepo;
-            _AssignmentRepo = assignmentRepo;
+            _jobTemplateRepo = AssignmentSetRepo;
+            _jobRepository = assignmentRepo;
         }
 
         [BindProperty]
-        public TaskTemplate AssignmentSet { get; set; } = new();
+        public JobTemplate AssignmentSet { get; set; } = new();
         public List<Models.Job> Assignments { get; set; } = new();
         [BindProperty]
         public List<int> SelectedAssignments { get; set; } = new();
 
         public async Task<IActionResult> OnGet()
         {
-            Assignments =  await _AssignmentRepo.GetAllAsync();
+            Assignments =  await _jobRepository.GetAllAsync();
 
             return Page();
         }
@@ -36,12 +34,12 @@ namespace CoffeeCrazy.Pages.AssignmentSets
         {
             if (!ModelState.IsValid)
             {
-                Assignments = await _AssignmentRepo.GetAllAsync();
+                Assignments = await _jobRepository.GetAllAsync();
                 return Page();
             }
             AssignmentSet.Deadline = DateTime.FromOADate(7);
             AssignmentSet.SetCompleted = false;
-            await _AssignmentSetRepo.CreateAsync(AssignmentSet);
+            await _jobTemplateRepo.CreateAsync(AssignmentSet);
 
             if (SelectedAssignments.Any())
             {

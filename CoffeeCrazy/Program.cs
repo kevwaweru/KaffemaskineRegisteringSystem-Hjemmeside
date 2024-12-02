@@ -15,7 +15,7 @@ namespace CoffeeCrazy
             // repositories
             builder.Services.AddTransient<IUserRepo, UserRepo>();    
             builder.Services.AddTransient<IJobRepo, JobRepo>();
-            builder.Services.AddTransient<ITaskTemplateRepo, TaskTemplateRepo>();
+            builder.Services.AddTransient<IJobTemplateRepo, JobTemplateRepo>();
             builder.Services.AddScoped<ITokenGeneratorRepo, TokenGeneratorRepo>();
             builder.Services.AddScoped<IAssignmentJunctionRepo, ValidateDatabaseMethods>();
 

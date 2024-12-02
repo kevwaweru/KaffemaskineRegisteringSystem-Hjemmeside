@@ -5,37 +5,39 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CoffeeCrazy.Pages.AssignmentSets
 {
-    public class DeleteModel : PageModel
+    public class UpdateModel : PageModel
     {
-        private readonly ITaskTemplateRepo _assignmentSetRepo;
+        private readonly IJobTemplateRepo _assignmentSetRepo;
 
-        public DeleteModel(ITaskTemplateRepo assignmentSetRepo)
+        public UpdateModel(IJobTemplateRepo repo)
         {
-            _assignmentSetRepo = assignmentSetRepo;
+            _assignmentSetRepo = repo;
         }
 
         [BindProperty]
-        public TaskTemplate AssignmentSet { get; set; }
+        public JobTemplate AssignmentSet { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int id)
         {
             AssignmentSet = await _assignmentSetRepo.GetByIdAsync(id);
+
             if (AssignmentSet == null)
             {
                 return NotFound();
             }
+
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (AssignmentSet == null)
+            if (!ModelState.IsValid)
             {
-                return NotFound();
+                return Page();
             }
 
-            await _assignmentSetRepo.DeleteAsync(AssignmentSet);
-            return RedirectToPage("/Index");
+            await _assignmentSetRepo.UpdateAsync(AssignmentSet);
+            return RedirectToPage("Index");
         }
     }
 }
