@@ -208,10 +208,13 @@ namespace CoffeeCrazy.Repos
                 {
                     await connection.OpenAsync();
 
+                    // SQL query to retrieve all jobs with TaskTemplate data using INNER JOIN
                     string getJobsQuery = @"
-                SELECT TaskId, TaskTemplateId, Comment, CreatedDate, Deadline, 
-                       IsCompleted, MachineId, UserId, FrequencyId 
-                FROM Tasks";
+                SELECT t.TaskId, t.TaskTemplateId, t.Comment, t.CreatedDate, t.Deadline, 
+                       t.IsCompleted, t.MachineId, t.UserId, t.FrequencyId, 
+                       tt.Title AS TaskTemplateTitle, tt.Description AS TaskTemplateDescription
+                FROM Tasks t
+                INNER JOIN TaskTemplates tt ON t.TaskTemplateId = tt.TaskTemplateId";
 
                     using (var command = new SqlCommand(getJobsQuery, connection))
                     {
