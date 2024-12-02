@@ -3,16 +3,3 @@
 @{
     ViewData["Title"] = "Slet Opgavesæt";
 }
-
-<h1>Du er nu igang med at prøve at slettet et opgavesæt!</h1>
-<p>Er du sikker?</p>
-<div>
-<dl>
-        <dt class="col-sm-10">@Model.AssignmentSet.Title</dt>
-</dl>    
-</div>
-<form method="post">
-    <input type="hidden" asp-for="AssignmentSet.AssignmentSetId" />
-    <button type="submit" class="btn btn-danger">Delete</button>
-    <a asp-page="/Index" class="btn btn-secondary">Cancel</a>
-</form>

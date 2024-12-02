@@ -80,18 +80,17 @@ namespace CoffeeCrazy.Repos
                 {
                     string SQLquery = @"
                                     INSERT INTO Tasks 
-                                    (TaskTemplateId, Comment, CreateDate, Deadline, IsCompleted, MachineId, UserId, FrequencyId)
+                                    (TaskTemplateId, Comment, CreatedDate, Deadline, IsCompleted, MachineId, FrequencyId)
                                     VALUES 
-                                     (@TaskTemplateId, @Comment, @CreateDate, @Deadline, @IsCompleted, @MachineId, @UserId, @FrequencyId)";
+                                     (@TaskTemplateId, @Comment, @CreatedDate, @Deadline, @IsCompleted, @MachineId, @FrequencyId)";
 
                     using var command = new SqlCommand(SQLquery, connection);
                     command.Parameters.AddWithValue("@TaskTemplateId", Job.JobTemplateId);
-                    command.Parameters.AddWithValue("@Comment", Job.Comment);
-                    command.Parameters.AddWithValue("@CreateDate", Job.CreatedDate);
+                    command.Parameters.AddWithValue("@CreatedDate", Job.CreatedDate);
                     command.Parameters.AddWithValue("@Deadline", Job.Deadline);
                     command.Parameters.AddWithValue("@IsCompleted", Job.IsCompleted);
                     command.Parameters.AddWithValue("@MachineId", Job.MachineId);
-                    command.Parameters.AddWithValue("@UserId", Job.UserId);
+                    command.Parameters.AddWithValue("@Comment", Job.Comment);
                     command.Parameters.AddWithValue("@FrequencyId", Job.FrequencyId);
 
 
@@ -182,7 +181,7 @@ namespace CoffeeCrazy.Repos
                         command.Parameters.AddWithValue("@FrequencyId", JobToBeUpdated.FrequencyId);
 
                         connection.Open();
-                        await command.ExecuteNonQueryAsync(); 
+                        await command.ExecuteNonQueryAsync();
 
                     }
 
@@ -198,144 +197,15 @@ namespace CoffeeCrazy.Repos
             }
         }
 
-        public async Task<List<Job>> GetAllAsync()
+        public Task<List<Job>> GetAllAsync()
         {
-            var jobs = new List<Job>();
-
-            try
-            {
-                using (var connection = new SqlConnection(_connectionString))
-                {
-                    await connection.OpenAsync();
-
-                    // SQL query to retrieve all jobs with TaskTemplate data using INNER JOIN
-                    string getJobsQuery = @"
-                SELECT t.TaskId, t.TaskTemplateId, t.Comment, t.CreatedDate, t.Deadline, 
-                       t.IsCompleted, t.MachineId, t.UserId, t.FrequencyId, 
-                       tt.Title AS TaskTemplateTitle, tt.Description AS TaskTemplateDescription
-                FROM Tasks t
-                INNER JOIN TaskTemplates tt ON t.TaskTemplateId = tt.TaskTemplateId";
-
-                    using (var command = new SqlCommand(getJobsQuery, connection))
-                    {
-                        using (var reader = await command.ExecuteReaderAsync())
-                        {
-                            while (await reader.ReadAsync())
-                            {
-                                // Create a new Job object and populate it with data from the database.
-                                var job = new Job
-                                {
-                                    JobId = reader.GetInt32(0),
-                                    JobTemplateId = reader.GetInt32(1),
-                                    Comment = reader.IsDBNull(2) ? null : reader.GetString(2),
-                                    CreatedDate = reader.GetDateTime(3),
-                                    Deadline = reader.GetDateTime(4),
-                                    IsCompleted = reader.GetBoolean(5),
-                                    MachineId = reader.GetInt32(6),
-                                    UserId = reader.GetInt32(7),
-                                    FrequencyId = reader.GetInt32(8),
-
-                                    // Including TaskTemplate data
-                                    JobTemplate = new JobTemplate
-                                    {
-                                        JobTemplateId = reader.GetInt32(1),
-                                        Title = reader.GetString(9),
-                                        Description = reader.IsDBNull(10) ? null : reader.GetString(10)
-                                    }
-                                };
-
-                                // Add the job to the list.
-                                jobs.Add(job);
-                            }
-                        }
-                    }
-                }
-            }
-            catch (SqlException ex)
-            {
-                // Log database-related errors.
-                Console.WriteLine($"Database error: {ex.Message}");
-                throw;
-            }
-            catch (Exception ex)
-            {
-                // Log general errors.
-                Console.WriteLine($"An error occurred: {ex.Message}");
-                throw;
-            }
-
-            // Return the list of jobs.
-            return jobs;
+            throw new NotImplementedException();
         }
 
-        public async Task<Job> GetByIdAsync(int taskId)
+        public Task<Job> GetByIdAsync(int id)
         {
-            try
-            {
-                using (var connection = new SqlConnection(_connectionString))
-                {
-                    await connection.OpenAsync();
-
-                    // SQL query to retrieve data from Tasks and TaskTemplates.
-                    const string query = @"
-                SELECT t.TaskId, t.TaskTemplateId, t.Comment, t.CreatedDate, t.Deadline, 
-                       t.IsCompleted, t.MachineId, t.UserId, t.FrequencyId,
-                       tt.Title AS TaskTemplateTitle, tt.Description AS TaskTemplateDescription
-                FROM Tasks t
-                INNER JOIN TaskTemplates tt ON t.TaskTemplateId = tt.TaskTemplateId
-                WHERE t.TaskId = @TaskId";
-
-                    using (var command = new SqlCommand(query, connection))
-                    {
-                        // Add parameter for the task ID.
-                        command.Parameters.AddWithValue("@TaskId", taskId);
-
-                        using (var reader = await command.ExecuteReaderAsync())
-                        {
-                            // Check if the record exists and return the job object.
-                            if (await reader.ReadAsync())
-                            {
-                                return new Job
-                                {
-                                    JobId = reader.GetInt32(0),
-                                    JobTemplateId = reader.GetInt32(1),
-                                    Comment = reader.IsDBNull(2) ? null : reader.GetString(2),
-                                    CreatedDate = reader.GetDateTime(3),
-                                    Deadline = reader.GetDateTime(4),
-                                    IsCompleted = reader.GetBoolean(5),
-                                    MachineId = reader.GetInt32(6),
-                                    UserId = reader.GetInt32(7),
-                                    FrequencyId = reader.GetInt32(8),
-
-                                    // Including TaskTemplate data
-                                    JobTemplate = new JobTemplate
-                                    {
-                                        JobTemplateId = reader.GetInt32(1),
-                                        Title = reader.GetString(9),
-                                        Description = reader.IsDBNull(10) ? null : reader.GetString(10)
-                                    }
-                                };
-                            }
-                            else
-                            {
-                                throw new InvalidOperationException($"Task with ID {taskId} does not exist.");
-                            }
-                        }
-                    }
-                }
-            }
-            catch (SqlException ex)
-            {
-                // Log database errors and rethrow.
-                Console.WriteLine($"Database error: {ex.Message}");
-                throw;
-            }
-            catch (Exception ex)
-            {
-                // Log general errors and rethrow.
-                Console.WriteLine($"An error occurred: {ex.Message}");
-                throw;
-            }
+            throw new NotImplementedException();
         }
     }
+
 }

@@ -1,6 +1,5 @@
 using CoffeeCrazy.Interfaces;
 using CoffeeCrazy.Models;
-using CoffeeCrazy.Repos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -8,39 +7,62 @@ namespace CoffeeCrazy.Pages.Jobs
 {
     public class CreateModel : PageModel
     {
+        private readonly IJobRepo _jobRepo;
         private readonly IJobTemplateRepo _jobTemplateRepo;
-        private readonly IJobRepo _jobRepository;
+        private readonly IMachineRepo _machineRepo;
 
-        public CreateModel(IJobTemplateRepo AssignmentSetRepo, IJobRepo assignmentRepo)
+        public CreateModel(IJobRepo jobRepo, IJobTemplateRepo jobTemplateRepo, IMachineRepo machineRepo)
         {
-            _jobTemplateRepo = AssignmentSetRepo;
-            _jobRepository = assignmentRepo;
+            _jobRepo = jobRepo;
+            _jobTemplateRepo = jobTemplateRepo;
+            _machineRepo = machineRepo;
         }
 
         [BindProperty]
-        public Job Job { get; set; } = new();
-        public List<JobTemplate> JobTemplates { get; set; } = new();
-        [BindProperty]
-        public List<int> SelectedJobTemplate { get; set; } = new();
+        public int JobTemplateId { get; set; }
 
-        public async Task<IActionResult> OnGet()
+        [BindProperty]
+        public int MachineId { get; set; }
+        public int comment { get; set; }
+
+        [BindProperty]
+        public int FrequencyId { get; set; }
+
+        public List<JobTemplate> TaskTemplates { get; set; } = new();
+
+        public List<Machine> Machines { get; set; } = new();
+
+        public async Task OnGetAsync()
         {
-            JobTemplates =  await _jobTemplateRepo.GetAllAsync();
-            return Page();
+            // Hent alle templates
+            TaskTemplates = await _jobTemplateRepo.GetAllAsync();
+            Machines = await _machineRepo.GetAllAsync();
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
             {
-                JobTemplates = await _jobTemplateRepo.GetAllAsync();
+                TaskTemplates = await _jobTemplateRepo.GetAllAsync(); // Reload templates if validation fails
                 return Page();
             }
-            Job.Deadline = DateTime.FromOADate(7);
-            Job.IsCompleted = false;
-            await _jobRepository.CreateAsync(Job); 
 
-            return RedirectToPage("/Index");
+            var newJob = new Job
+            {
+                JobTemplateId = JobTemplateId,
+                MachineId = MachineId,
+                CreatedDate = DateTime.UtcNow,
+                Deadline = DateTime.UtcNow.AddDays(1),
+                IsCompleted = false,
+                FrequencyId = FrequencyId,
+                Comment = "dillerdaller"
+
+                //Comment And UserId Is missing, but it shoulden be a problem because they can be null. and is something that is getting set when job done.
+            };
+
+            await _jobRepo.CreateAsync(newJob);
+
+            return RedirectToPage("/Jobs/Index");
         }
     }
 }

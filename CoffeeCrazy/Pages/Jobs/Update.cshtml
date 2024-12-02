@@ -7,22 +7,33 @@
 <h1>Update AssignmentSet</h1>
 
 <form method="post">
-    <input type="hidden" asp-for="AssignmentSet.AssignmentSetId" />
-    <div>
-        <label for="Titel">Titel</labelfor>
-
-    </div>    
-    <div>
+    <div class="form-group">
         <label for="Deadline">Deadline</label>
-        <input type="datetime-local" id="Deadline" asp-for="AssignmentSet.Deadline" required />
+        <input asp-for="JobToUpdate.Deadline" class="form-control" type="datetime-local" />
+        <span asp-validation-for="JobToUpdate.Deadline" class="text-danger"></span>
     </div>
-    <div>
-        <label for="SetCompleted">Set Completed</label>
-        <input type="checkbox" id="SetCompleted" asp-for="AssignmentSet.SetCompleted" />
+
+    <div class="form-group">
+        <label for="MachineId">Maskine</label>
+        <select asp-for="JobToUpdate.MachineId" class="form-control">
+            <option value="">Vælg en maskine</option>
+        </select>
+        <span asp-validation-for="JobToUpdate.MachineId" class="text-danger"></span>
     </div>
-    <div>
-        <label for="MachineId">Machine ID</label>
-        <input type="number" id="MachineId" asp-for="AssignmentSet.MachineId" required />
+
+    <div class="form-group">
+        <label for="UserId">Bruger</label>
+        <select asp-for="JobToUpdate.UserId" class="form-control">
+            <option value="">Vælg en bruger</option>
+        </select>
+        <span asp-validation-for="JobToUpdate.UserId" class="text-danger"></span>
     </div>
-    <button type="submit">Update</button>
+
+    <div class="form-group">
+        <label for="IsCompleted">Færdiggjort</label>
+        <input asp-for="JobToUpdate.IsCompleted" type="checkbox" class="form-check-input" />
+        <span asp-validation-for="JobToUpdate.IsCompleted" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Gem ændringer</button>
 </form>

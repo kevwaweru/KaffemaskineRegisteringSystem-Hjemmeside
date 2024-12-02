@@ -7,26 +7,35 @@ namespace CoffeeCrazy.Pages.Jobs
 {
     public class UpdateModel : PageModel
     {
-        private readonly IJobTemplateRepo _assignmentSetRepo;
+        private readonly IJobRepo _jobRepo;
 
-        public UpdateModel(IJobTemplateRepo repo)
+        public UpdateModel(IJobRepo repo)
         {
-            _assignmentSetRepo = repo;
+            _jobRepo = repo;
         }
 
         [BindProperty]
-        public JobTemplate AssignmentSet { get; set; }
+        public Job JobToUpdate { get; set; } = new Job();
 
         public async Task<IActionResult> OnGetAsync(int id)
         {
-            AssignmentSet = await _assignmentSetRepo.GetByIdAsync(id);
-
-            if (AssignmentSet == null)
+            try
             {
-                return NotFound();
-            }
+                // Hent det eksisterende job
+                JobToUpdate = await _jobRepo.GetByIdAsync(id);
 
-            return Page();
+                if (JobToUpdate == null)
+                {
+                    return NotFound(); // Returnér 404, hvis job ikke findes
+                }
+
+                return Page();
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, $"Fejl under indlæsning: {ex.Message}");
+                return RedirectToPage("/Jobs/Index"); // Gå til en oversigtsside ved fejl
+            }
         }
 
         public async Task<IActionResult> OnPostAsync()
@@ -36,8 +45,16 @@ namespace CoffeeCrazy.Pages.Jobs
                 return Page();
             }
 
-            await _assignmentSetRepo.UpdateAsync(AssignmentSet);
-            return RedirectToPage("Index");
+            try
+            {
+                await _jobRepo.UpdateAsync(JobToUpdate);
+                return RedirectToPage("/Jobs/Index"); // Opdater og gå til oversigt
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, $"Fejl under opdatering: {ex.Message}");
+                return Page();
+            }
         }
     }
 }
