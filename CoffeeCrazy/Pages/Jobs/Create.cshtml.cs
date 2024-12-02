@@ -38,7 +38,7 @@ namespace CoffeeCrazy.Pages.Jobs
             }
             Job.Deadline = DateTime.FromOADate(7);
             Job.IsCompleted = false;
-            await _jobRepository.CreateAsync(Job);
+            await _jobRepository.CreateAsync(Job); 
 
             return RedirectToPage("/Index");
         }
