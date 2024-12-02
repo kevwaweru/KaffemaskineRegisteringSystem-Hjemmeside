@@ -15,6 +15,56 @@ namespace CoffeeCrazy.Repos
                 ?? throw new InvalidOperationException("Connection string 'Kaffe Maskine Database' not found.");
         }
 
+        // Olles version
+        public int CreateTaskFromTemplate(int jobTemplateId, int userId, int taskSetId, int machineId, int frequencyId)
+        {
+            Job job = new Job();
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                string description;
+                string title;
+                var templateQuery = "SELECT Description, Title FROM TaskTemplates WHERE TaskTemplateId = @TaskTemplateId";
+                using (var command = new SqlCommand(templateQuery, connection))
+                {
+                    command.Parameters.AddWithValue("@TaskTemplateId", jobTemplateId);
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            description = reader.GetString(0);
+                            title = reader.GetString(1);
+                        }
+                        else
+                        {
+                            throw new Exception("TaskTemplate not found.");
+                        }
+                    }
+                }
+
+                var insertTaskQuery = @"
+
+            INSERT INTO Tasks TaskTemplateId, Comment, CreateDate, Deadline, IsCompleted, MachineId, UserId, FrequencyId)
+            OUTPUT INSERTED.TaskId
+            VALUES (@TaskTemplateId, @Comment, @CreateDate, @Deadline, @IsCompleted, @MachineId, @UserId, @FrequencyId)";
+
+                using (var command = new SqlCommand(insertTaskQuery, connection))
+                {
+                    command.Parameters.AddWithValue("@TaskTemplateId", jobTemplateId);
+                    command.Parameters.AddWithValue("@Comment", job.Comment);
+                    command.Parameters.AddWithValue("@CreateDate", job.CreatedDate);
+                    command.Parameters.AddWithValue("@Deadline", job.Deadline);
+                    command.Parameters.AddWithValue("@IsCompleted", job.IsCompleted);
+                    command.Parameters.AddWithValue("@MachineId", machineId);
+                    command.Parameters.AddWithValue("@UserId", userId);
+                    command.Parameters.AddWithValue("@FrequencyId", frequencyId);
+
+                    return (int)command.ExecuteScalar();
+                }
+            }
+        }
+
 
 
         /// <summary>
