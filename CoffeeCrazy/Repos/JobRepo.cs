@@ -238,7 +238,7 @@ namespace CoffeeCrazy.Repos
                                     // Including TaskTemplate data
                                     JobTemplate = new JobTemplate
                                     {
-                                        TaskTemplateId = reader.GetInt32(1),
+                                        JobTemplateId = reader.GetInt32(1),
                                         Title = reader.GetString(9),
                                         Description = reader.IsDBNull(10) ? null : reader.GetString(10)
                                     }
@@ -310,7 +310,7 @@ namespace CoffeeCrazy.Repos
                                     // Including TaskTemplate data
                                     JobTemplate = new JobTemplate
                                     {
-                                        TaskTemplateId = reader.GetInt32(1),
+                                        JobTemplateId = reader.GetInt32(1),
                                         Title = reader.GetString(9),
                                         Description = reader.IsDBNull(10) ? null : reader.GetString(10)
                                     }
