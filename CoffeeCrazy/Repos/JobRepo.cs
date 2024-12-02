@@ -30,16 +30,21 @@ namespace CoffeeCrazy.Repos
                 {
                     string SQLquery = @"
                                     INSERT INTO Tasks 
-                                    (TaskTemplateId, Comment, CreateDate, IsCompleted, MachineId, FrequencyId)
+                                    (TaskTemplateId, Comment, CreateDate, Deadline, IsCompleted, MachineId, UserId, FrequencyId)
                                     VALUES 
-                                    (@TaskTemplateId, @Comment, @CreateDate, @IsCompleted, @MachineId, @FrequencyId)";
+                                     (@TaskTemplateId, @Comment, @CreateDate, @Deadline, @IsCompleted, @MachineId, @UserId, @FrequencyId)";
 
          //TaskId og TaskTemplateId skal ikke sendes med pga. de contraints vi har lavet vel? E.g. (1,1).
                     using var command = new SqlCommand(SQLquery, connection);
                     command.Parameters.AddWithValue("@TaskTemplateId", task.TaskTemplateId);
                     command.Parameters.AddWithValue("@Comment", task.Comment);
                     command.Parameters.AddWithValue("@CreateDate", task.CreatedDate);
+                    command.Parameters.AddWithValue("@Deadline", task.Deadline);
                     command.Parameters.AddWithValue("@IsCompleted", task.IsCompleted);
+                    command.Parameters.AddWithValue("@MachineId", task.MachineId);
+                    command.Parameters.AddWithValue("@UserId", task.UserId);
+                    command.Parameters.AddWithValue("@FrequencyId", task.FrequencyId);
+
 
                     await connection.OpenAsync();
                     await command.ExecuteNonQueryAsync();
@@ -66,11 +71,11 @@ namespace CoffeeCrazy.Repos
             {
                 using (SqlConnection connection = new SqlConnection(_connectionString))
                 {
-                    string sqlQuery = "DELETE FROM Assignments WHERE AssignmentId = @AssignmentId";
+                    string sqlQuery = "DELETE FROM Assignments WHERE TaskId = @TaskId";
 
                     SqlCommand command = new SqlCommand(sqlQuery, connection);
 
-                    command.Parameters.AddWithValue("@AssignmentId", toBeDeletedAssignment.TaskId);
+                    command.Parameters.AddWithValue("@TaskId", toBeDeletedAssignment.TaskId);
                     
                     await connection.OpenAsync();
                     
@@ -101,26 +106,38 @@ namespace CoffeeCrazy.Repos
                 {
                     throw new ArgumentNullException(nameof(assignmentToBeUpdated), "Du bliver nødt til at sende ny data med, hvis du vil have opdateret opgaven.");
                 }
+                ,[TaskTemplateId]
+      ,[Comment]
+      ,[CreatedDate]
+      ,[Deadline]
+      ,[IsCompleted]
+      ,[MachineId]
+      ,[UserId]
+      ,[FrequencyId]
 
-          
                 using (SqlConnection connection = new SqlConnection(_connectionString))
                 {
                     string query = @"
-                      Update Assignments
+                      Update Tasks
                       Set 
-                          Titel = @Titel,
                           Comment = @Comment,
                           CreateDate = @CreateDate, 
-                          IsCompleted = @IsCompleted,
+                          Deadline = @Deadline, 
+                          IsCompleted = @IsCompleted, 
+                          MachineId = @MachineId,
+                          UserId = @UserId,
+                          FrequencyId = @FrequencyId,  
                       Where
-                          AssignmentId = @AssignmentId";
+                          TaskId = @TaskId";
                     using (SqlCommand command = connection.CreateCommand())
                     {
-                        command.Parameters.AddWithValue("@AssignmentId", assignmentToBeUpdated.AssignmentId);
-                        command.Parameters.AddWithValue("@Titel", assignmentToBeUpdated.Title);
+                        command.Parameters.AddWithValue("@TaskId", assignmentToBeUpdated.TaskId);
                         command.Parameters.AddWithValue("@Comment", (object?)assignmentToBeUpdated.Comment);
-                        command.Parameters.AddWithValue("@CreateDate", assignmentToBeUpdated.CreateDate);
+                        command.Parameters.AddWithValue("@CreateDate", assignmentToBeUpdated.CreatedDate);
+                        command.Parameters.AddWithValue("@Deadline", assignmentToBeUpdated.Deadline);
                         command.Parameters.AddWithValue("@IsCompleted", assignmentToBeUpdated.IsCompleted);
+                        command.Parameters.AddWithValue("@UserId", assignmentToBeUpdated.UserId);
+                        command.Parameters.AddWithValue("@FrequencyId", assignmentToBeUpdated.FrequencyId);
 
                         connection.Open(); 
                         await command.ExecuteNonQueryAsync(); //
@@ -141,7 +158,7 @@ namespace CoffeeCrazy.Repos
        
         public async Task<List<Job>> GetAllAsync()
         {
-            var assignments = new List<Job>();
+            var  = new List<Job>();
 
             try
             {
@@ -156,16 +173,19 @@ namespace CoffeeCrazy.Repos
                         {
                             while (await reader.ReadAsync())
                             {
-                                var assignment = new Job
+                                var job = new Job
                                 {
                                     TaskId = reader.GetInt32(0),
-                                    Title = reader.GetString(1),
+                                    TaskTemplateId = reader.GetInt32(1),
                                     Comment = reader.GetString(2),
-                                    CreateDate = reader.GetDateTime(3),
-                                    IsCompleted = reader.GetBoolean(4)
+                                    CreatedDate = reader.GetDateTime(3),
+                                    Deadline = reader.GetDateTime(4),
+                                    IsCompleted = reader.GetBoolean(5),
+                                    MachineId = reader.GetInt32(6),
+                                    UserId = reader.GetInt32(7),
+                                    FrequencyId = reader.GetInt32(8),
                                 };
-
-                                assignments.Add(assignment);
+                                .Add(job);
                             }
                         }
                     }
