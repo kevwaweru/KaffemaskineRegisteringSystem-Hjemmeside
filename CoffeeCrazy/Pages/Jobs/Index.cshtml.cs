@@ -2,7 +2,7 @@ using CoffeeCrazy.Interfaces;
 using CoffeeCrazy.Models;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace CoffeeCrazy.Pages.AssignmentSets
+namespace CoffeeCrazy.Pages.Jobs
 {
     public class IndexModel : PageModel
     {

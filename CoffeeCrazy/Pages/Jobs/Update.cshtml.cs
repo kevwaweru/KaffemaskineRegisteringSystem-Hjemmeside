@@ -3,7 +3,7 @@ using CoffeeCrazy.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace CoffeeCrazy.Pages.AssignmentSets
+namespace CoffeeCrazy.Pages.Jobs
 {
     public class UpdateModel : PageModel
     {

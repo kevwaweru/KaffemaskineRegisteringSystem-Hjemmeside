@@ -1,5 +1,5 @@
 ﻿@page
-@model CoffeeCrazy.Pages.AssignmentSets.CreateModel
+@model CoffeeCrazy.Pages.Jobs.CreateModel
 @{
     ViewData["Title"] = "Opret opgavesæt";
 }
@@ -10,13 +10,13 @@
 
     <div class="form-group">
         <label for="Title">Titel</label>
-        <input type="text" class="form-control" id="Title" asp-for="AssignmentSet.Title" />
-        <span asp-validation-for="AssignmentSet.Title" class="text-danger"></span>
+        <input type="text" class="form-control" id="Title" asp-for="JobTemplate.Title" />
+        <span asp-validation-for="JobTemplate.Title" class="text-danger"></span>
     </div>
 
     <div class="form-group">
         <label>Assignments</label>
-        @foreach (var assignment in Model.Assignments)
+        @foreach (var assignment in Model.Jobs)
         {
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" name="SelectedAssignments" value="@assignment.AssignmentId" id="assignment-@assignment.AssignmentId" />

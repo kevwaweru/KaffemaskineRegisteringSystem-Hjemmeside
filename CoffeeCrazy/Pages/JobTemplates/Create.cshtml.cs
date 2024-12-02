@@ -3,18 +3,18 @@ using CoffeeCrazy.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace CoffeeCrazy.Pages.Assignments
+namespace CoffeeCrazy.Pages.JobsTemplates
 {
     public class CreateModel : PageModel
     {
-        private readonly IJobRepo _assignmentRepo;
-        public CreateModel(IJobRepo assignmentRepo)
+        private readonly IJobTemplateRepo _jobTemplateRepo;
+        public CreateModel(IJobTemplateRepo jobRepo)
         {
-            _assignmentRepo = assignmentRepo;
+            _jobTemplateRepo = jobRepo;
         }
 
         [BindProperty]
-        public Models.Job Assignment { get; set; }
+        public JobTemplate JobTemplate { get; set; }
 
         public IActionResult OnGet()
         {
@@ -27,7 +27,7 @@ namespace CoffeeCrazy.Pages.Assignments
                 return Page();
             }
 
-            await _assignmentRepo.CreateAsync(Assignment);
+            await _jobTemplateRepo.CreateAsync(JobTemplate);
             return RedirectToPage("/Index");
         }
     }

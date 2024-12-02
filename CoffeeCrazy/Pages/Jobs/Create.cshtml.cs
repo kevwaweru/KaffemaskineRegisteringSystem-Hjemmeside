@@ -4,7 +4,7 @@ using CoffeeCrazy.Repos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace CoffeeCrazy.Pages.AssignmentSets
+namespace CoffeeCrazy.Pages.Jobs
 {
     public class CreateModel : PageModel
     {
@@ -18,15 +18,14 @@ namespace CoffeeCrazy.Pages.AssignmentSets
         }
 
         [BindProperty]
-        public JobTemplate AssignmentSet { get; set; } = new();
-        public List<Models.Job> Assignments { get; set; } = new();
+        public Job Job { get; set; } = new();
+        public List<JobTemplate> JobTemplates { get; set; } = new();
         [BindProperty]
-        public List<int> SelectedAssignments { get; set; } = new();
+        public List<int> SelectedJobTemplate { get; set; } = new();
 
         public async Task<IActionResult> OnGet()
         {
-            Assignments =  await _jobRepository.GetAllAsync();
-
+            JobTemplates =  await _jobTemplateRepo.GetAllAsync();
             return Page();
         }
 
@@ -34,17 +33,12 @@ namespace CoffeeCrazy.Pages.AssignmentSets
         {
             if (!ModelState.IsValid)
             {
-                Assignments = await _jobRepository.GetAllAsync();
+                JobTemplates = await _jobTemplateRepo.GetAllAsync();
                 return Page();
             }
-            AssignmentSet.Deadline = DateTime.FromOADate(7);
-            AssignmentSet.SetCompleted = false;
-            await _jobTemplateRepo.CreateAsync(AssignmentSet);
-
-            if (SelectedAssignments.Any())
-            {
-                await _AssignmentJunctionRepo.AddAssignmentToAssignmentSetAsync(AssignmentSet.AssignmentSetId,SelectedAssignments);
-            }
+            Job.Deadline = DateTime.FromOADate(7);
+            Job.IsCompleted = false;
+            await _jobRepository.CreateAsync(Job);
 
             return RedirectToPage("/Index");
         }
