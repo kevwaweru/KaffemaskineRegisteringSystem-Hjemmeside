@@ -8,15 +8,13 @@ namespace CoffeeCrazy.Pages.AssignmentSets
 {
     public class CreateModel : PageModel
     {
-        private readonly IJobTemplateRepo _AssignmentSetRepo;
-        private readonly IAssignmentJunctionRepo _AssignmentJunctionRepo;
-        private readonly IJobRepo _AssignmentRepo;
+        private readonly IJobTemplateRepo _jobTemplateRepo;
+        private readonly IJobRepo _jobRepository;
 
-        public CreateModel(IJobTemplateRepo AssignmentSetRepo, IAssignmentJunctionRepo assignmentJunctionRepo, IJobRepo assignmentRepo)
+        public CreateModel(IJobTemplateRepo AssignmentSetRepo, IJobRepo assignmentRepo)
         {
-            _AssignmentSetRepo = AssignmentSetRepo;
-            _AssignmentJunctionRepo = assignmentJunctionRepo;
-            _AssignmentRepo = assignmentRepo;
+            _jobTemplateRepo = AssignmentSetRepo;
+            _jobRepository = assignmentRepo;
         }
 
         [BindProperty]
@@ -27,7 +25,7 @@ namespace CoffeeCrazy.Pages.AssignmentSets
 
         public async Task<IActionResult> OnGet()
         {
-            Assignments =  await _AssignmentRepo.GetAllAsync();
+            Assignments =  await _jobRepository.GetAllAsync();
 
             return Page();
         }
@@ -36,12 +34,12 @@ namespace CoffeeCrazy.Pages.AssignmentSets
         {
             if (!ModelState.IsValid)
             {
-                Assignments = await _AssignmentRepo.GetAllAsync();
+                Assignments = await _jobRepository.GetAllAsync();
                 return Page();
             }
             AssignmentSet.Deadline = DateTime.FromOADate(7);
             AssignmentSet.SetCompleted = false;
-            await _AssignmentSetRepo.CreateAsync(AssignmentSet);
+            await _jobTemplateRepo.CreateAsync(AssignmentSet);
 
             if (SelectedAssignments.Any())
             {
