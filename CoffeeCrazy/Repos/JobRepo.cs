@@ -201,16 +201,12 @@ namespace CoffeeCrazy.Repos
         public async Task<List<Job>> GetAllAsync()
         {
             var jobs = new List<Job>();
-
             try
             {
                 using (var connection = new SqlConnection(_connectionString))
                 {
                     await connection.OpenAsync();
-
-                    // SQL query to retrieve all jobs with TaskTemplate data using INNER JOIN
-                    string query = @"
-                     SELECT * FROM Tasks";
+                    string query = "SELECT * FROM Tasks";
 
                     using (var command = new SqlCommand(query, connection))
                     {
@@ -218,26 +214,24 @@ namespace CoffeeCrazy.Repos
                         {
                             while (await reader.ReadAsync())
                             {
-                                // Create a new Job object and populate it with data from the database.
                                 var job = new Job
                                 {
                                     JobId = reader.GetInt32(0),
                                     JobTemplateId = reader.GetInt32(1),
-                                    Comment = reader.IsDBNull(2) ? null : reader.GetString(2),
+                                    Comment = reader.GetString(2),
                                     CreatedDate = reader.GetDateTime(3),
                                     Deadline = reader.GetDateTime(4),
                                     IsCompleted = reader.GetBoolean(5),
                                     MachineId = reader.GetInt32(6),
-                                    UserId = reader.GetInt32(7),
-                                    FrequencyId = reader.GetInt32(8),
+                                    FrequencyId = reader.GetInt32(8)
                                 };
 
-                                // Add the job to the list.
                                 jobs.Add(job);
                             }
                         }
                     }
                 }
+                return jobs;
             }
             catch (SqlException ex)
             {
@@ -251,9 +245,6 @@ namespace CoffeeCrazy.Repos
                 Console.WriteLine($"An error occurred: {ex.Message}");
                 throw;
             }
-
-            // Return the list of jobs.
-            return jobs;
         }
 
         public async Task<Job> GetByIdAsync(int taskId)
