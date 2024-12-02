@@ -1,9 +1,5 @@
 ﻿using CoffeeCrazy.Interfaces;
-using CoffeeCrazy.Models;
-using CoffeeCrazy.Models.Enums;
-using Microsoft.AspNetCore.Authentication.OAuth.Claims;
 using Microsoft.Data.SqlClient;
-using Task = System.Threading.Tasks.Task;
 
 namespace CoffeeCrazy.Repos
 {
@@ -19,12 +15,13 @@ namespace CoffeeCrazy.Repos
         }
 
 
+
        /// <summary>
        /// 
        /// </summary>
        /// <param name="task"></param>
        /// <returns></returns>
-        public async System.Threading.Tasks.Task CreateAsync(Models.Task task)
+        public async Task CreateAsync(Models.Task task)
         {
             try
             {
@@ -32,15 +29,15 @@ namespace CoffeeCrazy.Repos
                 {
                     string SQLquery = @"
                                     INSERT INTO Tasks 
-                                    (TaskTemplate, Comment, CreateDate, IsCompleted, MachineId, FrequencyId)
+                                    (TaskTemplateId, Comment, CreateDate, IsCompleted, MachineId, FrequencyId)
                                     VALUES 
-                                    (@TaskTemplate, @Comment, @CreateDate, @IsCompleted, @MachineId, @FrequencyId)";
+                                    (@TaskTemplateId, @Comment, @CreateDate, @IsCompleted, @MachineId, @FrequencyId)";
 
          //TaskId og TaskTemplateId skal ikke sendes med pga. de contraints vi har lavet vel? E.g. (1,1).
                     using var command = new SqlCommand(SQLquery, connection);
                     command.Parameters.AddWithValue("@TaskTemplateId", task.TaskTemplateId);
                     command.Parameters.AddWithValue("@Comment", task.Comment);
-                    command.Parameters.AddWithValue("@CreateDate", task.CreateDate);
+                    command.Parameters.AddWithValue("@CreateDate", task.CreatedDate);
                     command.Parameters.AddWithValue("@IsCompleted", task.IsCompleted);
 
                     await connection.OpenAsync();
@@ -62,7 +59,7 @@ namespace CoffeeCrazy.Repos
         }
 
         
-        public async System.Threading.Tasks.Task DeleteAsync(Models.Task toBeDeletedAssignment)
+        public async Task DeleteAsync(Models.Task toBeDeletedAssignment)
         {
             try
             {
@@ -95,7 +92,7 @@ namespace CoffeeCrazy.Repos
         /// <param name="assignmentToBeUpdated">Angiv hvilke opgave der skal opdateres</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"> den kaster excetion hvis du er dårlig til at kalde den.</exception>
-        public async System.Threading.Tasks.Task UpdateAsync(Models.Task assignmentToBeUpdated)
+        public async Task UpdateAsync(Models.Task assignmentToBeUpdated)
         {
             try
             {
@@ -150,7 +147,7 @@ namespace CoffeeCrazy.Repos
                 using (var connection = new SqlConnection(_connectionString))
                 {
                     await connection.OpenAsync();
-                    string query = "SELECT * FROM Assignments";
+                    string query = "SELECT * FROM Tasks";
 
                     using (var command = new SqlCommand(query, connection))
                     {
