@@ -7,15 +7,15 @@ namespace CoffeeCrazy.Pages.AssignmentSets
 {
     public class UpdateModel : PageModel
     {
-        private readonly ITaskTemplateRepo _assignmentSetRepo;
+        private readonly IJobTemplateRepo _assignmentSetRepo;
 
-        public UpdateModel(ITaskTemplateRepo repo)
+        public UpdateModel(IJobTemplateRepo repo)
         {
             _assignmentSetRepo = repo;
         }
 
         [BindProperty]
-        public TaskTemplate AssignmentSet { get; set; }
+        public JobTemplate AssignmentSet { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int id)
         {

@@ -7,15 +7,15 @@ namespace CoffeeCrazy.Pages.AssignmentSets
 {
     public class DeleteModel : PageModel
     {
-        private readonly ITaskTemplateRepo _assignmentSetRepo;
+        private readonly IJobTemplateRepo _assignmentSetRepo;
 
-        public DeleteModel(ITaskTemplateRepo assignmentSetRepo)
+        public DeleteModel(IJobTemplateRepo assignmentSetRepo)
         {
             _assignmentSetRepo = assignmentSetRepo;
         }
 
         [BindProperty]
-        public TaskTemplate AssignmentSet { get; set; }
+        public JobTemplate AssignmentSet { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int id)
         {

@@ -15,7 +15,7 @@ namespace CoffeeCrazy.Repos
         private readonly string _connectionString;
 
         //CTOR
-        public ValidateDatabaseMethods(IConfiguration configuration, ITaskTemplateRepo assignmentSetRepo, IJobRepo assignmentRepo)
+        public ValidateDatabaseMethods(IConfiguration configuration, IJobTemplateRepo assignmentSetRepo, IJobRepo assignmentRepo)
         {
             _connectionString = configuration.GetConnectionString("DefaultConnection")
                 ?? throw new InvalidOperationException("Connection string 'Kaffe Maskine Database' not found.");

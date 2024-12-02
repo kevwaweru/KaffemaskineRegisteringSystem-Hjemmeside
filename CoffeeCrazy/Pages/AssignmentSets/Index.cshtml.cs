@@ -6,14 +6,14 @@ namespace CoffeeCrazy.Pages.AssignmentSets
 {
     public class IndexModel : PageModel
     {
-        private readonly ITaskTemplateRepo _assignmentSetRepo;
+        private readonly IJobTemplateRepo _assignmentSetRepo;
 
-        public IndexModel(ITaskTemplateRepo assignmentSetRepo)
+        public IndexModel(IJobTemplateRepo assignmentSetRepo)
         {
             _assignmentSetRepo = assignmentSetRepo;
         }
 
-        public List<TaskTemplate> AssignmentSets { get; set; }
+        public List<JobTemplate> AssignmentSets { get; set; }
 
         public async Task OnGetAsync()
         {

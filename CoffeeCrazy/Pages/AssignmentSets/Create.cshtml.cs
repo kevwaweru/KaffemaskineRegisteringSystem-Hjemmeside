@@ -8,11 +8,11 @@ namespace CoffeeCrazy.Pages.AssignmentSets
 {
     public class CreateModel : PageModel
     {
-        private readonly ITaskTemplateRepo _AssignmentSetRepo;
+        private readonly IJobTemplateRepo _AssignmentSetRepo;
         private readonly IAssignmentJunctionRepo _AssignmentJunctionRepo;
         private readonly IJobRepo _AssignmentRepo;
 
-        public CreateModel(ITaskTemplateRepo AssignmentSetRepo, IAssignmentJunctionRepo assignmentJunctionRepo, IJobRepo assignmentRepo)
+        public CreateModel(IJobTemplateRepo AssignmentSetRepo, IAssignmentJunctionRepo assignmentJunctionRepo, IJobRepo assignmentRepo)
         {
             _AssignmentSetRepo = AssignmentSetRepo;
             _AssignmentJunctionRepo = assignmentJunctionRepo;
@@ -20,7 +20,7 @@ namespace CoffeeCrazy.Pages.AssignmentSets
         }
 
         [BindProperty]
-        public TaskTemplate AssignmentSet { get; set; } = new();
+        public JobTemplate AssignmentSet { get; set; } = new();
         public List<Models.Job> Assignments { get; set; } = new();
         [BindProperty]
         public List<int> SelectedAssignments { get; set; } = new();
