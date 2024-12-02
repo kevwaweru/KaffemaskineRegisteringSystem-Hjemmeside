@@ -16,11 +16,11 @@ namespace CoffeeCrazy.Repos
         }
 
         /// <summary>
-        /// Use to Create an assingmentSet, with diffrent assignments
+        /// Use to Create a TaskTemplate, with diffrent Tasks
         /// </summary>
-        /// <param name="assignmentSet">Takes an objekt of an Tasks, Remember nothing can be null.</param>
+        /// <param name="TaskTemplate">Takes an objekt of a Tasks.</param>
         /// <returns>A Sql Query to the database</returns>
-        public async System.Threading.Tasks.Task CreateAsync(TaskTemplate assignmentSet)
+        public async Task CreateAsync(TaskTemplate TaskTemplate)
         {
             try
             {
@@ -33,11 +33,11 @@ namespace CoffeeCrazy.Repos
 
                     using (SqlCommand command = new SqlCommand(sqlQuery, connection))
                     {
-                        command.Parameters.AddWithValue("@Title", SqlDbType.NVarChar).Value = assignmentSet.Title;
-                        command.Parameters.AddWithValue("@SetCompleted", SqlDbType.Bit).Value = assignmentSet.SetCompleted;
-                        command.Parameters.AddWithValue("@Deadline", SqlDbType.DateTime).Value = assignmentSet.Deadline;
-                        command.Parameters.AddWithValue("@AssignmentId", SqlDbType.Int).Value = assignmentSet.AssignmentId;
-                        command.Parameters.AddWithValue("@MachineId", SqlDbType.Int).Value = assignmentSet.MachineId;
+                        command.Parameters.AddWithValue("@Title", SqlDbType.NVarChar).Value = TaskTemplate.Title;
+                        command.Parameters.AddWithValue("@SetCompleted", SqlDbType.Bit).Value = TaskTemplate.SetCompleted;
+                        command.Parameters.AddWithValue("@Deadline", SqlDbType.DateTime).Value = TaskTemplate.Deadline;
+                        command.Parameters.AddWithValue("@AssignmentId", SqlDbType.Int).Value = TaskTemplate.AssignmentId;
+                        command.Parameters.AddWithValue("@MachineId", SqlDbType.Int).Value = TaskTemplate.MachineId;
                         
                         command.ExecuteNonQuery();
                     }
@@ -237,9 +237,9 @@ namespace CoffeeCrazy.Repos
         /// </summary>
         /// <param name="assignmentSetId"></param>
         /// <returns></returns>
-        public async Task<List<Models.Task>> GetByAssignmentSetIdAsync(int assignmentSetId)
+        public async Task<List<Models.Job>> GetByAssignmentSetIdAsync(int assignmentSetId)
         {
-            var assignments = new List<Models.Task>();
+            var assignments = new List<Models.Job>();
             string errorMessage = string.Empty;
             try
             {
@@ -255,7 +255,7 @@ namespace CoffeeCrazy.Repos
                         {
                             while (await reader.ReadAsync())
                             {
-                                var assignment = new Models.Task
+                                var assignment = new Models.Job
                                 {
                                     AssignmentId = reader.GetInt32(0),
                                     Title = reader.GetString(1),

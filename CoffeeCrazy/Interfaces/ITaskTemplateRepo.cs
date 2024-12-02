@@ -4,6 +4,6 @@ namespace CoffeeCrazy.Interfaces
 {
     public interface ITaskTemplateRepo: ICRUDRepo<TaskTemplate>
     {
-        Task<List<Models.Task>> GetByAssignmentSetIdAsync(int assignmentSetId);
+        Task<List<Models.Job>> GetByAssignmentSetIdAsync(int assignmentSetId);
     }
 }

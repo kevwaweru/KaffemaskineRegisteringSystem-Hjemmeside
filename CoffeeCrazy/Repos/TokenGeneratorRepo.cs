@@ -99,7 +99,6 @@ namespace CoffeeCrazy.Repos
                     var command = new SqlCommand(SQLquery, connection);
                     command.Parameters.AddWithValue("@Token", token);
 
-
                     await connection.OpenAsync();
 
                     var result = (int)await command.ExecuteScalarAsync();

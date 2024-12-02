@@ -1,14 +1,15 @@
 ﻿using CoffeeCrazy.Interfaces;
+using CoffeeCrazy.Models;
 using Microsoft.Data.SqlClient;
 
 namespace CoffeeCrazy.Repos
 {
-    public class TaskRepo : ITaskRepo
+    public class JobRepo : IJobRepo
     {
         private readonly string _connectionString;
        
 
-        public TaskRepo(IConfiguration configuration)
+        public JobRepo(IConfiguration configuration)
         {
             _connectionString = configuration.GetConnectionString("DefaultConnection")
                 ?? throw new InvalidOperationException("Connection string 'Kaffe Maskine Database' not found.");
@@ -21,7 +22,7 @@ namespace CoffeeCrazy.Repos
        /// </summary>
        /// <param name="task"></param>
        /// <returns></returns>
-        public async Task CreateAsync(Models.Task task)
+        public async Task CreateAsync(Job task)
         {
             try
             {
@@ -59,7 +60,7 @@ namespace CoffeeCrazy.Repos
         }
 
         
-        public async Task DeleteAsync(Models.Task toBeDeletedAssignment)
+        public async Task DeleteAsync(Job toBeDeletedAssignment)
         {
             try
             {
@@ -92,7 +93,7 @@ namespace CoffeeCrazy.Repos
         /// <param name="assignmentToBeUpdated">Angiv hvilke opgave der skal opdateres</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"> den kaster excetion hvis du er dårlig til at kalde den.</exception>
-        public async Task UpdateAsync(Models.Task assignmentToBeUpdated)
+        public async Task UpdateAsync(Job assignmentToBeUpdated)
         {
             try
             {
@@ -138,9 +139,9 @@ namespace CoffeeCrazy.Repos
             }
         }
        
-        public async Task<List<Models.Task>> GetAllAsync()
+        public async Task<List<Job>> GetAllAsync()
         {
-            var assignments = new List<Models.Task>();
+            var assignments = new List<Job>();
 
             try
             {
@@ -155,7 +156,7 @@ namespace CoffeeCrazy.Repos
                         {
                             while (await reader.ReadAsync())
                             {
-                                var assignment = new Models.Task
+                                var assignment = new Job
                                 {
                                     TaskId = reader.GetInt32(0),
                                     Title = reader.GetString(1),
@@ -183,7 +184,7 @@ namespace CoffeeCrazy.Repos
             }
         }
 
-        public async Task<Task> GetByIdAsync(int assignmentId)
+        public async Task<Job> GetByIdAsync(int assignmentId)
         {
             try
             {
@@ -200,7 +201,7 @@ namespace CoffeeCrazy.Repos
                         {
                             if (await reader.ReadAsync())
                             {
-                                return new Models.Task
+                                return new Job
                                 {
                                     AssignmentId = reader.GetInt32(0),
                                     Title = reader.GetString(1),

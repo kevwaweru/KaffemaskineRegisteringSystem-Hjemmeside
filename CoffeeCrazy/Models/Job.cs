@@ -3,7 +3,7 @@
     /// <summary>
     /// 
     /// </summary>
-    public class Task
+    public class Job
     {
         public int TaskId { get; set; }
         public int TaskTemplateId { get; set; }
