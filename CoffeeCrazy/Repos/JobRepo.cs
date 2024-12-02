@@ -223,12 +223,6 @@ namespace CoffeeCrazy.Repos
                 {
                     await connection.OpenAsync();
 
-                    // SQL query to get a task by ID.
-                     string query = @"
-                SELECT TaskId, TaskTemplateId, Comment, CreatedDate, Deadline, 
-                       IsCompleted, MachineId, UserId, FrequencyId 
-                FROM Tasks 
-                WHERE TaskId = @TaskId";
                     // SQL query to retrieve data from Tasks and TaskTemplates.
                     const string query = @"
                 SELECT t.TaskId, t.TaskTemplateId, t.Comment, t.CreatedDate, t.Deadline, 
