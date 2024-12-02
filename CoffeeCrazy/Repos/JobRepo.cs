@@ -7,7 +7,7 @@ namespace CoffeeCrazy.Repos
     public class JobRepo : IJobRepo
     {
         private readonly string _connectionString;
-       
+
 
         public JobRepo(IConfiguration configuration)
         {
@@ -17,11 +17,11 @@ namespace CoffeeCrazy.Repos
 
 
 
-       /// <summary>
-       /// 
-       /// </summary>
-       /// <param name="task"></param>
-       /// <returns></returns>
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="task"></param>
+        /// <returns></returns>
         public async Task CreateAsync(Job task)
         {
             try
@@ -34,7 +34,7 @@ namespace CoffeeCrazy.Repos
                                     VALUES 
                                      (@TaskTemplateId, @Comment, @CreateDate, @Deadline, @IsCompleted, @MachineId, @UserId, @FrequencyId)";
 
-         //TaskId og TaskTemplateId skal ikke sendes med pga. de contraints vi har lavet vel? E.g. (1,1).
+                    //TaskId og TaskTemplateId skal ikke sendes med pga. de contraints vi har lavet vel? E.g. (1,1).
                     using var command = new SqlCommand(SQLquery, connection);
                     command.Parameters.AddWithValue("@TaskTemplateId", task.TaskTemplateId);
                     command.Parameters.AddWithValue("@Comment", task.Comment);
@@ -64,7 +64,7 @@ namespace CoffeeCrazy.Repos
             }
         }
 
-        
+
         public async Task DeleteAsync(Job toBeDeletedAssignment)
         {
             try
@@ -76,9 +76,9 @@ namespace CoffeeCrazy.Repos
                     SqlCommand command = new SqlCommand(sqlQuery, connection);
 
                     command.Parameters.AddWithValue("@TaskId", toBeDeletedAssignment.TaskId);
-                    
+
                     await connection.OpenAsync();
-                    
+
                     await command.ExecuteNonQueryAsync();
                 }
             }
@@ -106,7 +106,7 @@ namespace CoffeeCrazy.Repos
                 {
                     throw new ArgumentNullException(nameof(assignmentToBeUpdated), "Du bliver nødt til at sende ny data med, hvis du vil have opdateret opgaven.");
                 }
-               
+
                 using (SqlConnection connection = new SqlConnection(_connectionString))
                 {
                     string query = @"
@@ -131,7 +131,7 @@ namespace CoffeeCrazy.Repos
                         command.Parameters.AddWithValue("@UserId", assignmentToBeUpdated.UserId);
                         command.Parameters.AddWithValue("@FrequencyId", assignmentToBeUpdated.FrequencyId);
 
-                        connection.Open(); 
+                        connection.Open();
                         await command.ExecuteNonQueryAsync(); //
 
                     }
@@ -147,29 +147,36 @@ namespace CoffeeCrazy.Repos
                 Console.WriteLine("Error" + ex);
             }
         }
-       
+
         public async Task<List<Job>> GetAllAsync()
         {
-            var  = new List<Job>();
+            // Initialize a list to store the jobs.
+            var jobs = new List<Job>();
 
             try
             {
                 using (var connection = new SqlConnection(_connectionString))
                 {
                     await connection.OpenAsync();
-                    string query = "SELECT * FROM Tasks";
 
-                    using (var command = new SqlCommand(query, connection))
+                    // Query to retrieve all jobs from the Tasks table.
+                    const string getJobsQuery = @"
+                SELECT TaskId, TaskTemplateId, Comment, CreatedDate, Deadline, 
+                       IsCompleted, MachineId, UserId, FrequencyId 
+                FROM Tasks";
+
+                    using (var command = new SqlCommand(getJobsQuery, connection))
                     {
                         using (var reader = await command.ExecuteReaderAsync())
                         {
                             while (await reader.ReadAsync())
                             {
+                                // Create a new Job object and populate it with data from the database.
                                 var job = new Job
                                 {
                                     TaskId = reader.GetInt32(0),
                                     TaskTemplateId = reader.GetInt32(1),
-                                    Comment = reader.GetString(2),
+                                    Comment = reader.IsDBNull(2) ? null : reader.GetString(2),
                                     CreatedDate = reader.GetDateTime(3),
                                     Deadline = reader.GetDateTime(4),
                                     IsCompleted = reader.GetBoolean(5),
@@ -177,54 +184,72 @@ namespace CoffeeCrazy.Repos
                                     UserId = reader.GetInt32(7),
                                     FrequencyId = reader.GetInt32(8),
                                 };
-                                .Add(job);
+
+                                // Add the job to the list.
+                                jobs.Add(job);
                             }
                         }
                     }
                 }
-                return assignments;
             }
             catch (SqlException ex)
             {
+                // Log database-related errors.
                 Console.WriteLine($"Database error: {ex.Message}");
                 throw;
             }
             catch (Exception ex)
             {
+                // Log general errors.
                 Console.WriteLine($"An error occurred: {ex.Message}");
                 throw;
             }
+
+            // Return the list of jobs.
+            return jobs;
         }
 
-        public async Task<Job> GetByIdAsync(int assignmentId)
+        public async Task<Job> GetByIdAsync(int taskId)
         {
             try
             {
                 using (var connection = new SqlConnection(_connectionString))
                 {
                     await connection.OpenAsync();
-                    string query = "SELECT * FROM Assignments WHERE AssignmentId = @AssignmentId";
+
+                    // SQL query to get a task by ID.
+                    const string query = @"
+                SELECT TaskId, TaskTemplateId, Comment, CreatedDate, Deadline, 
+                       IsCompleted, MachineId, UserId, FrequencyId 
+                FROM Tasks 
+                WHERE TaskId = @TaskId";
 
                     using (var command = new SqlCommand(query, connection))
                     {
-                        command.Parameters.AddWithValue("@AssignmentId", assignmentId);
+                        // Add parameter for the task ID.
+                        command.Parameters.AddWithValue("@TaskId", taskId);
 
                         using (var reader = await command.ExecuteReaderAsync())
                         {
+                            // Check if the record exists and return the job object.
                             if (await reader.ReadAsync())
                             {
                                 return new Job
                                 {
-                                    AssignmentId = reader.GetInt32(0),
-                                    Title = reader.GetString(1),
-                                    Comment = reader.GetString(2),
-                                    CreateDate = reader.GetDateTime(3),
-                                    IsCompleted = reader.GetBoolean(4)
+                                    TaskId = reader.GetInt32(0),
+                                    TaskTemplateId = reader.GetInt32(1),
+                                    Comment = reader.IsDBNull(2) ? null : reader.GetString(2),
+                                    CreatedDate = reader.GetDateTime(3),
+                                    Deadline = reader.GetDateTime(4),
+                                    IsCompleted = reader.GetBoolean(5),
+                                    MachineId = reader.GetInt32(6),
+                                    UserId = reader.GetInt32(7),
+                                    FrequencyId = reader.GetInt32(8),
                                 };
                             }
                             else
                             {
-                                throw new Exception($"Tasks with ID {assignmentId} does not exist.");
+                                throw new InvalidOperationException($"Task with ID {taskId} does not exist.");
                             }
                         }
                     }
@@ -232,15 +257,16 @@ namespace CoffeeCrazy.Repos
             }
             catch (SqlException ex)
             {
+                // Log database errors and rethrow.
                 Console.WriteLine($"Database error: {ex.Message}");
                 throw;
             }
             catch (Exception ex)
             {
+                // Log general errors and rethrow.
                 Console.WriteLine($"An error occurred: {ex.Message}");
                 throw;
             }
         }
-
     }
 }
