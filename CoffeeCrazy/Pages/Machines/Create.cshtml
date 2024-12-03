@@ -1,21 +1,16 @@
 ﻿@page
 @model CoffeeCrazy.Pages.Machines.CreateModel
 @{
-    ViewData["Title"] = "Create Machine";
+    ViewData["Title"] = "Lav ny Maskine";
 }
 
-<h1>Create Machine</h1>
+<h1>Lav Maskine</h1>
 
 <form method="post">
     <div>
-        <label>Placement</label>
+        <label>Placering</label>
         <input asp-for="Machine.Placement" class="form-control" />
         <span asp-validation-for="Machine.Placement" class="text-danger"></span>
-    </div>
-    <div>
-        <label>Status</label>
-        <input type="checkbox" asp-for="Machine.Status" class="form-check-input" />
-        <span asp-validation-for="Machine.Status" class="text-danger"></span>
     </div>
     <div>
         <label>Campus</label>

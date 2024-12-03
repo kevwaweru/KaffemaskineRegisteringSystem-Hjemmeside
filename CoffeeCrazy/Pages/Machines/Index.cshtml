@@ -1,0 +1,53 @@
+﻿@page
+@using CoffeeCrazy.Models
+@model CoffeeCrazy.Pages.Machines.IndexModel
+@{
+    ViewData["Title"] = "Maskine Oversigt";
+}
+
+<h1>Maskine Oversigt</h1>
+
+<br />
+<p class="text-danger">Hvis maskinen er inaktiv, vil rækken være rød.</p>
+<p class="text-success">Hvis maskinen er aktiv, vil rækken være grøn.</p>
+<p>Hvis ingen af ovenstående er sand, er rækken bare hvid.</p>
+<br />
+
+<div class="container">
+    <div class="row">
+        @foreach (var machine in Model.Machines)
+        {
+            <div class="col">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Maskine ID</th>
+                            <th>Placering</th>
+                            <th>Status</th>
+                            <th>Campus</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="@GetRowClass(machine)">
+                            <td>@machine.MachineId</td>
+                            <td>@machine.Placement</td>
+                            <td>@(machine.Status ? "Aktiv" : "Inaktiv")</td>
+                            <td>@machine.Campus</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
+
+@functions {
+    // Funktion til at bestemme rækkens klasse baseret på maskinens status
+    private string GetRowClass(Machine machine)
+    {
+        // Hvis maskinen er inaktiv, er rækken rød
+        return !machine.Status ? "table-danger" :
+               // Hvis maskinen er aktiv, er rækken grøn
+               "table-success";
+    }
+}

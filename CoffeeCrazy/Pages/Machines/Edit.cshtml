@@ -1,0 +1,33 @@
+﻿@page "{id:int}"
+@using CoffeeCrazy.Models
+@model CoffeeCrazy.Pages.Machines.EditModel
+@{
+    ViewData["Title"] = "Rediger Maskine";
+}
+
+<h1>Rediger Maskine</h1>
+
+<form method="post">
+    <div class="form-group">
+        <label for="MachineId">Maskine ID</label>
+        <input type="text" class="form-control" id="MachineId" value="@Model.Machine.MachineId" readonly />
+    </div>
+
+    <div class="form-group">
+        <label for="Placement">Placering</label>
+        <input type="text" class="form-control" id="Placement" asp-for="Machine.Placement" />
+    </div>
+
+    <div class="form-group">
+        <select asp-for="Machine.Campus" class="form-control">
+            @foreach (var campus in Enum.GetValues(typeof(CoffeeCrazy.Models.Enums.Campus)))
+            {
+                <option value="@((int)campus)">@campus</option>
+            }
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Opdater Maskine</button>
+</form>
+
+<a href="/Machines/Index" class="btn btn-secondary mt-3">Tilbage til oversigt</a>

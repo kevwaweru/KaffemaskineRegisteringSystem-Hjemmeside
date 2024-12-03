@@ -10,33 +10,41 @@ namespace CoffeeCrazy.Pages.Machines
     {
         private readonly IMachineRepo _machineRepo;
 
-        [BindProperty]
-        public Machine Machine { get; set; }
-
         public DeleteModel(IMachineRepo machineRepo)
         {
             _machineRepo = machineRepo;
         }
 
-        public async Task<IActionResult> OnGetAsync(int id)
+        public List<Machine> Machines { get; set; } = new();
+
+        [BindProperty]
+        public int? SelectedMachineId { get; set; } // Holds the ID of the selected machine.
+
+        public async Task<IActionResult> OnGetAsync()
         {
-            Machine = await _machineRepo.GetByIdAsync(id);
-            if (Machine == null)
-            {
-                return NotFound();
-            }
+            Machines = await _machineRepo.GetAllAsync();
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (Machine == null)
+            if (!SelectedMachineId.HasValue)
+            {
+                ModelState.AddModelError(nameof(SelectedMachineId), "Please select a machine to delete.");
+                Machines = await _machineRepo.GetAllAsync(); // Reload machines for redisplay.
+                return Page();
+            }
+
+            var machine = await _machineRepo.GetByIdAsync(SelectedMachineId.Value);
+
+            if (machine == null)
             {
                 return NotFound();
             }
 
-            await _machineRepo.DeleteAsync(Machine);
-            return RedirectToPage("./Index"); 
+            await _machineRepo.DeleteAsync(machine);
+
+            return RedirectToPage("./Index"); // Redirect to a list or main page after deletion.
         }
     }
 }
