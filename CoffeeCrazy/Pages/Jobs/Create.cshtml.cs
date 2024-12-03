@@ -1,5 +1,6 @@
 using CoffeeCrazy.Interfaces;
 using CoffeeCrazy.Models;
+using CoffeeCrazy.Repos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -13,7 +14,7 @@ namespace CoffeeCrazy.Pages.Jobs
 
 
         public List<JobTemplate> TaskTemplates { get; set; } = new();
-        public List<Machine> Machines { get; set; } = new();
+        public List<Machine> Machines { get; set; } = new ();
 
         [BindProperty]
         public Job NewJob { get; set; } = new Job();
@@ -33,20 +34,35 @@ namespace CoffeeCrazy.Pages.Jobs
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
+
+            if (NewJob.MachineId == 99)
             {
-                TaskTemplates = await _jobTemplateRepo.GetAllAsync(); // Reload templates if validation fails
-                return Page();
+                foreach (Machine machine in await _machineRepo.GetAllAsync())
+                {
+                    Job jobToBeCreated = new Job();
+
+                    jobToBeCreated.CreatedDate = DateTime.UtcNow;
+                    jobToBeCreated.Deadline = DateTime.UtcNow.AddDays(1);
+                    jobToBeCreated.IsCompleted = false;
+                    jobToBeCreated.Comment = "Pikhoved";
+                    jobToBeCreated.MachineId = machine.MachineId;
+                    jobToBeCreated.FrequencyId = NewJob.FrequencyId;
+                    jobToBeCreated.JobTemplateId = NewJob.JobTemplateId;
+
+                    await _jobRepo.CreateAsync(jobToBeCreated);
+                }
             }
+            else
+            {
+                NewJob.CreatedDate = DateTime.UtcNow;
+                NewJob.Deadline = DateTime.UtcNow.AddDays(1);
+                NewJob.IsCompleted = false;
+                NewJob.Comment = "Pikhoved";
 
-            NewJob.CreatedDate = DateTime.UtcNow;
-            NewJob.Deadline = DateTime.UtcNow.AddDays(1);
-            NewJob.IsCompleted = false;
-            NewJob.Comment = "Pikhoved";
-
-            await _jobRepo.CreateAsync(NewJob);
-
+                await _jobRepo.CreateAsync(NewJob);
+            }
             return RedirectToPage("/Jobs/Index");
         }
+
     }
 }

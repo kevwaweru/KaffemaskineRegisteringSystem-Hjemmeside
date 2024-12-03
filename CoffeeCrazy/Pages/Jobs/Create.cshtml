@@ -22,6 +22,7 @@
     <div>
         <label>Vælg Kaffemaskine</label>
         <select asp-for="NewJob.MachineId" class="form-control">
+            <option value=99>Alle maskiner</option>
             @foreach (var Machine in Model.Machines)
             {
                 <option value="@Machine.MachineId">@Machine.Placement</option>
@@ -31,7 +32,13 @@
     </div>
     <div>
         <label>Hvor tit?</label>
-        <input asp-for="NewJob.FrequencyId" class="form-control" />
+        <select class="form-select" asp-for="NewJob.FrequencyId">
+
+            <option value=1>Daglig</option>
+            <option value=2>Ugenligt</option>
+            <option value=3>Månedligt</option>
+
+        </select>
         <span asp-validation-for="NewJob.FrequencyId" class="text-danger"></span>
     </div>
     <button type="submit" class="btn btn-primary">Opret opgave</button>

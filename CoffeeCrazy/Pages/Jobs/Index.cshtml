@@ -31,17 +31,18 @@
                             <th>Hyppighed</th>
                             <th>Medarbejder Navn</th>
                             <th>Er Udført?</th>
+                            <th>Slet opgave</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (Job currentJob in Model.Jobs)
+                        @foreach (Job job in Model.Jobs)
                         {
-                            if (machine.MachineId == currentJob.MachineId)
+                            if (machine.MachineId == job.MachineId)
                             {
 
-                                JobTemplate jobTemplate = Model.JobTemplates.FirstOrDefault(jobTemplateParameter => jobTemplateParameter.JobTemplateId == currentJob.JobTemplateId);
-                                Frequency frequency = Model.frequencies.FirstOrDefault(frequencyParameter => (int)frequencyParameter == currentJob.FrequencyId);
-                                User user = Model.Users.FirstOrDefault(userParameter => userParameter.UserId == currentJob.UserId);
+                                JobTemplate jobTemplate = Model.JobTemplates.FirstOrDefault(jobTemplateParameter => jobTemplateParameter.JobTemplateId == job.JobTemplateId);
+                                Frequency frequency = Model.Frequencies.FirstOrDefault(frequencyParameter => (int)frequencyParameter == job.FrequencyId);
+                                User user = Model.Users.FirstOrDefault(userParameter => userParameter.UserId == job.UserId);
 
                                 if (jobTemplate != null && frequency != null)
                                 {
@@ -49,39 +50,39 @@
                                     Jed godt vi ikke kommer til at bruge bootstrap men her ville vi fx. skrive en CSS klasse*/
                                     string rowClass =
                                     /*Hvis deadline er overskredet og jobbet er ikke udført af nogen, så er rækken rød*/
-                                    currentJob.Deadline < DateTime.Now && !currentJob.IsCompleted ? "table-danger" :
+                                    job.Deadline < DateTime.Now && !job.IsCompleted ? "table-danger" :
                                     /*Hvis jobbet er udført, er rækken grøn*/
-                                    currentJob.IsCompleted ? "table-success" :
+                                    job.IsCompleted ? "table-success" :
                                     /*Hvis ingen af ovenstående er sand, er rækken bare hvid*/
                                     "table-light";
 
                                     <tr class="@rowClass">
-                                        <td>@currentJob.MachineId</td>
+                                        <td>@job.MachineId</td>
 
                                         <td>@jobTemplate.Title</td>
 
                                         <td>@jobTemplate.Description</td>
 
-                                        @if (currentJob.Comment != null)
+                                        @if (job.Comment != null)
                                         {
-                                            <td>@currentJob.Comment</td>
+                                            <td>@job.Comment</td>
                                         }
                                         else
                                         {
                                             <td>Ingen kommentar</td>
                                         }
 
-                                        <td>@currentJob.CreatedDate</td>
+                                        <td>@job.CreatedDate</td>
 
-                                        <td>@currentJob.Deadline</td>
+                                        <td>@job.Deadline</td>
 
                                         <td>@frequency</td>
 
-                                        @if (currentJob.UserId != null)
+                                        @if (job.UserId != null)
                                         {
                                             <td>@user.FirstName @user.LastName</td>
                                         }
-                                        else if (currentJob.UserId == null && currentJob.Deadline > DateTime.Now)
+                                        else if (job.UserId == null && job.Deadline > DateTime.Now)
                                         {
                                             <td class="text-warning">Venter på at blive udført</td>
                                         }
@@ -89,8 +90,29 @@
                                         {
                                             <td class="text-danger">Ikke udført af nogen</td>
                                         }
-                                        <td>@currentJob.IsCompleted</td>
+                                        <td>@job.IsCompleted</td>
+                                        <td>
+                                            <!-- Button trigger modal -->
+                                            <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#sletModal_@job.JobId">Slet</button>
+
+                                            <!-- Modal -->
+                                            <div class="modal fade" id="sletModal_@job.JobId" tabindex="-1" aria-labelledby="sletModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h1 class="modal-title fs-5" id="sletModalLabel" style="color:black;">Er du sikker på du vil slette denne job "@jobTemplate.Title" på maskine @job.MachineId?</h1>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal">Fortryd</button>
+                                                            <a class="btn btn-danger btn-sm" asp-page="Delete" asp-route-id="@job.JobId">Slet</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
                                     </tr>
+
                                 }
                             }
                         }
