@@ -110,29 +110,27 @@ namespace CoffeeCrazy.Repos
                       Set 
                           TaskTemplateId = @TaskTemplateId,
                           Comment = @Comment,
-                          CreateDate = @CreateDate, 
                           Deadline = @Deadline, 
                           IsCompleted = @IsCompleted, 
                           MachineId = @MachineId,
-                          UserId = @UserId,
-                          FrequencyId = @FrequencyId,  
+                          FrequencyId = @FrequencyId  
                       Where
                           TaskId = @TaskId";
-                    using (SqlCommand command = connection.CreateCommand())
+                    using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@TaskTemplateId", JobToBeUpdated.JobTemplateId);
-                        command.Parameters.AddWithValue("@Comment", (object?)JobToBeUpdated.Comment);
-                        command.Parameters.AddWithValue("@CreateDate", JobToBeUpdated.CreatedDate);
-                        command.Parameters.AddWithValue("@Deadline", JobToBeUpdated.Deadline);
+                        command.Parameters.AddWithValue("@Comment", (object?)JobToBeUpdated.Comment ?? DBNull.Value);
+                        command.Parameters.AddWithValue("@Deadline", JobToBeUpdated.Deadline == null ? DBNull.Value : JobToBeUpdated.Deadline);
+                        command.Parameters.AddWithValue("@MachineId", JobToBeUpdated.MachineId);
                         command.Parameters.AddWithValue("@IsCompleted", JobToBeUpdated.IsCompleted);
-                        command.Parameters.AddWithValue("@UserId", JobToBeUpdated.UserId);
+          //              command.Parameters.AddWithValue("@UserId", JobToBeUpdated.UserId); // husk at tilføje til query hvis du vil have det med
                         command.Parameters.AddWithValue("@FrequencyId", JobToBeUpdated.FrequencyId);
+                        command.Parameters.AddWithValue("@TaskId", JobToBeUpdated.JobId);
 
                         connection.Open();
                         await command.ExecuteNonQueryAsync();
 
                     }
-
                 }
             }
             catch (SqlException SqlEx)

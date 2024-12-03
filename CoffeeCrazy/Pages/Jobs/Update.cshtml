@@ -5,34 +5,57 @@
 
 <h1>Opdater dine opgaver, samt template PAS PÅ man retter det orginale template!!!!!!!!!!!!!!!!</h1>
 
+
 <form method="post">
 
+    <input asp-for="JobToUpdate.JobId" type="hidden" />
+
     <div>
         <label>Kommentar</label>
-        <input asp-for="Job.Comment" class="form-control" />
-        <span asp-validation-for="Job.Comment" class="text-danger"></span>
-    </div>
-    <div>
-        <label>Dødslinje</label>
-        <input asp-for="Job.Deadline" class="form-control" />
-        <span asp-validation-for="Job.Deadline" class="text-danger"></span>
-    </div>
-    <div>
-        <label>Udført</label>
-        <input asp-for="Job.IsCompleted" type="checkbox" />
-        <span asp-validation-for="Job.IsCompleted" class="text-danger"></span>
-    </div>
-    <div>
-        <label>Udført</label>
-        <input asp-for="Job.Deadline" type="date" />
-        <span asp-validation-for="Job.Deadline" class="text-danger"></span>
-    </div>
-    <div>
-        <label>Kommentar</label>
-        <input asp-for="Job.Comment" class="form-control" />
-        <span asp-validation-for="Job.Comment" class="text-danger"></span>
+        <input asp-for="JobToUpdate.Comment" class="form-control" />
+        <span asp-validation-for="JobToUpdate.Comment" class="text-danger"></span>
     </div>
 
+    <div>
+        <label>Udført</label>
+        <input asp-for="JobToUpdate.IsCompleted" type="checkbox" />
+        <span asp-validation-for="JobToUpdate.IsCompleted" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label>Dødslinje</label>
+        <input asp-for="JobToUpdate.Deadline" type="date" />
+        <span asp-validation-for="JobToUpdate.Deadline" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label>Opgave</label>
+        <select asp-for="JobToUpdate.JobTemplateId" class="form-control">
+            @foreach (var template in Model.JobTemplates)
+            {
+                <option value="@template.JobTemplateId">@template.Title</option>
+            }
+        </select>
+        <span asp-validation-for="JobToUpdate.JobTemplateId" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label>Vælg Kaffemaskine</label>
+        <select asp-for="JobToUpdate.MachineId" class="form-control">
+            @foreach (var Machine in Model.Machines)
+            {
+                <option value="@Machine.MachineId">@Machine.Placement</option>
+            }
+        </select>
+        <span asp-validation-for="JobToUpdate.MachineId" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label>Hvor tit?</label>
+        <input asp-for="JobToUpdate.FrequencyId" class="form-control" />
+        <span asp-validation-for="JobToUpdate.FrequencyId" class="text-danger"></span>
+    </div>
+    
 
 @* Tror ikke det skal bruges 
     <h2>Job Template</h2>
