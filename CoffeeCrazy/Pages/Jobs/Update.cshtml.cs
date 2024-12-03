@@ -23,9 +23,9 @@ namespace CoffeeCrazy.Pages.Jobs
         [BindProperty]
         public Job JobToUpdate { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int jobId)
+        public async Task <IActionResult> OnGetAsync(int Id)
         {
-            JobToUpdate = await _jobRepo.GetByIdAsync(jobId);
+            JobToUpdate = await _jobRepo.GetByIdAsync(Id);
             Machines = await _machineRepo.GetAllAsync();
             JobTemplates = await _jobTemplateRepo.GetAllAsync();
 

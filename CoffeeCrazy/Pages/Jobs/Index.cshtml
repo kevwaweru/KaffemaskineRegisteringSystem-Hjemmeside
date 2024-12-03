@@ -92,9 +92,9 @@
                                         }
                                         <td>@job.IsCompleted</td>
                                         <td>
-                                            <a asp-page="Update" asp-route-id="@job.JobId">Update (@job.JobId)</a>
-                                            <a asp-page="Update" asp-route-id="@job.JobId">Update</a>
-                                            <a asp-page="Update" asp-route-id="@job.JobId">Update</a>
+                                            <a href="/Jobs/Update?id=@job.JobId">Update</a>
+                                            <a class="btn btn-danger btn-sm" asp-page="Update" asp-route-id="@job.JobId">Update</a>
+
                                         </td>
                                         <td>
                                             <!-- Button trigger modal -->
