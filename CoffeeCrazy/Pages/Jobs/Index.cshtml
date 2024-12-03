@@ -41,7 +41,7 @@
                             {
 
                                 JobTemplate jobTemplate = Model.JobTemplates.FirstOrDefault(jobTemplateParameter => jobTemplateParameter.JobTemplateId == job.JobTemplateId);
-                                Frequency frequency = Model.frequencies.FirstOrDefault(frequencyParameter => (int)frequencyParameter == job.FrequencyId);
+                                Frequency frequency = Model.Frequencies.FirstOrDefault(frequencyParameter => (int)frequencyParameter == job.FrequencyId);
                                 User user = Model.Users.FirstOrDefault(userParameter => userParameter.UserId == job.UserId);
 
                                 if (jobTemplate != null && frequency != null)

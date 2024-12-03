@@ -15,7 +15,7 @@ namespace CoffeeCrazy.Pages.Jobs
         private readonly IMachineRepo _machineRepo;
 
 
-        public List<Frequency> frequencies = new List<Frequency>();
+        public List<Frequency> Frequencies = new List<Frequency>();
 
         public List<JobTemplate> JobTemplates { get; set; }
         public List<Job> Jobs { get; set; }
@@ -51,7 +51,7 @@ namespace CoffeeCrazy.Pages.Jobs
             Machines = await _machineRepo.GetAllAsync();
             foreach (var item in Jobs)
             {
-                frequencies.Add((Frequency)item.FrequencyId);
+                Frequencies.Add((Frequency)item.FrequencyId);
             }
         }
         public async Task<IActionResult> OnPostDeleteAsync(int id)
