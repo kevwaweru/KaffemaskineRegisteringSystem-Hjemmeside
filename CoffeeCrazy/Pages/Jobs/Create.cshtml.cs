@@ -11,27 +11,19 @@ namespace CoffeeCrazy.Pages.Jobs
         private readonly IJobTemplateRepo _jobTemplateRepo;
         private readonly IMachineRepo _machineRepo;
 
+
+        public List<JobTemplate> TaskTemplates { get; set; } = new();
+        public List<Machine> Machines { get; set; } = new();
+
+        [BindProperty]
+        public Job NewJob { get; set; } = new Job();
+
         public CreateModel(IJobRepo jobRepo, IJobTemplateRepo jobTemplateRepo, IMachineRepo machineRepo)
         {
             _jobRepo = jobRepo;
             _jobTemplateRepo = jobTemplateRepo;
             _machineRepo = machineRepo;
         }
-
-        [BindProperty]
-        public int JobTemplateId { get; set; }
-
-        [BindProperty]
-        public int MachineId { get; set; }
-        public int comment { get; set; }
-
-        [BindProperty]
-        public int FrequencyId { get; set; }
-
-        public List<JobTemplate> TaskTemplates { get; set; } = new();
-
-        public List<Machine> Machines { get; set; } = new();
-
         public async Task OnGetAsync()
         {
             // Hent alle templates
@@ -43,25 +35,16 @@ namespace CoffeeCrazy.Pages.Jobs
         {
             if (!ModelState.IsValid)
             {
-                TaskTemplates = await _jobTemplateRepo.GetAllAsync(); 
+                TaskTemplates = await _jobTemplateRepo.GetAllAsync(); // Reload templates if validation fails
                 return Page();
             }
 
-            var newJob = new Job
-            {
-                JobTemplateId = JobTemplateId,
-                MachineId = MachineId,
-                CreatedDate = DateTime.UtcNow,
-                Deadline = DateTime.UtcNow.AddDays(1),
-                IsCompleted = false,
-                FrequencyId = FrequencyId,
-                Comment = "dillerdaller"
+            NewJob.CreatedDate = DateTime.UtcNow;
+            NewJob.Deadline = DateTime.UtcNow.AddDays(1);
+            NewJob.IsCompleted = false;
+            NewJob.Comment = "Pikhoved";
 
-                //Comment And UserId Is missing, but it shoulden be a problem because they can be null. and is something that is getting set when job done.
-            };
-            
-
-            await _jobRepo.CreateAsync(newJob);
+            await _jobRepo.CreateAsync(NewJob);
 
             return RedirectToPage("/Jobs/Index");
         }

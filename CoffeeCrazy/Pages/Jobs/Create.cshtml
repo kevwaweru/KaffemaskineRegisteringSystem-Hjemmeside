@@ -8,29 +8,31 @@
 
 <form method="post">
     <div>
-        <label for="JobTemplateId">Task Template</label>
-        <select id="JobTemplateId" name="JobTemplateId" class="form-control">
+        <label>Task Template</label>
+        <select asp-for="NewJob.JobTemplateId" class="form-control">
             @foreach (var template in Model.TaskTemplates)
             {
                 <option value="@template.JobTemplateId">@template.Title</option>
             }
         </select>
+        <span asp-validation-for="NewJob.JobTemplateId" class="text-danger"></span>
     </div>
 
+
     <div>
-        <label for="MachineId">Vælg Kaffemaskine</label>
-        <select id="MachineId" name="MachineId" class="form-control">
+        <label>Vælg Kaffemaskine</label>
+        <select asp-for="NewJob.MachineId" class="form-control">
             @foreach (var Machine in Model.Machines)
             {
                 <option value="@Machine.MachineId">@Machine.Placement</option>
             }
         </select>
+        <span asp-validation-for="NewJob.MachineId" class="text-danger"></span>
     </div>
-
     <div>
-        <label for="FrequencyId">Hvor tit?</label>
-        <input id="FrequencyId" name="FrequencyId" class="form-control" />
+        <label>Hvor tit?</label>
+        <input asp-for="NewJob.FrequencyId" class="form-control" />
+        <span asp-validation-for="NewJob.FrequencyId" class="text-danger"></span>
     </div>
-
     <button type="submit" class="btn btn-primary">Opret opgave</button>
 </form>
