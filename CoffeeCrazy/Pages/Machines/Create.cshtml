@@ -1,0 +1,31 @@
+﻿@page
+@model CoffeeCrazy.Pages.Machines.CreateModel
+@{
+    ViewData["Title"] = "Create Machine";
+}
+
+<h1>Create Machine</h1>
+
+<form method="post">
+    <div>
+        <label>Placement</label>
+        <input asp-for="Machine.Placement" class="form-control" />
+        <span asp-validation-for="Machine.Placement" class="text-danger"></span>
+    </div>
+    <div>
+        <label>Status</label>
+        <input type="checkbox" asp-for="Machine.Status" class="form-check-input" />
+        <span asp-validation-for="Machine.Status" class="text-danger"></span>
+    </div>
+    <div>
+        <label>Campus</label>
+        <select asp-for="Machine.Campus" class="form-control">
+            @foreach (var campus in Enum.GetValues(typeof(CoffeeCrazy.Models.Enums.Campus)))
+            {
+                <option value="@((int)campus)">@campus</option>
+            }
+        </select>
+        <span asp-validation-for="Machine.Campus" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Create</button>
+</form>

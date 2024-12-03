@@ -1,0 +1,19 @@
+﻿@page "{id:int}"
+@model CoffeeCrazy.Pages.Machines.DeleteModel
+@{
+    ViewData["Title"] = "Delete Machine";
+}
+
+<h1>Delete Machine</h1>
+<p>Are you sure you want to delete this machine?</p>
+
+<div>
+    <strong>Machine ID:</strong> @Model.Machine.MachineId<br />
+    <strong>Placement:</strong> @Model.Machine.Placement<br />
+    <strong>Campus:</strong> @Model.Machine.Campus<br />
+</div>
+
+<form method="post">
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a asp-page="./Index" class="btn btn-secondary">Cancel</a>
+</form>
