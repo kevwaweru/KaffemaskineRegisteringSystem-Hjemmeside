@@ -54,6 +54,11 @@ namespace CoffeeCrazy.Pages.Jobs
                 frequencies.Add((Frequency)item.FrequencyId);
             }
         }
+        public async Task<IActionResult> OnPostDeleteAsync(int id)
+        {
+            await _jobRepo.DeleteAsync(await _jobRepo.GetByIdAsync(id));
+            return Page();
+        }
     }
 }
 
