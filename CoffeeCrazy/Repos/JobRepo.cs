@@ -15,58 +15,6 @@ namespace CoffeeCrazy.Repos
                 ?? throw new InvalidOperationException("Connection string 'Kaffe Maskine Database' not found.");
         }
 
-        // Olles version
-        public int CreateTaskFromTemplate(int jobTemplateId, int userId, int taskSetId, int machineId, int frequencyId)
-        {
-            Job job = new Job();
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-
-                string description;
-                string title;
-                var templateQuery = "SELECT Description, Title FROM TaskTemplates WHERE TaskTemplateId = @TaskTemplateId";
-                using (var command = new SqlCommand(templateQuery, connection))
-                {
-                    command.Parameters.AddWithValue("@TaskTemplateId", jobTemplateId);
-                    using (var reader = command.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            description = reader.GetString(0);
-                            title = reader.GetString(1);
-                        }
-                        else
-                        {
-                            throw new Exception("TaskTemplate not found.");
-                        }
-                    }
-                }
-
-                var insertTaskQuery = @"
-
-            INSERT INTO Tasks TaskTemplateId, Comment, CreateDate, Deadline, IsCompleted, MachineId, UserId, FrequencyId)
-            OUTPUT INSERTED.TaskId
-            VALUES (@TaskTemplateId, @Comment, @CreateDate, @Deadline, @IsCompleted, @MachineId, @UserId, @FrequencyId)";
-
-                using (var command = new SqlCommand(insertTaskQuery, connection))
-                {
-                    command.Parameters.AddWithValue("@TaskTemplateId", jobTemplateId);
-                    command.Parameters.AddWithValue("@Comment", job.Comment);
-                    command.Parameters.AddWithValue("@CreateDate", job.CreatedDate);
-                    command.Parameters.AddWithValue("@Deadline", job.Deadline);
-                    command.Parameters.AddWithValue("@IsCompleted", job.IsCompleted);
-                    command.Parameters.AddWithValue("@MachineId", machineId);
-                    command.Parameters.AddWithValue("@UserId", userId);
-                    command.Parameters.AddWithValue("@FrequencyId", frequencyId);
-
-                    return (int)command.ExecuteScalar();
-                }
-            }
-        }
-
-
-
         /// <summary>
         /// 
         /// </summary>
@@ -197,7 +145,7 @@ namespace CoffeeCrazy.Repos
             }
         }
 
-        public Task<List<Job>> GetAllAsync()
+        public async Task<List<Job>> GetAllAsync()
         {
             var jobs = new List<Job>();
             try
@@ -225,7 +173,6 @@ namespace CoffeeCrazy.Repos
                                     UserId = reader.IsDBNull(7) ? (int?)null : reader.GetInt32(7),
                                     FrequencyId = reader.GetInt32(8)
                                 };
-                                    JobTemplateId = reader.GetInt32(1),
                                 jobs.Add(job);
                             }
                         }
@@ -246,7 +193,7 @@ namespace CoffeeCrazy.Repos
                 throw;
             }
         }
-                        }
+                        
         public async Task<Job> GetByIdAsync(int taskId)
         {
             try
@@ -306,35 +253,5 @@ namespace CoffeeCrazy.Repos
             }
         }
     }
-                                    // Including TaskTemplate data
-                                    JobTemplate = new JobTemplate
-                                    {
-                                        JobTemplateId = reader.GetInt32(1),
-                                        Title = reader.GetString(9),
-                                        Description = reader.IsDBNull(10) ? null : reader.GetString(10)
-                                    }
-                                };
-                            }
-                            else
-                            {
-                                throw new InvalidOperationException($"Task with ID {taskId} does not exist.");
-                            }
-                        }
-                    }
-                }
-            }
-            catch (SqlException ex)
-            {
-                // Log database errors and rethrow.
-                Console.WriteLine($"Database error: {ex.Message}");
-                throw;
-            }
-            catch (Exception ex)
-            {
-                // Log general errors and rethrow.
-                Console.WriteLine($"An error occurred: {ex.Message}");
-                throw;
-            }
-        }
-    }
 }
+

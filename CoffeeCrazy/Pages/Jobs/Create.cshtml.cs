@@ -43,7 +43,7 @@ namespace CoffeeCrazy.Pages.Jobs
         {
             if (!ModelState.IsValid)
             {
-                TaskTemplates = await _jobTemplateRepo.GetAllAsync(); // Reload templates if validation fails
+                TaskTemplates = await _jobTemplateRepo.GetAllAsync(); 
                 return Page();
             }
 
@@ -59,6 +59,7 @@ namespace CoffeeCrazy.Pages.Jobs
 
                 //Comment And UserId Is missing, but it shoulden be a problem because they can be null. and is something that is getting set when job done.
             };
+            
 
             await _jobRepo.CreateAsync(newJob);
 

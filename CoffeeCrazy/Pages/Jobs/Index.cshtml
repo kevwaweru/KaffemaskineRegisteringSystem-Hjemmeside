@@ -39,7 +39,6 @@
                             if (machine.MachineId == currentJob.MachineId)
                             {
 
-
                                 JobTemplate jobTemplate = Model.JobTemplates.FirstOrDefault(jobTemplateParameter => jobTemplateParameter.JobTemplateId == currentJob.JobTemplateId);
                                 Frequency frequency = Model.frequencies.FirstOrDefault(frequencyParameter => (int)frequencyParameter == currentJob.FrequencyId);
                                 User user = Model.Users.FirstOrDefault(userParameter => userParameter.UserId == currentJob.UserId);
