@@ -80,18 +80,17 @@ namespace CoffeeCrazy.Repos
                 {
                     string SQLquery = @"
                                     INSERT INTO Tasks 
-                                    (TaskTemplateId, Comment, CreateDate, Deadline, IsCompleted, MachineId, UserId, FrequencyId)
+                                    (TaskTemplateId, Comment, CreatedDate, Deadline, IsCompleted, MachineId, FrequencyId)
                                     VALUES 
-                                     (@TaskTemplateId, @Comment, @CreateDate, @Deadline, @IsCompleted, @MachineId, @UserId, @FrequencyId)";
+                                     (@TaskTemplateId, @Comment, @CreatedDate, @Deadline, @IsCompleted, @MachineId, @FrequencyId)";
 
                     using var command = new SqlCommand(SQLquery, connection);
                     command.Parameters.AddWithValue("@TaskTemplateId", Job.JobTemplateId);
-                    command.Parameters.AddWithValue("@Comment", Job.Comment);
-                    command.Parameters.AddWithValue("@CreateDate", Job.CreatedDate);
+                    command.Parameters.AddWithValue("@CreatedDate", Job.CreatedDate);
                     command.Parameters.AddWithValue("@Deadline", Job.Deadline);
                     command.Parameters.AddWithValue("@IsCompleted", Job.IsCompleted);
                     command.Parameters.AddWithValue("@MachineId", Job.MachineId);
-                    command.Parameters.AddWithValue("@UserId", Job.UserId);
+                    command.Parameters.AddWithValue("@Comment", Job.Comment);
                     command.Parameters.AddWithValue("@FrequencyId", Job.FrequencyId);
 
 
@@ -182,7 +181,7 @@ namespace CoffeeCrazy.Repos
                         command.Parameters.AddWithValue("@FrequencyId", JobToBeUpdated.FrequencyId);
 
                         connection.Open();
-                        await command.ExecuteNonQueryAsync(); 
+                        await command.ExecuteNonQueryAsync();
 
                     }
 
@@ -198,7 +197,7 @@ namespace CoffeeCrazy.Repos
             }
         }
 
-        public async Task<List<Job>> GetAllAsync()
+        public Task<List<Job>> GetAllAsync()
         {
             var jobs = new List<Job>();
             try
@@ -226,7 +225,7 @@ namespace CoffeeCrazy.Repos
                                     UserId = reader.IsDBNull(7) ? (int?)null : reader.GetInt32(7),
                                     FrequencyId = reader.GetInt32(8)
                                 };
-
+                                    JobTemplateId = reader.GetInt32(1),
                                 jobs.Add(job);
                             }
                         }
@@ -247,7 +246,7 @@ namespace CoffeeCrazy.Repos
                 throw;
             }
         }
-
+                        }
         public async Task<Job> GetByIdAsync(int taskId)
         {
             try
@@ -283,6 +282,37 @@ namespace CoffeeCrazy.Repos
                                     FrequencyId = reader.GetInt32(8),
 
                                     
+                                };
+                            }
+                            else
+                            {
+                                throw new InvalidOperationException($"Task with ID {taskId} does not exist.");
+                            }
+                        }
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                // Log database errors and rethrow.
+                Console.WriteLine($"Database error: {ex.Message}");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                // Log general errors and rethrow.
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                throw;
+            }
+        }
+    }
+                                    // Including TaskTemplate data
+                                    JobTemplate = new JobTemplate
+                                    {
+                                        JobTemplateId = reader.GetInt32(1),
+                                        Title = reader.GetString(9),
+                                        Description = reader.IsDBNull(10) ? null : reader.GetString(10)
+                                    }
                                 };
                             }
                             else

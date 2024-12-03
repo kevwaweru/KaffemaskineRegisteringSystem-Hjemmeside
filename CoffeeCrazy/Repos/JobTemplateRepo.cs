@@ -28,7 +28,7 @@ namespace CoffeeCrazy.Repos
                 {
 
                     string sqlQuery = @"
-                                           INSERT INTO TaskTemplate (Title, Description) 
+                                           INSERT INTO TaskTemplates (Title, Description) 
                                            VALUES (@Title, @Description)";
 
                     using (SqlCommand command = new SqlCommand(sqlQuery, connection))
@@ -101,7 +101,7 @@ namespace CoffeeCrazy.Repos
                 using (var connection = new SqlConnection(_connectionString))
                 {
                     await connection.OpenAsync();
-                    string query = "SELECT * FROM TaskTemplate";
+                    string query = "SELECT * FROM TaskTemplates";
 
                     using (var command = new SqlCommand(query, connection))
                     {
@@ -154,7 +154,7 @@ namespace CoffeeCrazy.Repos
                 using (SqlConnection connection = new SqlConnection(_connectionString))
                 {
                     string query = @"
-                      Update TaskTemplate
+                      Update TaskTemplates
                       Set 
                         Title        = @Title
                         Description = @Description
@@ -194,7 +194,7 @@ namespace CoffeeCrazy.Repos
             {
                 using (SqlConnection connection = new SqlConnection(_connectionString))
                 {
-                    string sqlQuery = "DELETE FROM TaskTemplate WHERE TaskTemplateId = @TaskTemplateId";
+                    string sqlQuery = "DELETE FROM TaskTemplates WHERE TaskTemplateId = @TaskTemplateId";
 
                     SqlCommand command = new SqlCommand(sqlQuery, connection);
 
