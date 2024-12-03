@@ -92,6 +92,11 @@
                                         }
                                         <td>@job.IsCompleted</td>
                                         <td>
+                                            <a asp-page="Update" asp-route-id="@job.JobId">Update (@job.JobId)</a>
+                                            <a asp-page="Update" asp-route-id="@job.JobId">Update</a>
+                                            <a asp-page="Update" asp-route-id="@job.JobId">Update</a>
+                                        </td>
+                                        <td>
                                             <!-- Button trigger modal -->
                                             <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#sletModal_@job.JobId">Slet</button>
 
@@ -107,6 +112,7 @@
                                                             <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal">Fortryd</button>
                                                             <a class="btn btn-danger btn-sm" asp-page="Delete" asp-route-id="@job.JobId">Slet</a>
                                                         </div>
+
                                                     </div>
                                                 </div>
                                             </div>

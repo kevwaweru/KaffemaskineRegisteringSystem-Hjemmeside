@@ -10,7 +10,7 @@ namespace CoffeeCrazy.Pages.Jobs
     {
         private readonly IJobRepo _jobRepo;
         private readonly IMachineRepo _machineRepo;
-        private readonly IJobTemplateRepo _jobTemplateRepo;  // skal måske ikke bruges
+        private readonly IJobTemplateRepo _jobTemplateRepo; 
         public UpdateModel(IJobRepo jobRepo, IMachineRepo machineRepo, IJobTemplateRepo jobTemplateRepo)
         {
             _machineRepo = machineRepo;
@@ -22,17 +22,14 @@ namespace CoffeeCrazy.Pages.Jobs
 
         [BindProperty]
         public Job JobToUpdate { get; set; }
-        //[BindProperty]
-        //public JobTemplate JobTemplate { get; set; }
 
-        public async Task <IActionResult> OnGetAsync(int jobId, int jobTemplateId)
+        public async Task<IActionResult> OnGetAsync(int jobId)
         {
             JobToUpdate = await _jobRepo.GetByIdAsync(jobId);
             Machines = await _machineRepo.GetAllAsync();
             JobTemplates = await _jobTemplateRepo.GetAllAsync();
-            //      JobTemplate = await _jobTemplateRepo.GetByIdAsync(jobTemplateId);// skal måske ikke bruges
 
-            if (JobToUpdate == null /* || JobTemplate == null*/)
+            if (JobToUpdate == null)
             {
                 return NotFound();
             }
@@ -46,8 +43,6 @@ namespace CoffeeCrazy.Pages.Jobs
             }
  
             await _jobRepo.UpdateAsync(JobToUpdate);
-
-      //    await _jobTemplateRepo.UpdateAsync(JobTemplate); // skal måske ikke bruges
 
             return RedirectToPage("/Jobs/Index");
         }

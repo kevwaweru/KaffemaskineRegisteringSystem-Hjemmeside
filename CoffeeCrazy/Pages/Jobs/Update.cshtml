@@ -1,4 +1,4 @@
-﻿@page
+﻿@page "{id:int}"
 @model CoffeeCrazy.Pages.Jobs.UpdateModel
 @{
 }
@@ -55,20 +55,6 @@
         <input asp-for="JobToUpdate.FrequencyId" class="form-control" />
         <span asp-validation-for="JobToUpdate.FrequencyId" class="text-danger"></span>
     </div>
-    
-
-@* Tror ikke det skal bruges 
-    <h2>Job Template</h2>
-    <div>
-        <label for="JobTemplate_Title">Titel:</label>
-        <input id="JobTemplate_Title" name="JobTemplate.Title" value="@Model.JobTemplate.Title" />
-    </div>
-    <div>
-        <label for="JobTemplate_Description">Beskrivelse:</label>
-        <textarea id="JobTemplate_Description" name="JobTemplate.Description">
-            @Model.JobTemplate.Description
-        </textarea>
-    </div> *@
 
     <button type="submit">Opdater</button>
 </form>
