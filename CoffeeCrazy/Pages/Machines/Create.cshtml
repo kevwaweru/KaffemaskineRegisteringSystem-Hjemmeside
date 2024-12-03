@@ -1,0 +1,26 @@
+﻿@page
+@model CoffeeCrazy.Pages.Machines.CreateModel
+@{
+    ViewData["Title"] = "Lav ny Maskine";
+}
+
+<h1>Lav Maskine</h1>
+
+<form method="post">
+    <div>
+        <label>Placering</label>
+        <input asp-for="Machine.Placement" class="form-control" />
+        <span asp-validation-for="Machine.Placement" class="text-danger"></span>
+    </div>
+    <div>
+        <label>Campus</label>
+        <select asp-for="Machine.Campus" class="form-control">
+            @foreach (var campus in Enum.GetValues(typeof(CoffeeCrazy.Models.Enums.Campus)))
+            {
+                <option value="@((int)campus)">@campus</option>
+            }
+        </select>
+        <span asp-validation-for="Machine.Campus" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Create</button>
+</form>

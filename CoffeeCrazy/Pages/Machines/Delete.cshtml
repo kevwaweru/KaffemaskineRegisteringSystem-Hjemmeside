@@ -1,0 +1,26 @@
+﻿@page
+@model CoffeeCrazy.Pages.Machines.DeleteModel
+@{
+    ViewData["Title"] = "Delete Machine";
+}
+
+<h1>Delete Machine</h1>
+
+<p>Select the machine you want to delete:</p>
+
+<form method="post">
+    <div>
+        <label for="selectedMachine">Machines</label>
+        <select id="selectedMachine" asp-for="SelectedMachineId" class="form-control">
+            <option value="">-- Select a machine --</option>
+            @foreach (var machine in Model.Machines)
+            {
+                <option value="@machine.MachineId">
+                    @machine.Placement (Campus: @machine.Campus, Status: @(machine.Status ? "Active" : "Inactive"))
+                </option>
+            }
+        </select>
+        <span asp-validation-for="SelectedMachineId" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-danger">Delete</button>
+</form>
