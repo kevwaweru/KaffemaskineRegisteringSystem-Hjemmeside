@@ -1,7 +1,6 @@
 using CoffeeCrazy.Interfaces;
 using CoffeeCrazy.Models;
 using CoffeeCrazy.Models.Enums;
-using CoffeeCrazy.Repos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -9,24 +8,21 @@ namespace CoffeeCrazy.Pages.Jobs
 {
     public class IndexModel : PageModel
     {
-        private readonly IJobTemplateRepo _jobTemplateRepo;
-        private readonly IJobRepo _jobRepo;
+        private readonly ICRUDRepo<Job> _jobRepo;
         private readonly IUserRepo _userRepo;
-        private readonly IMachineRepo _machineRepo;
+        private readonly ICRUDRepo<Machine> _machineRepo;
 
 
         public List<Frequency> Frequencies = new List<Frequency>();
 
-        public List<JobTemplate> JobTemplates { get; set; }
         public List<Job> Jobs { get; set; }
         public List<User> Users { get; set; }
         public List<Machine> Machines { get; set; }
 
         private List<Job> OlderThan6MonthsJobs { get; set; }
 
-        public IndexModel(IJobTemplateRepo jobTemplateRepo, IJobRepo jobRepo, IUserRepo userRepo, IMachineRepo machineRepo)
+        public IndexModel(ICRUDRepo<Job> jobRepo, IUserRepo userRepo, ICRUDRepo<Machine> machineRepo)
         {
-            _jobTemplateRepo = jobTemplateRepo;
             _jobRepo = jobRepo;
             _userRepo = userRepo;
             _machineRepo = machineRepo;
@@ -45,7 +41,6 @@ namespace CoffeeCrazy.Pages.Jobs
                 await _jobRepo.DeleteAsync(oldJob);
             }
 
-            JobTemplates = await _jobTemplateRepo.GetAllAsync();
             Jobs = await _jobRepo.GetAllAsync();
             Users = await _userRepo.GetAllAsync();
             Machines = await _machineRepo.GetAllAsync();

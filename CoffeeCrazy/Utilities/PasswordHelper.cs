@@ -1,4 +1,4 @@
-﻿namespace CoffeeCrazy.Utilitys
+﻿namespace CoffeeCrazy.Utilities
 {
     using System.Security.Cryptography;
     using System.Text;

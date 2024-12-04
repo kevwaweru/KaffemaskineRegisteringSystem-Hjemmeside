@@ -2,7 +2,6 @@
 using CoffeeCrazy.Interfaces;
 using CoffeeCrazy.Models;
 using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
 
 
 namespace CoffeeCrazy.Repos
@@ -15,12 +14,9 @@ namespace CoffeeCrazy.Repos
         private readonly string _connectionString;
 
         //CTOR
-        public ValidateDatabaseMethods(IConfiguration configuration, IJobTemplateRepo assignmentSetRepo, IJobRepo assignmentRepo)
+        public ValidateDatabaseMethods(IConfiguration configuration)
         {
-            _connectionString = configuration.GetConnectionString("DefaultConnection")
-                ?? throw new InvalidOperationException("Connection string 'Kaffe Maskine Database' not found.");
-
-
+            _connectionString = configuration.GetConnectionString("DefaultConnection");
         }
 
         /// <summary>

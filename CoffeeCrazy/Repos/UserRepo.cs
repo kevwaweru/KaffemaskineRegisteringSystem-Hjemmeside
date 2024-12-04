@@ -1,24 +1,23 @@
 ﻿using CoffeeCrazy.Interfaces;
 using CoffeeCrazy.Models;
 using CoffeeCrazy.Models.Enums;
-using CoffeeCrazy.Utilitys;
+using CoffeeCrazy.Utilities;
 using Microsoft.Data.SqlClient;
-using System.Linq.Expressions;
 
 namespace CoffeeCrazy.Repos
 {
     public class UserRepo : IUserRepo
     {
+        private readonly ITokenRepo _tokenGeneratorRepo;
         private readonly string _connectionString;
-        private readonly ITokenGeneratorRepo _tokenGeneratorRepo;
-        public UserRepo(IConfiguration configuration, ITokenGeneratorRepo tokenGeneratorRepo)
+
+        public UserRepo(IConfiguration configuration, ITokenRepo tokenGeneratorRepo)
         {
-            _connectionString = configuration.GetConnectionString("DefaultConnection")
-                ?? throw new InvalidOperationException("Connection string 'Kaffe maskine database' not found.");
+            _connectionString = configuration.GetConnectionString("DefaultConnection");
             _tokenGeneratorRepo = tokenGeneratorRepo;
         }
 
-        public async System.Threading.Tasks.Task CreateAsync(User user)
+        public async Task CreateAsync(User user)
         {
             try
             {
@@ -28,124 +27,66 @@ namespace CoffeeCrazy.Repos
 
                 using (SqlConnection connection = new SqlConnection(_connectionString))
                 {
-                    string query = @"
-                INSERT INTO Users (FirstName, LastName, Email, Password, PasswordSalt, CampusId, RoleId)
-                VALUES (@FirstName, @LastName, @Email, @Password, @PasswordSalt, @CampusId, @RoleId)"; ;
-
-                    using (SqlCommand command = new SqlCommand(query, connection))
-                    {
-                        command.Parameters.AddWithValue("@FirstName", user.FirstName);
-                        command.Parameters.AddWithValue("@LastName", user.LastName);
-                        command.Parameters.AddWithValue("@Email", user.Email);
-                        command.Parameters.AddWithValue("@Password", user.Password);
-                        command.Parameters.AddWithValue("@PasswordSalt", user.PasswordSalt);
-                        command.Parameters.AddWithValue("@CampusId", (int)user.Campus);
-                        command.Parameters.AddWithValue("@RoleId", (int)user.Role);
-
-                        await connection.OpenAsync();
-                        await command.ExecuteNonQueryAsync();
-                    }
-                }
-            }
-            catch (SqlException sqlEx)
-            {
-                Console.WriteLine("Error: " + sqlEx.Message);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error: " + ex.Message);
-            }
-        }
-
-        public async System.Threading.Tasks.Task UpdateAsync(User toBeUpdatedUser)
-        {
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(_connectionString))
-                {
-                    string query = "EXEC AdminUpdateEmployee @UserId, @FirstName, @LastName, @Email, @Password, @PasswordSalt, @CampusId";
+                    string query = @"INSERT INTO Users (FirstName, LastName, Email, Password, PasswordSalt, CampusId, RoleId)
+                                    VALUES (@FirstName, @LastName, @Email, @Password, @PasswordSalt, @CampusId, @RoleId)";
 
                     SqlCommand command = new SqlCommand(query, connection);
-                    command.Parameters.AddWithValue("@Id", (int)toBeUpdatedUser.UserId);
-                    command.Parameters.AddWithValue("@FirstName", toBeUpdatedUser.FirstName);
-                    command.Parameters.AddWithValue("@LastName", toBeUpdatedUser.LastName);
-                    command.Parameters.AddWithValue("@Email", toBeUpdatedUser.Email);
-                    command.Parameters.AddWithValue("@Password", toBeUpdatedUser.Password);
-                    command.Parameters.AddWithValue("@PasswordSalt", toBeUpdatedUser.PasswordSalt);
-                    command.Parameters.AddWithValue("@CampusId", (int)toBeUpdatedUser.Campus);
+                    command.Parameters.AddWithValue("@FirstName", user.FirstName);
+                    command.Parameters.AddWithValue("@LastName", user.LastName);
+                    command.Parameters.AddWithValue("@Email", user.Email);
+                    command.Parameters.AddWithValue("@Password", user.Password);
+                    command.Parameters.AddWithValue("@PasswordSalt", user.PasswordSalt);
+                    command.Parameters.AddWithValue("@CampusId", (int)user.Campus);
+                    command.Parameters.AddWithValue("@RoleId", (int)user.Role);
 
                     await connection.OpenAsync();
                     await command.ExecuteNonQueryAsync();
                 }
             }
-            catch (SqlException sqlEx)
+            catch (SqlException ex)
             {
-                Console.WriteLine("Error:" + sqlEx);
+                // SQL Errors
+                Console.Error.WriteLine($"SQL error: {ex.Message}");
+                throw;
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error:" + ex);
-            }
-        }
-
-
-        public async System.Threading.Tasks.Task DeleteAsync(User toBeDeletedUser)
-        {
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(_connectionString))
-                {
-                    string sqlQuery = "DELETE FROM Users WHERE UserId = @UserId";
-
-                    SqlCommand command = new SqlCommand(sqlQuery, connection);
-
-                    command.Parameters.AddWithValue("@UserId", toBeDeletedUser.UserId);
-
-                    await connection.OpenAsync();
-
-                    await command.ExecuteNonQueryAsync();
-                }
-            }
-            catch (SqlException sqlEx)
-            {
-                Console.WriteLine("Error: " + sqlEx.Message);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error: " + ex.Message);
+                // Other Errors
+                Console.Error.WriteLine($"Mistakes has happened: {ex.Message}");
+                throw;
             }
         }
 
         public async Task<List<User>> GetAllAsync()
         {
-            var users = new List<User>();
-
+            List<User> users = new List<User>();
             try
             {
-                using (var connection = new SqlConnection(_connectionString))
+                using (SqlConnection connection = new SqlConnection(_connectionString))
                 {
+                    string query = "SELECT * FROM Users";
+
+                    SqlCommand command = new SqlCommand(query, connection);
+
                     await connection.OpenAsync();
-                    string query = "SELECT UserId, FirstName, LastName, Email, Password, RoleId, CampusId FROM Users";
 
-                    using (var command = new SqlCommand(query, connection))
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        using (var reader = await command.ExecuteReaderAsync())
+                        while (await reader.ReadAsync())
                         {
-                            while (await reader.ReadAsync())
+                            User user = new User
                             {
-                                var user = new User
-                                {
-                                    UserId = reader.GetInt32(0),
-                                    FirstName = reader.GetString(1),
-                                    LastName = reader.GetString(2),
-                                    Email = reader.GetString(3),
-                                    Password = reader.GetString(4),
-                                    Role = (Role)reader.GetInt32(5),
-                                    Campus = (Campus)reader.GetInt32(6)
-                                };
+                                UserId = (int)reader["UserId"],
+                                FirstName = (string)reader["FirstName"],
+                                LastName = (string)reader["LastName"],
+                                Email = (string)reader["Email"],
+                                Password = (string)reader["Password"],
+                                PasswordSalt = (string)reader["PasswordSalt"],
+                                Role = (Role)reader["RoleId"],
+                                Campus = (Campus)reader["CampusId"]
+                            };
 
-                                users.Add(user);
-                            }
+                            users.Add(user);
                         }
                     }
                 }
@@ -162,41 +103,41 @@ namespace CoffeeCrazy.Repos
                 throw;
             }
         }
-
         public async Task<User> GetByIdAsync(int userId)
         {
             try
             {
-                using (var connection = new SqlConnection(_connectionString))
+                using (SqlConnection connection = new SqlConnection(_connectionString))
                 {
+                    string query = "SELECT * WHERE UserId = @UserId";
+
+                    SqlCommand command = new SqlCommand(query, connection);
+                    command.Parameters.AddWithValue("@UserId", userId);
+
                     await connection.OpenAsync();
-                    string query = "SELECT UserId, FirstName, LastName, Email, Password, RoleId, CampusId FROM Users WHERE UserId = @UserId";
 
-                    using (var command = new SqlCommand(query, connection))
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        command.Parameters.AddWithValue("@UserId", userId);
-
-                        using (var reader = await command.ExecuteReaderAsync())
+                        if (await reader.ReadAsync())
                         {
-                            if (await reader.ReadAsync())
+                            return new User
                             {
-                                return new User
-                                {
-                                    UserId = reader.GetInt32(0),
-                                    FirstName = reader.GetString(1),
-                                    LastName = reader.GetString(2),
-                                    Email = reader.GetString(3),
-                                    Password = reader.GetString(4),
-                                    Role = (Role)reader.GetInt32(5),
-                                    Campus = (Campus)reader.GetInt32(6)
-                                };
-                            }
-                            else
-                            {
-                                throw new Exception($"User with ID {userId} does not exist.");
-                            }
+                                UserId = (int)reader["UserId"],
+                                FirstName = (string)reader["FirstName"],
+                                LastName = (string)reader["LastName"],
+                                Email = (string)reader["Email"],
+                                Password = (string)reader["Password"],
+                                PasswordSalt = (string)reader["PasswordSalt"],
+                                Role = (Role)reader["RoleId"],
+                                Campus = (Campus)reader["CampusId"]
+                            };
+                        }
+                        else
+                        {
+                            throw new Exception($"User with ID {userId} does not exist.");
                         }
                     }
+
                 }
             }
             catch (SqlException ex)
@@ -210,13 +151,88 @@ namespace CoffeeCrazy.Repos
                 throw;
             }
         }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="email"></param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
+
+        public async Task UpdateAsync(User toBeUpdatedUser)
+        {
+            try
+            {
+                var (passwordHash, passwordSalt) = PasswordHelper.CreatePasswordHash(toBeUpdatedUser.Password);
+                toBeUpdatedUser.Password = Convert.ToBase64String(passwordHash);
+                toBeUpdatedUser.PasswordSalt = Convert.ToBase64String(passwordSalt);
+
+                using (SqlConnection connection = new SqlConnection(_connectionString))
+                {
+                    string query = @"UPDATE Users SET
+                                        FirstName = @FirstName,
+                                        LastName = @LastName,
+                                        Email = @Email,
+                                        Password = @Password,
+                                        PasswordSalt = @PasswordSalt,
+                                        CampusId = @CampusId,
+                                        RoleId = @RoleId
+                                    WHERE
+                                        JobId = @JobId";
+
+                    SqlCommand command = new SqlCommand(query, connection);
+                    command.Parameters.AddWithValue("@FirstName", toBeUpdatedUser.FirstName);
+                    command.Parameters.AddWithValue("@LastName", toBeUpdatedUser.LastName);
+                    command.Parameters.AddWithValue("@Email", toBeUpdatedUser.Email);
+                    command.Parameters.AddWithValue("@Password", toBeUpdatedUser.Password);
+                    command.Parameters.AddWithValue("@PasswordSalt", toBeUpdatedUser.PasswordSalt);
+                    command.Parameters.AddWithValue("@CampusId", (int)toBeUpdatedUser.Campus);
+                    command.Parameters.AddWithValue("@RoleId", (int)toBeUpdatedUser.Role);
+                    command.Parameters.AddWithValue("@UserId", toBeUpdatedUser.UserId);
+
+                    await connection.OpenAsync();
+                    await command.ExecuteNonQueryAsync();
+                }
+            }
+            catch (SqlException ex)
+            {
+                // SQL Errors
+                Console.Error.WriteLine($"SQL error: {ex.Message}");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                // Other Errors
+                Console.Error.WriteLine($"Mistakes has happened: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task DeleteAsync(User toBeDeletedUser)
+        {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_connectionString))
+                {
+                    string sqlQuery = "DELETE FROM Users WHERE UserId = @UserId";
+
+                    SqlCommand command = new SqlCommand(sqlQuery, connection);
+                    command.Parameters.AddWithValue("@UserId", toBeDeletedUser.UserId);
+
+                    await connection.OpenAsync();
+                    await command.ExecuteNonQueryAsync();
+                }
+            }
+            catch (SqlException ex)
+            {
+                // SQL Errors
+                Console.Error.WriteLine($"SQL error: {ex.Message}");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                // Other Errors
+                Console.Error.WriteLine($"Mistakes has happened: {ex.Message}");
+                throw;
+            }
+        }
+
+
+
+        // -- Jeg kunne godt tænke mig vi flytte disse til et PasswordRepo --
         public async Task<(byte[] passwordHash, byte[] passwordSalt, Role role, string firstName, int userId)> GetUserByEmailAsync(string email)
         {
             try
@@ -224,10 +240,9 @@ namespace CoffeeCrazy.Repos
                 using (var connection = new SqlConnection(_connectionString))
                 {
                     await connection.OpenAsync();
-                    string query = @"
-                SELECT Password, PasswordSalt, RoleId, FirstName, UserId
-                FROM Users 
-                WHERE Email = @Email";
+                    string query = @"SELECT Password, PasswordSalt, RoleId, FirstName, UserId
+                                    FROM Users 
+                                    WHERE Email = @Email";
 
                     using (var command = new SqlCommand(query, connection))
                     {
@@ -257,20 +272,21 @@ namespace CoffeeCrazy.Repos
                     throw new Exception("User not found");
                 }
             }
-            catch (SqlException sqlEx)
+            catch (SqlException ex)
             {
-                Console.Error.WriteLine($"SQL Error: {sqlEx.Message}");
-                throw new Exception("A database error occurred. Please try again later.", sqlEx);
+                // SQL Errors
+                Console.Error.WriteLine($"SQL error: {ex.Message}");
+                throw;
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Error: {ex.Message}");
-                throw new Exception("An error occurred while retrieving the user.", ex);
+                // Other Errors
+                Console.Error.WriteLine($"Mistakes has happened: {ex.Message}");
+                throw;
             }
-
         }
 
-        public async System.Threading.Tasks.Task ChangePasswordAsync(string email, string currentPassword, string newPassword)
+        public async Task ChangePasswordAsync(string email, string currentPassword, string newPassword)
         {
             try
             {
@@ -278,10 +294,9 @@ namespace CoffeeCrazy.Repos
                 {
                     await connection.OpenAsync();
 
-                    string selectQuery = @"
-                SELECT Password, PasswordSalt 
-                FROM Users 
-                WHERE Email = @Email";
+                    string selectQuery = @"SELECT Password, PasswordSalt 
+                                            FROM Users 
+                                            WHERE Email = @Email";
 
                     using (var selectCommand = new SqlCommand(selectQuery, connection))
                     {
@@ -308,10 +323,8 @@ namespace CoffeeCrazy.Repos
 
                     var (newHash, newSalt) = PasswordHelper.CreatePasswordHash(newPassword);
 
-                    string updateQuery = @"
-                UPDATE Users 
-                SET Password = @NewPasswordHash, PasswordSalt = @NewPasswordSalt
-                WHERE Email = @Email";
+                    string updateQuery = @"UPDATE Users SET Password = @NewPasswordHash, PasswordSalt = @NewPasswordSalt
+                                         WHERE Email = @Email";
 
                     using (var updateCommand = new SqlCommand(updateQuery, connection))
                     {
@@ -323,9 +336,16 @@ namespace CoffeeCrazy.Repos
                     }
                 }
             }
+            catch (SqlException ex)
+            {
+                // SQL Errors
+                Console.Error.WriteLine($"SQL error: {ex.Message}");
+                throw;
+            }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                // Other Errors
+                Console.Error.WriteLine($"Mistakes has happened: {ex.Message}");
                 throw;
             }
         }
@@ -345,20 +365,25 @@ namespace CoffeeCrazy.Repos
                     }
 
                     var (hash, salt) = PasswordHelper.CreatePasswordHash(newPassword);
-              
+
                     await UpdateUserPasswordAsync(email, hash, salt, connection);
 
                     // Slet token fra databasen
                     // skal bare implamenteres
-                  
-                   await _tokenGeneratorRepo.DeleteAsync(token);
+
+                    await _tokenGeneratorRepo.DeleteTokenAsync(token);
                 }
 
-                return true; 
+                return true;
+            }
+            catch (SqlException sqlEx)
+            {
+                Console.WriteLine("Error: " + sqlEx.Message);
+                return false;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine("Error: " + ex.Message);
                 return false;
             }
         }
@@ -371,27 +396,40 @@ namespace CoffeeCrazy.Repos
         /// <returns></returns>
         private async Task<string?> GetEmailByTokenAsync(string token, SqlConnection connection)
         {
-            string query = @"
-        SELECT Email 
-        FROM PasswordResetTokens 
-        WHERE Token = @Token";
-
-            using (var command = new SqlCommand(query, connection))
+            try
             {
-                command.Parameters.AddWithValue("@Token", token);
+                string query = @"SELECT Email
+                                FROM PasswordResetTokens
+                                WHERE Token = @Token";
 
-                using (var reader = await command.ExecuteReaderAsync())
+                using (var command = new SqlCommand(query, connection))
                 {
-                    if (await reader.ReadAsync())
+                    command.Parameters.AddWithValue("@Token", token);
+
+                    using (var reader = await command.ExecuteReaderAsync())
                     {
-                        return reader["Email"].ToString();
+                        if (await reader.ReadAsync())
+                        {
+                            return reader["Email"].ToString();
+                        }
                     }
                 }
+                return null;
             }
-            return null; 
+            catch (SqlException ex)
+            {
+                // SQL Errors
+                Console.Error.WriteLine($"SQL error: {ex.Message}");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                // Other Errors
+                Console.Error.WriteLine($"Mistakes has happened: {ex.Message}");
+                throw;
+            }
         }
-      
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -400,21 +438,34 @@ namespace CoffeeCrazy.Repos
         /// <param name="salt"></param>
         /// <param name="connection"></param>
         /// <returns></returns>
-        private async System.Threading.Tasks.Task UpdateUserPasswordAsync(string email, byte[] hash, byte[] salt, SqlConnection connection)
+        private async Task UpdateUserPasswordAsync(string email, byte[] hash, byte[] salt, SqlConnection connection)
         {
-            string query = @"
-                    UPDATE Users 
-                    SET Password = @Password, PasswordSalt = @PasswordSalt
-                    WHERE Email = @Email";
-
-            using (var command = new SqlCommand(query, connection))
+            try
             {
-                command.Parameters.AddWithValue("@Password", Convert.ToBase64String(hash));
-                command.Parameters.AddWithValue("@PasswordSalt", Convert.ToBase64String(salt));
-                command.Parameters.AddWithValue("@Email", email);
+                string query = @"UPDATE Users SET Password = @Password, PasswordSalt = @PasswordSalt
+                                WHERE Email = @Email";
 
-                await command.ExecuteNonQueryAsync();
+                using (var command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Password", Convert.ToBase64String(hash));
+                    command.Parameters.AddWithValue("@PasswordSalt", Convert.ToBase64String(salt));
+                    command.Parameters.AddWithValue("@Email", email);
+
+                    await command.ExecuteNonQueryAsync();
+                }
             }
+            catch (SqlException ex)
+            {
+                // SQL Errors
+                Console.Error.WriteLine($"SQL error: {ex.Message}");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                // Other Errors
+                Console.Error.WriteLine($"Mistakes has happened: {ex.Message}");
+                throw;
+            } 
         }
 
         public async Task<bool> DeleteUserAsync(int userId, int currentUserId)
@@ -452,15 +503,5 @@ namespace CoffeeCrazy.Repos
                 return false;
             }
         }
-
     }
- 
-
-
-
-
-
-
-
-
 }

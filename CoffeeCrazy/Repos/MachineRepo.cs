@@ -6,77 +6,181 @@ using System.Data;
 
 namespace CoffeeCrazy.Repos
 {
-    public class MachineRepo : IMachineRepo
+    public class MachineRepo : ICRUDRepo<Machine>
     {
         private readonly string _connectionString;
+
         public MachineRepo(IConfiguration configuration)
         {
-            _connectionString = configuration.GetConnectionString("DefaultConnection")
-                ?? throw new InvalidOperationException("Connection string 'Kaffe maskine database' not found.");
+            _connectionString = configuration.GetConnectionString("DefaultConnection");
         }
 
-        public async System.Threading.Tasks.Task CreateAsync(Machine machine)
+        public async Task CreateAsync(Machine toBeCreatedMachine)
         {
             try
             {
                 using (SqlConnection connection = new SqlConnection(_connectionString))
                 {
-                    string sqlQuery = "INSERT INTO Machines (MachineId, CampusId, Status, Placement) VALUES (@MachineName, @CampusId, @Status, @Placement)";
+                    string SQLquery = @"INSERT INTO Machines (Placement, CampusId)
+                                        VALUES (@Placement, @CampusId)";
 
-                    SqlCommand command = new SqlCommand(sqlQuery, connection);
-
-                    command.Parameters.Add("@MachineName", SqlDbType.NVarChar).Value = machine.MachineId;
-                    command.Parameters.Add("@CampusId", SqlDbType.Int).Value = (int)machine.Campus;
-                    command.Parameters.Add("@Status", SqlDbType.Bit).Value = machine.Status;
-                    command.Parameters.Add("@Placement", SqlDbType.NVarChar).Value = machine.Placement;
+                    SqlCommand command = new SqlCommand(SQLquery, connection);
+                    command.Parameters.AddWithValue("@Placement", toBeCreatedMachine.Placement);
+                    command.Parameters.AddWithValue("@CampusId", (int)toBeCreatedMachine.Campus);
 
                     await connection.OpenAsync();
                     await command.ExecuteNonQueryAsync();
-
                 }
             }
-            catch (SqlException sqlEx)
+            catch (SqlException ex)
             {
-                Console.WriteLine("Error: " + sqlEx.Message);
+                // SQL Errors
+                Console.Error.WriteLine($"SQL error: {ex.Message}");
+                throw;
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error: " + ex.Message);
+                // Other Errors
+                Console.Error.WriteLine($"Mistakes has happened: {ex.Message}");
+                throw;
             }
         }
 
-        public async System.Threading.Tasks.Task UpdateAsync(Machine machine)
+        public async Task<List<Machine>> GetAllAsync()
+        {
+            List<Machine> machines = new List<Machine>();
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_connectionString))
+                {
+                    string query = "SELECT * FROM Machines";
+
+                    SqlCommand command = new SqlCommand(query, connection);
+
+                    await connection.OpenAsync();
+
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            Machine machine = new Machine
+                            {
+                                MachineId = (int)reader["MachineId"],
+                                Status = (bool)reader["Status"],
+                                Placement = reader["Placement"] as string,
+                                Campus = (Campus)reader["CampusId"]
+                            };
+
+                            machines.Add(machine);
+                        }
+                    }
+                }
+                return machines;
+            }
+            catch (SqlException ex)
+            {
+                // Log database-related errors.
+                Console.WriteLine($"Database error: {ex.Message}");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                // Log general errors.
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<Machine> GetByIdAsync(int machineId)
         {
             try
             {
                 using (SqlConnection connection = new SqlConnection(_connectionString))
                 {
-                    string sqlQuery = "UPDATE Machines SET MachineName = @MachineName, CampusId = @CampusId, Status = @Status, Placement = @Placement WHERE MachineId = @MachineId";
+                    string query = "SELECT * FROM Machines WHERE MachineId = @MachineId";
 
-                    SqlCommand command = new SqlCommand(sqlQuery, connection);
-
-                    command.Parameters.Add("@MachineId", SqlDbType.Int).Value = machine.MachineId;
-                    command.Parameters.Add("@CampusId", SqlDbType.Int).Value = (int)machine.Campus;
-                    command.Parameters.Add("@Status", SqlDbType.Bit).Value = machine.Status;
-                    command.Parameters.Add("@Placement", SqlDbType.NVarChar).Value = machine.Placement;
+                    SqlCommand command = new SqlCommand(query, connection);
+                    command.Parameters.AddWithValue("@MachineId", machineId);
 
                     await connection.OpenAsync();
 
-                    await command.ExecuteNonQueryAsync();
-
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                    {
+                        if (await reader.ReadAsync())
+                        {
+                            return new Machine
+                            {
+                                MachineId = (int)reader["MachineId"],
+                                Status = (bool)reader["Status"],
+                                Placement = reader["Placement"] as string,
+                                Campus = (Campus)reader["CampusId"]
+                            };
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException($"Machine with ID {machineId} does not exist.");
+                        }
+                    }
                 }
             }
-            catch (SqlException sqlEx)
+            catch (SqlException ex)
             {
-                Console.WriteLine("Error: " + sqlEx.Message);
+                // Log database errors and rethrow.
+                Console.WriteLine($"Database error: {ex.Message}");
+                throw;
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error: " + ex.Message);
+                // Log general errors and rethrow.
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                throw;
             }
         }
 
-        public async System.Threading.Tasks.Task DeleteAsync(Machine toBeDeletedMachine)
+        public async Task UpdateAsync(Machine toBeUpdatedMachine)
+        {
+            try
+            {
+                if (toBeUpdatedMachine == null)
+                {
+                    throw new ArgumentNullException(nameof(toBeUpdatedMachine), "You will need to submit new data if you want the Machine updated.");
+                }
+
+                using (SqlConnection connection = new SqlConnection(_connectionString))
+                {
+                    string query = @"UPDATE Machines SET
+                                        Status = @Status,
+                                        Placement = @Placement,
+                                        CampusId = @CampusId
+                                    WHERE
+                                        MachineId = @MachineId";
+
+                    SqlCommand command = new SqlCommand(query, connection);
+
+                    command.Parameters.AddWithValue("@Status", toBeUpdatedMachine.Status);
+                    command.Parameters.AddWithValue("@Placement", toBeUpdatedMachine.Placement);
+                    command.Parameters.AddWithValue("@CampusId", (int)toBeUpdatedMachine.Campus);
+                    command.Parameters.AddWithValue("@MachineId", toBeUpdatedMachine.MachineId);
+
+                    await connection.OpenAsync();
+                    await command.ExecuteNonQueryAsync();
+                }
+            }
+            catch (SqlException ex)
+            {
+                // SQL Errors
+                Console.Error.WriteLine($"SQL error: {ex.Message}");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                // Other Errors
+                Console.Error.WriteLine($"Mistakes has happened: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task DeleteAsync(Machine toBeDeletedMachine)
         {
             try
             {
@@ -85,119 +189,25 @@ namespace CoffeeCrazy.Repos
                     string sqlQuery = "DELETE FROM Machines WHERE MachineId = @MachineId";
 
                     SqlCommand command = new SqlCommand(sqlQuery, connection);
-
                     command.Parameters.AddWithValue("@MachineId", toBeDeletedMachine.MachineId);
 
                     await connection.OpenAsync();
-
                     await command.ExecuteNonQueryAsync();
                 }
             }
-            catch (SqlException sqlEx)
+            catch (SqlException ex)
             {
-                Console.WriteLine("Error: " + sqlEx.Message);
+                // SQL Errors
+                Console.Error.WriteLine($"SQL error: {ex.Message}");
+                throw;
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error: " + ex.Message);
+                // Other Errors
+                Console.Error.WriteLine($"Mistakes has happened: {ex.Message}");
+                throw;
             }
         }
 
-        //Method to get ALL machines from database.
-        public async Task<List<Machine>> GetAllAsync()
-        {
-            var machines = new List<Machine>();
-
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(_connectionString))
-                {
-                    await connection.OpenAsync();
-
-                    string sqlQuery = @"SELECT MachineId, Status, CampusId, Placement FROM Machines";
-
-                    SqlCommand command = new SqlCommand(sqlQuery, connection);
-
-                    using (var reader = await command.ExecuteReaderAsync())
-                    {
-                        while (await reader.ReadAsync())
-                        {
-                            machines.Add(new Machine
-                            {
-                                MachineId = reader.GetInt32(0),
-                                Status = reader.GetBoolean(1),
-                                Campus = (Campus)reader.GetInt32(2),
-                                Placement = reader.GetString(3)
-                            });
-                        }
-                    }
-
-                }
-            }
-            catch (SqlException SqlEx)
-            {
-                Console.WriteLine("Sql-Exception Error." + SqlEx);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error" + ex);
-            }
-            return machines;
-        }
-
-        //Get a single machine by its Id.
-        public async Task<Machine> GetByIdAsync(int id)
-        {
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(_connectionString))
-                {
-
-                    await connection.OpenAsync();
-
-                    string sqlQuery = @"SELECT MachineId, Status, CampusId, Placement 
-                                FROM Machines 
-                                WHERE MachineId = @MachineId";
-
-                    SqlCommand command = new SqlCommand(sqlQuery, connection);
-
-                    command.Parameters.AddWithValue("@MachineId", id);
-
-                    using (var reader = await command.ExecuteReaderAsync())
-                    {
-                        if (await reader.ReadAsync())
-                        {
-                            return new Machine
-                            {
-                                MachineId = reader.GetInt32(0),
-                                Status = reader.GetBoolean(1),
-                                Campus = (Campus)reader.GetInt32(2),
-                                Placement = reader.GetString(3)
-                            };
-                        }
-                        else
-                        {
-                            throw new Exception($"The machine with ID {id} does not exist.");
-                        }
-
-                    }
-                }
-            }
-            catch (SqlException SqlEx)
-            {
-                Console.WriteLine("Sql-Exception Error." + SqlEx);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error" + ex);
-            }
-            return null;
-        }
-
-        public Task<List<Machine>> GetAllByCampusAsync(int campusId)
-        {
-            throw new NotImplementedException();
-        }
     }
-        
 }

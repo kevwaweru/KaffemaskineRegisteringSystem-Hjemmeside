@@ -1,10 +1,10 @@
 ﻿namespace CoffeeCrazy.Repos
 {
-    public interface ITokenGeneratorRepo
+    public interface ITokenRepo
     {
-        Task CreateAsync(string email);
+        Task CreateTokenAsync(string email);
         Task<string> GetTokenAsync(string email);
         Task<bool> ValidateTokenAsync(string token);
-        Task DeleteAsync(string token);
+        Task DeleteTokenAsync(string token);
     }
 }

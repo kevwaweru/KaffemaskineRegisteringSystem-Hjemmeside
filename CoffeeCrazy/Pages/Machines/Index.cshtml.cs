@@ -1,18 +1,15 @@
 using CoffeeCrazy.Interfaces;
 using CoffeeCrazy.Models;
-using CoffeeCrazy.Repos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace CoffeeCrazy.Pages.Machines
 {
     public class IndexModel : PageModel
     {
-        private readonly IMachineRepo _machineRepo;
+        private readonly ICRUDRepo<Machine> _machineRepo;
 
-        public IndexModel(IMachineRepo machineRepo)
+        public IndexModel(ICRUDRepo<Machine> machineRepo)
         {
             _machineRepo = machineRepo;
         }

@@ -1,6 +1,5 @@
 ﻿namespace CoffeeCrazy.Models.Enums
 {
-    //Keivn
     public enum Campus
     {
         Roskilde = 1,

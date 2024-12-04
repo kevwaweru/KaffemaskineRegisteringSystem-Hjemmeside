@@ -9,8 +9,8 @@ namespace CoffeeCrazy.Pages.Login.Password
     public class ResetPasswordModel : PageModel
     {
         private readonly IUserRepo _userRepo;
-        private readonly ITokenGeneratorRepo _tokenGeneratorRepo;
-        public ResetPasswordModel(IUserRepo userRepo, ITokenGeneratorRepo tokenGeneratorRepo)
+        private readonly ITokenRepo _tokenGeneratorRepo;
+        public ResetPasswordModel(IUserRepo userRepo, ITokenRepo tokenGeneratorRepo)
         {
             _userRepo = userRepo;
             _tokenGeneratorRepo = tokenGeneratorRepo;

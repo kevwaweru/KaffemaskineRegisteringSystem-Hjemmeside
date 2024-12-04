@@ -1,4 +1,5 @@
 using CoffeeCrazy.Interfaces;
+using CoffeeCrazy.Models;
 using CoffeeCrazy.Repos;
 using CoffeeCrazy.Services;
 
@@ -13,11 +14,11 @@ namespace CoffeeCrazy
             // Add services to the container.
             builder.Services.AddRazorPages();   
             // repositories
-            builder.Services.AddTransient<IUserRepo, UserRepo>();    
-            builder.Services.AddTransient<IJobRepo, JobRepo>();
-            builder.Services.AddTransient<IJobTemplateRepo, JobTemplateRepo>();
-            builder.Services.AddScoped<ITokenGeneratorRepo, TokenGeneratorRepo>();
-            builder.Services.AddScoped<IMachineRepo, MachineRepo>();
+            builder.Services.AddTransient<ICRUDRepo<Job>, JobRepo>();
+            builder.Services.AddScoped<ICRUDRepo<Machine>, MachineRepo>();
+            builder.Services.AddScoped<ITokenRepo, TokenRepo>();
+            builder.Services.AddTransient<IUserRepo, UserRepo>();
+
 
             // Services
             builder.Services.AddTransient<IEmailService, EmailService>();

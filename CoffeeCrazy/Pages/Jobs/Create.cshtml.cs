@@ -1,6 +1,5 @@
 using CoffeeCrazy.Interfaces;
 using CoffeeCrazy.Models;
-using CoffeeCrazy.Repos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -8,27 +7,21 @@ namespace CoffeeCrazy.Pages.Jobs
 {
     public class CreateModel : PageModel
     {
-        private readonly IJobRepo _jobRepo;
-        private readonly IJobTemplateRepo _jobTemplateRepo;
-        private readonly IMachineRepo _machineRepo;
+        private readonly ICRUDRepo<Job> _jobRepo;
+        private readonly ICRUDRepo<Machine> _machineRepo;
 
-
-        public List<JobTemplate> TaskTemplates { get; set; } = new();
         public List<Machine> Machines { get; set; } = new ();
 
         [BindProperty]
         public Job NewJob { get; set; } = new Job();
 
-        public CreateModel(IJobRepo jobRepo, IJobTemplateRepo jobTemplateRepo, IMachineRepo machineRepo)
+        public CreateModel(ICRUDRepo<Job> jobRepo, ICRUDRepo<Machine> machineRepo)
         {
             _jobRepo = jobRepo;
-            _jobTemplateRepo = jobTemplateRepo;
             _machineRepo = machineRepo;
         }
         public async Task OnGetAsync()
         {
-            // Hent alle templates
-            TaskTemplates = await _jobTemplateRepo.GetAllAsync();
             Machines = await _machineRepo.GetAllAsync();
         }
 
@@ -41,24 +34,24 @@ namespace CoffeeCrazy.Pages.Jobs
                 {
                     Job jobToBeCreated = new Job();
 
-                    jobToBeCreated.CreatedDate = DateTime.UtcNow;
-                    jobToBeCreated.Deadline = DateTime.UtcNow.AddDays(1);
+                    jobToBeCreated.Title = NewJob.Title;
+                    jobToBeCreated.Description = NewJob.Description;
+                    jobToBeCreated.Comment = "null";
                     jobToBeCreated.IsCompleted = false;
-                    jobToBeCreated.Comment = "Pikhoved";
-                    jobToBeCreated.MachineId = machine.MachineId;
+                    jobToBeCreated.DateCreated = DateTime.UtcNow;
+                    jobToBeCreated.Deadline = DateTime.UtcNow.AddMinutes(1);
                     jobToBeCreated.FrequencyId = NewJob.FrequencyId;
-                    jobToBeCreated.JobTemplateId = NewJob.JobTemplateId;
-
+                    jobToBeCreated.MachineId = machine.MachineId;
+                    
                     await _jobRepo.CreateAsync(jobToBeCreated);
                 }
             }
             else
             {
-                NewJob.CreatedDate = DateTime.UtcNow;
-                NewJob.Deadline = DateTime.UtcNow.AddDays(1);
                 NewJob.IsCompleted = false;
-                NewJob.Comment = "Pikhoved";
-
+                NewJob.Comment = "null";
+                NewJob.DateCreated = DateTime.UtcNow;
+                NewJob.Deadline = DateTime.UtcNow.AddMinutes(1);
                 await _jobRepo.CreateAsync(NewJob);
             }
             return RedirectToPage("/Jobs/Index");

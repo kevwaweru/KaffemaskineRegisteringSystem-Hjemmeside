@@ -1,23 +1,35 @@
 ﻿@page
 @model CoffeeCrazy.Pages.Jobs.CreateModel
 @{
-    ViewData["Title"] = "Opret opgavesæt";
+    ViewData["Title"] = "Opret Opgaver";
 }
 
-<h1>Opret Opgavesæt</h1>
+<h1>Opret Opgaver</h1>
 
 <form method="post">
     <div>
-        <label>Task Template</label>
-        <select asp-for="NewJob.JobTemplateId" class="form-control">
-            @foreach (var template in Model.TaskTemplates)
-            {
-                <option value="@template.JobTemplateId">@template.Title</option>
-            }
-        </select>
-        <span asp-validation-for="NewJob.JobTemplateId" class="text-danger"></span>
+        <label>Title</label>
+        <input class="form-control" asp-for="NewJob.Title" />
+        <span asp-validation-for="NewJob.Title" class="text-danger"></span>
     </div>
 
+    <div>
+        <label>Description</label>
+        <input class="form-control" asp-for="NewJob.Description" />
+        <span asp-validation-for="NewJob.Description" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label>Hvor tit?</label>
+        <select class="form-select" asp-for="NewJob.FrequencyId">
+
+            <option value=1>Daglig</option>
+            <option value=2>Ugenligt</option>
+            <option value=3>Månedligt</option>
+
+        </select>
+        <span asp-validation-for="NewJob.FrequencyId" class="text-danger"></span>
+    </div>
 
     <div>
         <label>Vælg Kaffemaskine</label>
@@ -30,16 +42,8 @@
         </select>
         <span asp-validation-for="NewJob.MachineId" class="text-danger"></span>
     </div>
-    <div>
-        <label>Hvor tit?</label>
-        <select class="form-select" asp-for="NewJob.FrequencyId">
 
-            <option value=1>Daglig</option>
-            <option value=2>Ugenligt</option>
-            <option value=3>Månedligt</option>
-
-        </select>
-        <span asp-validation-for="NewJob.FrequencyId" class="text-danger"></span>
-    </div>
     <button type="submit" class="btn btn-primary">Opret opgave</button>
+    <a class="btn btn-secondary btn-sm" asp-page="Index">Tilbage til oversigt</a>
+
 </form>

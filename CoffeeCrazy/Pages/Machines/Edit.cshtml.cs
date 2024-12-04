@@ -1,17 +1,15 @@
 using CoffeeCrazy.Interfaces;
 using CoffeeCrazy.Models;
-using CoffeeCrazy.Repos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Threading.Tasks;
 
 namespace CoffeeCrazy.Pages.Machines
 {
     public class EditModel : PageModel
     {
-        private readonly IMachineRepo _machineRepo;
+        private readonly ICRUDRepo<Machine> _machineRepo;
 
-        public EditModel(IMachineRepo machineRepo)
+        public EditModel(ICRUDRepo<Machine> machineRepo)
         {
             _machineRepo = machineRepo;
         }

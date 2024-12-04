@@ -3,8 +3,6 @@ using CoffeeCrazy.Models.Enums;
 using CoffeeCrazy.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Security.Claims;
-using Microsoft.Data.SqlClient;
 
 namespace CoffeeCrazy.Pages.Users
 {
@@ -22,7 +20,7 @@ namespace CoffeeCrazy.Pages.Users
         [BindProperty]
         public int UserIdToDelete { get; set; }
 
-        public async Task<IActionResult> OnPostDeleteAsync()
+        public async Task<IActionResult> OnGetAsync(int id)
         {
             User userToDelete = await _userRepo.GetByIdAsync(UserIdToDelete);
 

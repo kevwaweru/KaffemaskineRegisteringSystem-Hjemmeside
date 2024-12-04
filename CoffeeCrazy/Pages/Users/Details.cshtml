@@ -20,4 +20,6 @@
     </dl>
 </div>
 
-<a class="btn btn-primary" asp-page="/Users/Index">Tilbage til Index</a>
+<a class="btn btn-danger" asp-page="Delete" asp-route-id="@Model.User.UserId">Slet bruger</a>
+
+<a class="btn btn-secondary" asp-page="/Users/Index">Tilbage til Index</a>

@@ -1,6 +1,5 @@
 using CoffeeCrazy.Interfaces;
 using CoffeeCrazy.Models;
-using CoffeeCrazy.Repos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -8,17 +7,16 @@ namespace CoffeeCrazy.Pages.Machines
 {
     public class DeleteModel : PageModel
     {
-        private readonly IMachineRepo _machineRepo;
-
-        public DeleteModel(IMachineRepo machineRepo)
-        {
-            _machineRepo = machineRepo;
-        }
+        private readonly ICRUDRepo<Machine> _machineRepo;
 
         public List<Machine> Machines { get; set; } = new();
 
         [BindProperty]
         public int? SelectedMachineId { get; set; } // Holds the ID of the selected machine.
+        public DeleteModel(ICRUDRepo<Machine> machineRepo)
+        {
+            _machineRepo = machineRepo;
+        }
 
         public async Task<IActionResult> OnGetAsync()
         {

@@ -1,6 +1,4 @@
 ﻿using CoffeeCrazy.Interfaces;
-using CoffeeCrazy.Repos;
-using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -8,10 +6,6 @@ namespace CoffeeCrazy.Services
 {
     public class TokenGeneratorService : ITokenGeneratorService
     {
-        public TokenGeneratorService()
-        {
-
-        }
         public string GenerateToken()
         {
             StringBuilder token = new StringBuilder();

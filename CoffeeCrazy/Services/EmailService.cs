@@ -1,7 +1,6 @@
 ﻿using CoffeeCrazy.Interfaces;
 using CoffeeCrazy.Models.Enums;
 using CoffeeCrazy.Repos;
-using Microsoft.Identity.Client;
 using System.Net;
 using System.Net.Mail;
 
@@ -10,9 +9,9 @@ namespace CoffeeCrazy.Services
     public class EmailService : IEmailService
     {
         private readonly IConfiguration _configuration;
-        private readonly ITokenGeneratorRepo _tokenGeneratorRepo;
+        private readonly ITokenRepo _tokenGeneratorRepo;
 
-        public EmailService(IConfiguration configuration, ITokenGeneratorRepo tokenGeneratorRepo)
+        public EmailService(IConfiguration configuration, ITokenRepo tokenGeneratorRepo)
         {
             _configuration = configuration;
             _tokenGeneratorRepo = tokenGeneratorRepo;
@@ -66,7 +65,7 @@ namespace CoffeeCrazy.Services
         {
             try
             {
-                await _tokenGeneratorRepo.CreateAsync(email);
+                await _tokenGeneratorRepo.CreateTokenAsync(email);
 
                 string token = await _tokenGeneratorRepo.GetTokenAsync(email);
 

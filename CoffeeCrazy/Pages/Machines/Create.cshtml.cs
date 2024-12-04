@@ -1,6 +1,6 @@
 using CoffeeCrazy.Interfaces;
 using CoffeeCrazy.Models;
-using CoffeeCrazy.Repos;
+using CoffeeCrazy.Models.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -8,14 +8,19 @@ namespace CoffeeCrazy.Pages.Machines
 {
     public class CreateModel : PageModel
     {
-        private readonly IMachineRepo _machineRepo;
+        private readonly ICRUDRepo<Machine> _machineRepo;
 
         [BindProperty]
         public Machine Machine { get; set; }
 
-        public CreateModel(IMachineRepo machineRepo)
+        public CreateModel(ICRUDRepo<Machine> machineRepo)
         {
             _machineRepo = machineRepo;
+        }
+
+        public void Onget()
+        {
+
         }
 
         public async Task<IActionResult> OnPostAsync()

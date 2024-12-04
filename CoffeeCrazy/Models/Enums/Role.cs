@@ -2,10 +2,8 @@
 
 namespace CoffeeCrazy.Models.Enums
 {
-    //Gorm
     public enum Role
     {
-
         [Display(Name = "MasterAdmin")]
         MasterAdmin = 1,
 

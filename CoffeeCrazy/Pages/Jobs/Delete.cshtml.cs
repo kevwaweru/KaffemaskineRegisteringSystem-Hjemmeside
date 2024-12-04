@@ -7,9 +7,9 @@ namespace CoffeeCrazy.Pages.Jobs
 {
     public class DeleteModel : PageModel
     {
-        private readonly IJobRepo _jobRepo;
+        private readonly ICRUDRepo<Job> _jobRepo;
 
-        public DeleteModel(IJobRepo jobRepo)
+        public DeleteModel(ICRUDRepo<Job> jobRepo)
         {
             _jobRepo = jobRepo;
 
