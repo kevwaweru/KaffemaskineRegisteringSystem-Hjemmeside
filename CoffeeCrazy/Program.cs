@@ -12,7 +12,7 @@ namespace CoffeeCrazy
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddRazorPages();   
+            builder.Services.AddRazorPages();
             // repositories
             builder.Services.AddTransient<ICRUDRepo<Job>, JobRepo>();
             builder.Services.AddScoped<ICRUDRepo<Machine>, MachineRepo>();
@@ -54,6 +54,12 @@ namespace CoffeeCrazy
             app.UseAuthorization();
 
             app.MapRazorPages();
+
+            app.MapGet("/", context =>
+            {
+                context.Response.Redirect("/Login/Login");
+                return Task.CompletedTask;
+            });
 
             app.Run();
         }

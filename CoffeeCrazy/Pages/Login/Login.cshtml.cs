@@ -41,7 +41,7 @@ namespace CoffeeCrazy.Pages.Login
                     HttpContext.Session.SetInt32("UserId",(int)userId);
 
 
-                    return RedirectToPage("/Index");
+                    return RedirectToPage("/Machines/Index");
                 }
                 else
                 {                    
