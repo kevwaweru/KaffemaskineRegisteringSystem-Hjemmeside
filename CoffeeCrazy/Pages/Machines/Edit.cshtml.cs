@@ -28,13 +28,13 @@ namespace CoffeeCrazy.Pages.Machines
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(int id)
         {
             if (!ModelState.IsValid)
             {
                 return Page();
             }
-
+            Machine.MachineId = id;
             // Opdaterer maskinen i databasen
             await _machineRepo.UpdateAsync(Machine);
 
