@@ -105,6 +105,7 @@ namespace CoffeeCrazy.Repos
                 throw;
             }
         }
+
         public async Task<User> GetByIdAsync(int userId)
         {
             try
@@ -231,6 +232,7 @@ namespace CoffeeCrazy.Repos
                 throw;
             }
         }
+
         public async Task SaveProfilePictureAsync(int userId, IFormFile profilePicture)
         {
             byte[] imageBytes = _imageService.ConvertImageToByteArray(profilePicture);
@@ -248,6 +250,7 @@ namespace CoffeeCrazy.Repos
                 }
             }
         }
+
         // Method to retrieve profile picture from the database
         public async Task<byte[]> GetProfilePictureAsync(int userId)
         {
@@ -268,8 +271,8 @@ namespace CoffeeCrazy.Repos
     
 
 
-    // -- Jeg kunne godt tænke mig vi flytte disse til et PasswordRepo --
-    public async Task<(byte[] passwordHash, byte[] passwordSalt, Role role, string firstName, int userId)> GetUserByEmailAsync(string email)
+        // -- Jeg kunne godt tænke mig vi flytte disse til et PasswordRepo --
+        public async Task<(byte[] passwordHash, byte[] passwordSalt, Role role, string firstName, int userId)> GetUserByEmailAsync(string email)
         {
             try
             {
