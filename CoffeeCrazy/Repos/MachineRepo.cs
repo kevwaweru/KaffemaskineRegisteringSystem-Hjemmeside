@@ -9,6 +9,7 @@ namespace CoffeeCrazy.Repos
     public class MachineRepo : ICRUDRepo<Machine>
     {
         private readonly string _connectionString;
+        private readonly ValidateDatabaseMethods _validateDatabaseMethods;
 
         public MachineRepo(IConfiguration configuration)
         {
@@ -17,16 +18,19 @@ namespace CoffeeCrazy.Repos
 
         public async Task CreateAsync(Machine toBeCreatedMachine)
         {
+
+            //validate input from parameter kunne blive sat ind her.
             try
             {
                 using (SqlConnection connection = new SqlConnection(_connectionString))
                 {
-                    string SQLquery = @"INSERT INTO Machines (Placement, CampusId)
-                                        VALUES (@Placement, @CampusId)";
+                    string SQLquery = @"INSERT INTO Machines (Placement, CampusId, Image)
+                                        VALUES (@Placement, @CampusId, @Image)";
 
                     SqlCommand command = new SqlCommand(SQLquery, connection);
                     command.Parameters.AddWithValue("@Placement", toBeCreatedMachine.Placement);
                     command.Parameters.AddWithValue("@CampusId", (int)toBeCreatedMachine.Campus);
+                    command.Parameters.AddWithValue("@Image", (byte[]?)toBeCreatedMachine.Image); //tilføjet Image til Create.
 
                     await connection.OpenAsync();
                     await command.ExecuteNonQueryAsync();
@@ -68,7 +72,9 @@ namespace CoffeeCrazy.Repos
                                 MachineId = (int)reader["MachineId"],
                                 Status = (bool)reader["Status"],
                                 Placement = reader["Placement"] as string,
-                                Campus = (Campus)reader["CampusId"]
+                                Campus = (Campus)reader["CampusId"],
+                                Image = GetImageValue(reader["Image"]) //Image tilføjet 05.12
+                                
                             };
 
                             machines.Add(machine);
@@ -90,6 +96,30 @@ namespace CoffeeCrazy.Repos
                 throw;
             }
         }
+
+
+        /// <summary>
+        /// En metode til at validere om vores billede i databasen indeholder værdier.
+        /// Evt. give den et andet navn - alla ControlForImageValue eller sådan.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns> returnerer en byte hvis der er noget i den gældende kolonne. Ellers sætter den kolonnen til at indeholde null, hvilekt den godt må </returns>
+        public static byte[]? GetImageValue(object value)
+        {
+            if (value != DBNull.Value)  //validere at vores værdi ikke er null så der kunne komme en 
+            {
+                return (byte[])value;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+
+
+
+
 
         public async Task<Machine> GetByIdAsync(int machineId)
         {
