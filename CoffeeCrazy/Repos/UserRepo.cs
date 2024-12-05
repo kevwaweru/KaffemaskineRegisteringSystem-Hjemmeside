@@ -1,6 +1,7 @@
 ﻿using CoffeeCrazy.Interfaces;
 using CoffeeCrazy.Models;
 using CoffeeCrazy.Models.Enums;
+using CoffeeCrazy.Services;
 using CoffeeCrazy.Utilities;
 using Microsoft.Data.SqlClient;
 
@@ -10,6 +11,7 @@ namespace CoffeeCrazy.Repos
     {
         private readonly ITokenRepo _tokenGeneratorRepo;
         private readonly string _connectionString;
+        private readonly ImageService _imageService;
 
         public UserRepo(IConfiguration configuration, ITokenRepo tokenGeneratorRepo)
         {
@@ -229,11 +231,45 @@ namespace CoffeeCrazy.Repos
                 throw;
             }
         }
+        public async Task SaveProfilePictureAsync(int userId, IFormFile profilePicture)
+        {
+            byte[] imageBytes = _imageService.ConvertImageToByteArray(profilePicture);
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                string query = "UPDATE UserProfiles SET ProfilePicture = @ProfilePicture WHERE UserId = @UserId";
+
+                using (var command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@ProfilePicture", imageBytes);
+                    command.Parameters.AddWithValue("@UserId", userId);
+                    await command.ExecuteNonQueryAsync();
+                }
+            }
+        }
+        // Method to retrieve profile picture from the database
+        public async Task<byte[]> GetProfilePictureAsync(int userId)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                string query = "SELECT ProfilePicture FROM UserProfiles WHERE UserId = @UserId";
+
+                using (var command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@UserId", userId);
+
+                    var result = await command.ExecuteScalarAsync();
+                    return result as byte[];  // Return the byte array of the profile picture
+                }
+            } //tilføj evt fejl kommentar hvis brugen prøver at hente et biled men ikke har uploadet et først 
+        }
+    
 
 
-
-        // -- Jeg kunne godt tænke mig vi flytte disse til et PasswordRepo --
-        public async Task<(byte[] passwordHash, byte[] passwordSalt, Role role, string firstName, int userId)> GetUserByEmailAsync(string email)
+    // -- Jeg kunne godt tænke mig vi flytte disse til et PasswordRepo --
+    public async Task<(byte[] passwordHash, byte[] passwordSalt, Role role, string firstName, int userId)> GetUserByEmailAsync(string email)
         {
             try
             {
