@@ -25,20 +25,21 @@ namespace CoffeeCrazy.Pages.Jobs
         {
             JobToUpdate = await _jobRepo.GetByIdAsync(Id);
             Machines = await _machineRepo.GetAllAsync();
-
+         
             if (JobToUpdate == null)
             {
                 return NotFound();
             }
             return Page();
+            
         }
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(int Id)
         {
             if (!ModelState.IsValid)
             {
                 return Page();
             }
- 
+            JobToUpdate.JobId = Id;
             await _jobRepo.UpdateAsync(JobToUpdate);
 
             return RedirectToPage("/Jobs/Index");
