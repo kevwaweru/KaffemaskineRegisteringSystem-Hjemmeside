@@ -1,10 +1,10 @@
 ﻿@page
 @model CoffeeCrazy.Pages.Login.LoginModel
 @{
-    Layout = "~/Pages/Shared/_Layout.cshtml"; // Referér til layoutet ellers fanger den ikke man bruger Bootstrap? tror jeg?
+    ViewData["Title"] = "Log ind";
 }
 
-<main style="flex-grow: 1; display: flex; justify-content: center; align-items: center; width: 100%;">
+<main style="flex-grow: 1; display: flex; justify-content: center; align-items: center; width: 100%; padding-top: 300px">
         <div class="center-container card shadow p-4" style="width: 100%; max-width: 400px;">
             <h1 class="text-center mb-4">Login</h1>
             <form method="post">
