@@ -9,7 +9,7 @@ namespace CoffeeCrazy.Repos
     public class MachineRepo : ICRUDRepo<Machine>
     {
         private readonly string _connectionString;
-        private readonly ValidateDataRepo _validateDatabaseMethods;
+        private readonly ValidateDataRepo _validateDatabaseRepo;
 
         public MachineRepo(IConfiguration configuration)
         {
@@ -24,13 +24,13 @@ namespace CoffeeCrazy.Repos
             {
                 using (SqlConnection connection = new SqlConnection(_connectionString))
                 {
-                    string SQLquery = @"INSERT INTO Machines (Placement, CampusId, Image)
-                                        VALUES (@Placement, @CampusId, @Image)";
+                    string SQLquery = @"INSERT INTO Machines (Placement, CampusId, MachineImage)
+                                        VALUES (@Placement, @CampusId, @MachineImage)";
 
                     SqlCommand command = new SqlCommand(SQLquery, connection);
                     command.Parameters.AddWithValue("@Placement", toBeCreatedMachine.Placement);
                     command.Parameters.AddWithValue("@CampusId", (int)toBeCreatedMachine.Campus);
-                    command.Parameters.AddWithValue("@Image", (byte[]?)toBeCreatedMachine.Image); //tilføjet Image til Create.
+                    //command.Parameters.AddWithValue("@MachineImage", (byte[]?)toBeCreatedMachine.MachineImage); //tilføjet MachineImage til Create.
 
                     await connection.OpenAsync();
                     await command.ExecuteNonQueryAsync();
@@ -78,7 +78,8 @@ namespace CoffeeCrazy.Repos
                                 Status = (bool)reader["Status"],
                                 Placement = reader["Placement"] as string,
                                 Campus = (Campus)reader["CampusId"],
-                                Image = (byte[]?)reader["Image"] //Image tilføjet 05.12 Datavalideringsmetode indsat, men vi har besluttet os at gøre det frontend primært.                               
+                                MachineImage = ValidateDataRepo.GetImageValue(reader["MachineImage"])   //MachineImage tilføjet 05.12 Datavalideringsmetode indsat, men vi har besluttet os at gøre det frontend primært.                               
+
                             };
 
                             machines.Add(machine);
@@ -130,7 +131,7 @@ namespace CoffeeCrazy.Repos
                                 Status = (bool)reader["Status"],
                                 Placement = reader["Placement"] as string,
                                 Campus = (Campus)reader["CampusId"],
-                                Image = (byte[]?)reader["Image"]
+                                MachineImage = ValidateDataRepo.GetImageValue(reader["MachineImage"])
                             };
                         }
                         else
@@ -178,7 +179,7 @@ namespace CoffeeCrazy.Repos
                                         Status = @Status,
                                         Placement = @Placement,
                                         CampusId = @CampusId,
-                                        Image = @Image
+                                        MachineImage = @MachineImage
                                     WHERE
                                         MachineId = @MachineId";
 
@@ -188,7 +189,7 @@ namespace CoffeeCrazy.Repos
                     command.Parameters.AddWithValue("@Placement", toBeUpdatedMachine.Placement);
                     command.Parameters.AddWithValue("@CampusId", (int)toBeUpdatedMachine.Campus);
                     command.Parameters.AddWithValue("@MachineId", toBeUpdatedMachine.MachineId);
-                    command.Parameters.AddWithValue("@Image", (byte[]?)toBeUpdatedMachine.Image);
+                    command.Parameters.AddWithValue("@MachineImage", (byte[]?)toBeUpdatedMachine.MachineImage);
 
 
                     await connection.OpenAsync();
