@@ -47,6 +47,14 @@
         </select>
         <span asp-validation-for="NewUser.Role" class="text-danger"></span>
     </div>
+    </<div>
+        <label>Profilbillede</label>
+        <select asp-for="NewUser.UserImage" class="form-control">
+            <input />
+        </select> 
+
+    </div>
+
     <button type="submit" class="btn btn-primary">Create</button>
     <a class="btn btn-secondary btn-sm" asp-page="Index">Tilbage til oversigt</a>
 
