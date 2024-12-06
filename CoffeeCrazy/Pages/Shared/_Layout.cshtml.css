@@ -55,16 +55,15 @@ button.accept-policy {
     background-color: #f8f9fa; /* Lys baggrund */
     flex-direction: column;
     width: 100%;
-}
-body {
-    margin: 0;
+    margin-left: 50%;
+    margin-right: 50%;
     padding: 0;
-    height: 100%;
 }
-main {
+
+/*main {
     flex-grow: 1;
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
-}
+}*/

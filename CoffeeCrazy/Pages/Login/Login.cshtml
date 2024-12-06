@@ -3,36 +3,39 @@
 @{
     Layout = "~/Pages/Shared/_Layout.cshtml"; // Referér til layoutet ellers fanger den ikke man bruger Bootstrap? tror jeg?
 }
-<div class="center-container card shadow p-4" style="width: 100%; max-width: 400px;">
-    <h1 class="text-center mb-4">Login</h1>
-    <form method="post">
-        <div class="mb-3">
-            <label for="Email" class="form-label">Email</label>
-            <div class="input-group">
-                <span class="input-group-text">
-                    <i class="bi bi-envelope"></i>
-                </span>
-                <input type="text" id="Email" class="form-control" asp-for="Email" required />
+
+<main style="flex-grow: 1; display: flex; justify-content: center; align-items: center; width: 100%;">
+        <div class="center-container card shadow p-4" style="width: 100%; max-width: 400px;">
+            <h1 class="text-center mb-4">Login</h1>
+            <form method="post">
+                <div class="mb-3">
+                    <label for="Email" class="form-label">Email</label>
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="bi bi-envelope"></i>
+                        </span>
+                        <input type="text" id="Email" class="form-control" asp-for="Email" required />
+                    </div>
+                    <span asp-validation-for="Email" class="text-danger small"></span>
+                </div>
+                <div class="mb-3">
+                    <label for="Password" class="form-label">Password</label>
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="bi bi-lock"></i>
+                        </span>
+                        <input type="password" id="Password" class="form-control" asp-for="Password" required />
+                    </div>
+                    <span asp-validation-for="Password" class="text-danger small"></span>
+                </div>
+                <button type="submit" class="btn btn-dark w-100">Login</button>
+            </form>
+            <div class="text-center mt-3">
+                <a asp-page="/Login/Password/ForgotPassword" class="btn">Glemt din password?</a>
             </div>
-            <span asp-validation-for="Email" class="text-danger small"></span>
+            @if (Model.ErrorMessage != null)
+            {
+                <div class="text-danger text-center mt-2">@Model.ErrorMessage</div>
+            }
         </div>
-        <div class="mb-3">
-            <label for="Password" class="form-label">Password</label>
-            <div class="input-group">
-                <span class="input-group-text">
-                    <i class="bi bi-lock"></i>
-                </span>
-                <input type="password" id="Password" class="form-control" asp-for="Password" required />
-            </div>
-            <span asp-validation-for="Password" class="text-danger small"></span>
-        </div>
-        <button type="submit" class="btn btn-dark w-100">Login</button>
-    </form>
-    <div class="text-center mt-3">
-        <a asp-page="/Login/Password/ForgotPassword" class="btn">Glemt din password?</a>
-    </div>
-    @if (Model.ErrorMessage != null)
-    {
-        <div class="text-danger text-center mt-2">@Model.ErrorMessage</div>
-    }
-</div>
+</main>

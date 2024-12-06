@@ -9,7 +9,7 @@
 
 <h1>Maskine Oversigt</h1>
     
-<div class="mb-3 d-flex justify-content-between align-items-center">
+<div class=" mb-3  d-flex justify-content-between align-items-center">
     @if (HttpContext.Session.GetInt32("RoleId") == (int)Role.Admin)
     {
         <a class="btn btn-primary btn-sm" asp-page="Create">Opret Maskine</a>
