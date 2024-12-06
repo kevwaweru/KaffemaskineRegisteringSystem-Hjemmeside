@@ -251,7 +251,7 @@ namespace CoffeeCrazy.Repos
             }
         }
 
-        // Method to retrieve profile picture from the database
+        // Method to retrieve profile picture from the database //Read method
         public async Task<byte[]> GetProfilePictureAsync(int userId)
         {
             using (var connection = new SqlConnection(_connectionString))
