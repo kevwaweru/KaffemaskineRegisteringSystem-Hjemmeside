@@ -30,7 +30,7 @@ namespace CoffeeCrazy.Repos
                     SqlCommand command = new SqlCommand(SQLquery, connection);
                     command.Parameters.AddWithValue("@Placement", toBeCreatedMachine.Placement);
                     command.Parameters.AddWithValue("@CampusId", (int)toBeCreatedMachine.Campus);
-                    command.Parameters.AddWithValue("@Image", (byte[]?)toBeCreatedMachine.Image); //tilføjet Image til Create.
+                    //command.Parameters.AddWithValue("@Image", (byte[]?)toBeCreatedMachine.Image); //tilføjet Image til Create.
 
                     await connection.OpenAsync();
                     await command.ExecuteNonQueryAsync();

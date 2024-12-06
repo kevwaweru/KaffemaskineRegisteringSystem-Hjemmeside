@@ -18,6 +18,7 @@ namespace CoffeeCrazy.Repos
             _connectionString = configuration.GetConnectionString("DefaultConnection");
             _tokenGeneratorRepo = tokenGeneratorRepo;
         }
+
         /// <summary>
         /// Create method
         /// </summary>
@@ -33,8 +34,8 @@ namespace CoffeeCrazy.Repos
 
                 using (SqlConnection connection = new SqlConnection(_connectionString))
                 {
-                    string query = @"INSERT INTO Users (FirstName, LastName, Email, Password, PasswordSalt, CampusId, RoleId, UserMachine)
-                                    VALUES (@FirstName, @LastName, @Email, @Password, @PasswordSalt, @CampusId, @RoleId, @UserMachine)";
+                    string query = @"INSERT INTO Users (FirstName, LastName, Email, Password, PasswordSalt, CampusId, RoleId, UserImage)
+                                    VALUES (@FirstName, @LastName, @Email, @Password, @PasswordSalt, @CampusId, @RoleId, @UserImage)";
 
                     SqlCommand command = new SqlCommand(query, connection);
                     command.Parameters.AddWithValue("@FirstName", user.FirstName);
