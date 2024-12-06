@@ -46,3 +46,25 @@ button.accept-policy {
   white-space: nowrap;
   line-height: 60px;
 }
+/*Oliver is using it for login pages*/
+.center-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f8f9fa; /* Lys baggrund */
+    flex-direction: column;
+    width: 100%;
+}
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+main {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
