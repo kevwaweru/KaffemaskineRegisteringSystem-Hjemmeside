@@ -1,56 +1,68 @@
 ﻿@page
 @using CoffeeCrazy.Models
+@using System.Security.Claims
+@using CoffeeCrazy.Models.Enums
 @model CoffeeCrazy.Pages.Machines.IndexModel
 @{
     ViewData["Title"] = "Maskine Oversigt";
 }
 
 <h1>Maskine Oversigt</h1>
-
-<br />
-<p class="text-danger">Hvis maskinen er inaktiv, vil rækken være rød.</p>
-<p class="text-success">Hvis maskinen er aktiv, vil rækken være grøn.</p>
-<p>Hvis ingen af ovenstående er sand, er rækken bare hvid.</p>
-<br />
-
-<a class="btn btn-primary btn-sm" asp-page="Create">Opret Maskine</a>
-<br />
+    
+<div class="mb-3 d-flex justify-content-between align-items-center">
+    @if (HttpContext.Session.GetInt32("RoleId") == (int)Role.Admin)
+    {
+        <a class="btn btn-primary btn-sm" asp-page="Create">Opret Maskine</a>
+    }
+    <p class="text-danger">Hvis maskinen er inaktiv, vil kortet være rød.</p>
+    <p class="text-success">Hvis maskinen er aktiv og uden jobs, vil kortet være grøn.</p>
+</div>
 
 <div class="container">
     <div class="row">
         @foreach (var machine in Model.Machines)
         {
-            <div class="col">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Maskine ID</th>
-                            <th>Placering</th>
-                            <th>Status</th>
-                            <th>Campus</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="@GetRowClass(machine)">
-                            <td>@machine.MachineId</td>
-                            <td>@machine.Placement</td>
-                            <td>@(machine.Status ? "Aktiv" : "Inaktiv")</td>
-                            <td>@machine.Campus</td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="col-md-6 mb-4">
+                <a href="@Url.Page("Details", new { id = machine.MachineId })" class="text-decoration-none">
+                    <div class="card @GetCardClass(machine)">
+                        <div class="card-body">
+                            <h5 class="card-title">Maskine ID: @machine.MachineId</h5>
+                            <p class="card-text">
+                                Placering: @machine.Placement <br />
+                                Status: @(machine.Status ? "Aktiv" : "Inaktiv") <br />
+                                Campus: @machine.Campus
+                            </p>
+                            <p class="card-text">Beskrivelse: @machine.Placement</p>
+
+                            @if (HttpContext.Session.GetInt32("RoleId") == (int)Role.Admin)
+                            {
+                                <div class="dropdown">
+                                    <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Handlinger
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <li><a class="dropdown-item" asp-page="Edit" asp-route-id="@machine.MachineId">Rediger</a></li>
+                                        <li><a class="dropdown-item" asp-page="Delete" asp-route-id="@machine.MachineId">Slet</a></li>
+                                        <li><a class="dropdown-item" asp-page="Details" asp-route-id="@machine.MachineId">Vis Detaljer</a></li>
+                                    </ul>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </a>
             </div>
         }
     </div>
 </div>
 
 @functions {
-    // Funktion til at bestemme rækkens klasse baseret på maskinens status
-    private string GetRowClass(Machine machine)
+    private string GetCardClass(Machine machine)
     {
-        // Hvis maskinen er inaktiv, er rækken rød
-        return !machine.Status ? "table-danger" :
-               // Hvis maskinen er aktiv, er rækken grøn
-               "table-success";
+        // Hvis ingen jobs og maskinen er aktiv, gør kortet grønt
+        if (machine.Status) //!machine.HasJobs) return "border-success text-success";
+        // Hvis maskinen er inaktiv, gør kortet rødt
+        if (!machine.Status) return "border-danger text-danger";
+        // Standard kortstil
+        return "border-secondary";
     }
 }
