@@ -18,7 +18,11 @@ namespace CoffeeCrazy.Repos
             _connectionString = configuration.GetConnectionString("DefaultConnection");
             _tokenGeneratorRepo = tokenGeneratorRepo;
         }
-
+        /// <summary>
+        /// Create method
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns> Nil </returns>
         public async Task CreateAsync(User user)
         {
             try
@@ -29,8 +33,8 @@ namespace CoffeeCrazy.Repos
 
                 using (SqlConnection connection = new SqlConnection(_connectionString))
                 {
-                    string query = @"INSERT INTO Users (FirstName, LastName, Email, Password, PasswordSalt, CampusId, RoleId)
-                                    VALUES (@FirstName, @LastName, @Email, @Password, @PasswordSalt, @CampusId, @RoleId)";
+                    string query = @"INSERT INTO Users (FirstName, LastName, Email, Password, PasswordSalt, CampusId, RoleId, UserMachine)
+                                    VALUES (@FirstName, @LastName, @Email, @Password, @PasswordSalt, @CampusId, @RoleId, @UserMachine)";
 
                     SqlCommand command = new SqlCommand(query, connection);
                     command.Parameters.AddWithValue("@FirstName", user.FirstName);
@@ -40,6 +44,7 @@ namespace CoffeeCrazy.Repos
                     command.Parameters.AddWithValue("@PasswordSalt", user.PasswordSalt);
                     command.Parameters.AddWithValue("@CampusId", (int)user.Campus);
                     command.Parameters.AddWithValue("@RoleId", (int)user.Role);
+                    command.Parameters.AddWithValue("@UserImage", (byte[]?)user.UserImage);
 
                     await connection.OpenAsync();
                     await command.ExecuteNonQueryAsync();
@@ -59,6 +64,10 @@ namespace CoffeeCrazy.Repos
             }
         }
 
+        /// <summary>
+        /// Read/Get all Users
+        /// </summary>
+        /// <returns></returns>
         public async Task<List<User>> GetAllAsync()
         {
             List<User> users = new List<User>();
@@ -85,7 +94,8 @@ namespace CoffeeCrazy.Repos
                                 Password = (string)reader["Password"],
                                 PasswordSalt = (string)reader["PasswordSalt"],
                                 Role = (Role)reader["RoleId"],
-                                Campus = (Campus)reader["CampusId"]
+                                Campus = (Campus)reader["CampusId"],
+                                UserImage = (byte[]?)reader["UserImage"]
                             };
 
                             users.Add(user);
@@ -106,6 +116,11 @@ namespace CoffeeCrazy.Repos
             }
         }
 
+        /// <summary>
+        /// Get/Read a user by its UserId
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public async Task<User> GetByIdAsync(int userId)
         {
             try
@@ -132,7 +147,8 @@ namespace CoffeeCrazy.Repos
                                 Password = (string)reader["Password"],
                                 PasswordSalt = (string)reader["PasswordSalt"],
                                 Role = (Role)reader["RoleId"],
-                                Campus = (Campus)reader["CampusId"]
+                                Campus = (Campus)reader["CampusId"],
+                                UserImage = (byte[]?)reader["UserImage"]
                             };
                         }
                         else
@@ -172,7 +188,8 @@ namespace CoffeeCrazy.Repos
                                         Password = @Password,
                                         PasswordSalt = @PasswordSalt,
                                         CampusId = @CampusId,
-                                        RoleId = @RoleId
+                                        RoleId = @RoleId,
+                                        UserImage = @UserImage
                                     WHERE
                                         JobId = @JobId";
 
@@ -185,6 +202,7 @@ namespace CoffeeCrazy.Repos
                     command.Parameters.AddWithValue("@CampusId", (int)toBeUpdatedUser.Campus);
                     command.Parameters.AddWithValue("@RoleId", (int)toBeUpdatedUser.Role);
                     command.Parameters.AddWithValue("@UserId", toBeUpdatedUser.UserId);
+                    command.Parameters.AddWithValue("@UserImage", (byte[]?)toBeUpdatedUser.UserImage);
 
                     await connection.OpenAsync();
                     await command.ExecuteNonQueryAsync();
@@ -233,45 +251,47 @@ namespace CoffeeCrazy.Repos
             }
         }
 
-        public async Task SaveProfilePictureAsync(int userId, IFormFile profilePicture)
-        {
-            byte[] imageBytes = _imageService.ConvertImageToByteArray(profilePicture);
-
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                await connection.OpenAsync();
-                string query = "UPDATE UserProfiles SET ProfilePicture = @ProfilePicture WHERE UserId = @UserId";
-
-                using (var command = new SqlCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue("@ProfilePicture", imageBytes);
-                    command.Parameters.AddWithValue("@UserId", userId);
-                    await command.ExecuteNonQueryAsync();
-                }
-            }
-        }
+        //public async Task SaveProfilePictureAsync(int userId, IFormFile profilePicture)
+        //{
+        //    byte[] imageBytes = _imageService.ConvertImageToByteArray(profilePicture);
+        //
+        //    using (var connection = new SqlConnection(_connectionString))
+        //    {
+        //        await connection.OpenAsync();
+        //        string query = "UPDATE UserProfiles SET ProfilePicture = @ProfilePicture WHERE UserId = @UserId";
+        //
+        //        using (var command = new SqlCommand(query, connection))
+        //        {
+        //            command.Parameters.AddWithValue("@ProfilePicture", imageBytes);
+        //            command.Parameters.AddWithValue("@UserId", userId);
+        //            await command.ExecuteNonQueryAsync();
+        //        }
+        //    }
+        //}
 
         // Method to retrieve profile picture from the database //Read method
-        public async Task<byte[]> GetProfilePictureAsync(int userId)
-        {
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                await connection.OpenAsync();
-                string query = "SELECT ProfilePicture FROM UserProfiles WHERE UserId = @UserId";
-
-                using (var command = new SqlCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue("@UserId", userId);
-
-                    var result = await command.ExecuteScalarAsync();
-                    return result as byte[];  // Return the byte array of the profile picture
-                }
-            } //tilføj evt fejl kommentar hvis brugen prøver at hente et biled men ikke har uploadet et først 
-        }
+        //public async Task<byte[]> GetProfilePictureAsync(int userId)
+        //{
+        //    using (var connection = new SqlConnection(_connectionString))
+        //    {
+        //        await connection.OpenAsync();
+        //        string query = "SELECT ProfilePicture FROM UserProfiles WHERE UserId = @UserId";
+        //
+        //        using (var command = new SqlCommand(query, connection))
+        //        {
+        //            command.Parameters.AddWithValue("@UserId", userId);
+        //
+        //            var result = await command.ExecuteScalarAsync();
+        //            return result as byte[];  // Return the byte array of the profile picture
+        //        }
+        //    } //tilføj evt fejl kommentar hvis brugen prøver at hente et biled men ikke har uploadet et først 
+        //}
     
 
 
         // -- Jeg kunne godt tænke mig vi flytte disse til et PasswordRepo --
+        
+        
         public async Task<(byte[] passwordHash, byte[] passwordSalt, Role role, string firstName, int userId)> GetUserByEmailAsync(string email)
         {
             try

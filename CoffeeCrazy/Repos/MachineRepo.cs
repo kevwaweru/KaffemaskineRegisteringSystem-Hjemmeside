@@ -9,7 +9,7 @@ namespace CoffeeCrazy.Repos
     public class MachineRepo : ICRUDRepo<Machine>
     {
         private readonly string _connectionString;
-        private readonly ValidateDatabaseMethods _validateDatabaseMethods;
+        private readonly ValidateDataRepo _validateDatabaseMethods;
 
         public MachineRepo(IConfiguration configuration)
         {
@@ -50,6 +50,11 @@ namespace CoffeeCrazy.Repos
             }
         }
 
+
+        /// <summary>
+        /// Get all machines from list.
+        /// </summary>
+        /// <returns> Machine </returns>
         public async Task<List<Machine>> GetAllAsync()
         {
             List<Machine> machines = new List<Machine>();
@@ -73,8 +78,7 @@ namespace CoffeeCrazy.Repos
                                 Status = (bool)reader["Status"],
                                 Placement = reader["Placement"] as string,
                                 Campus = (Campus)reader["CampusId"],
-                                Image = GetImageValue(reader["Image"]) //Image tilføjet 05.12
-                                
+                                Image = (byte[]?)reader["Image"] //Image tilføjet 05.12 Datavalideringsmetode indsat, men vi har besluttet os at gøre det frontend primært.                               
                             };
 
                             machines.Add(machine);
@@ -97,7 +101,12 @@ namespace CoffeeCrazy.Repos
             }
         }
 
-
+        /// <summary>
+        /// Read/Get all method for machine
+        /// </summary>
+        /// <param name="machineId"></param>
+        /// <returns> Machine </returns>
+        /// <exception cref="InvalidOperationException"></exception>
         public async Task<Machine> GetByIdAsync(int machineId)
         {
             try
@@ -121,7 +130,7 @@ namespace CoffeeCrazy.Repos
                                 Status = (bool)reader["Status"],
                                 Placement = reader["Placement"] as string,
                                 Campus = (Campus)reader["CampusId"],
-                                Image = GetImageValue(reader["Image"])
+                                Image = (byte[]?)reader["Image"]
                             };
                         }
                         else
@@ -146,26 +155,14 @@ namespace CoffeeCrazy.Repos
         }
 
 
+
+
         /// <summary>
-        /// En metode til at validere om vores billede i databasen indeholder værdier.
-        /// Evt. give den et andet navn - alla ControlForImageValue eller sådan.
+        /// Method to update a Machine object.
         /// </summary>
-        /// <param name="value"></param>
-        /// <returns> returnerer en byte hvis der er noget i den gældende kolonne. Ellers sætter den kolonnen til at indeholde null, hvilekt den godt må </returns>
-        public static byte[]? GetImageValue(object value)
-        {
-            if (value != DBNull.Value)  //validere at vores værdi ikke er null så der kunne komme en 
-            {
-                return (byte[])value;
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-
-
+        /// <param name="toBeUpdatedMachine"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
         public async Task UpdateAsync(Machine toBeUpdatedMachine)
         {
             try
@@ -180,7 +177,8 @@ namespace CoffeeCrazy.Repos
                     string query = @"UPDATE Machines SET
                                         Status = @Status,
                                         Placement = @Placement,
-                                        CampusId = @CampusId
+                                        CampusId = @CampusId,
+                                        Image = @Image
                                     WHERE
                                         MachineId = @MachineId";
 
@@ -190,6 +188,8 @@ namespace CoffeeCrazy.Repos
                     command.Parameters.AddWithValue("@Placement", toBeUpdatedMachine.Placement);
                     command.Parameters.AddWithValue("@CampusId", (int)toBeUpdatedMachine.Campus);
                     command.Parameters.AddWithValue("@MachineId", toBeUpdatedMachine.MachineId);
+                    command.Parameters.AddWithValue("@Image", (byte[]?)toBeUpdatedMachine.Image);
+
 
                     await connection.OpenAsync();
                     await command.ExecuteNonQueryAsync();
@@ -209,6 +209,11 @@ namespace CoffeeCrazy.Repos
             }
         }
 
+        /// <summary>
+        /// Method to delete a Machine object.
+        /// </summary>
+        /// <param name="toBeDeletedMachine"></param>
+        /// <returns></returns>
         public async Task DeleteAsync(Machine toBeDeletedMachine)
         {
             try

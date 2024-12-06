@@ -7,7 +7,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace CoffeeCrazy.Repos
 {
-    public class ValidateDatabaseMethods
+    public class ValidateDataRepo
     {
         //Gamle AssignmentJunctionRepo hvor jeg fik lavet et par databasevalideringsmetoder, som vi måske
         //kan bruge andetsteds - Gorm.
@@ -15,7 +15,7 @@ namespace CoffeeCrazy.Repos
         private readonly string _connectionString;
 
         //CTOR
-        public ValidateDatabaseMethods(IConfiguration configuration)
+        public ValidateDataRepo(IConfiguration configuration)
         {
             _connectionString = configuration.GetConnectionString("DefaultConnection");
         }
@@ -82,7 +82,24 @@ namespace CoffeeCrazy.Repos
             }
         }
 
-        
+        /// <summary>
+        /// En metode til at validere om vores billede i databasen indeholder værdier.
+        /// Evt. give den et andet navn - alla ControlForImageValue eller sådan.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns> returnerer en byte hvis der er noget i den gældende kolonne. Ellers sætter den kolonnen til at indeholde null, hvilekt den godt må </returns>
+        public static byte[]? GetImageValue(object value)
+        {
+            if (value != DBNull.Value)  //validere at vores værdi ikke er null så der kunne komme en 
+            {
+                return (byte[])value;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
 
     }
 }
