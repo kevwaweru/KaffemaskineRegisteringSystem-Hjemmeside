@@ -98,29 +98,6 @@ namespace CoffeeCrazy.Repos
         }
 
 
-        /// <summary>
-        /// En metode til at validere om vores billede i databasen indeholder værdier.
-        /// Evt. give den et andet navn - alla ControlForImageValue eller sådan.
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns> returnerer en byte hvis der er noget i den gældende kolonne. Ellers sætter den kolonnen til at indeholde null, hvilekt den godt må </returns>
-        public static byte[]? GetImageValue(object value)
-        {
-            if (value != DBNull.Value)  //validere at vores værdi ikke er null så der kunne komme en 
-            {
-                return (byte[])value;
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-
-
-
-
-
         public async Task<Machine> GetByIdAsync(int machineId)
         {
             try
@@ -143,7 +120,8 @@ namespace CoffeeCrazy.Repos
                                 MachineId = (int)reader["MachineId"],
                                 Status = (bool)reader["Status"],
                                 Placement = reader["Placement"] as string,
-                                Campus = (Campus)reader["CampusId"]
+                                Campus = (Campus)reader["CampusId"],
+                                Image = GetImageValue(reader["Image"])
                             };
                         }
                         else
@@ -166,6 +144,27 @@ namespace CoffeeCrazy.Repos
                 throw;
             }
         }
+
+
+        /// <summary>
+        /// En metode til at validere om vores billede i databasen indeholder værdier.
+        /// Evt. give den et andet navn - alla ControlForImageValue eller sådan.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns> returnerer en byte hvis der er noget i den gældende kolonne. Ellers sætter den kolonnen til at indeholde null, hvilekt den godt må </returns>
+        public static byte[]? GetImageValue(object value)
+        {
+            if (value != DBNull.Value)  //validere at vores værdi ikke er null så der kunne komme en 
+            {
+                return (byte[])value;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+
 
         public async Task UpdateAsync(Machine toBeUpdatedMachine)
         {
