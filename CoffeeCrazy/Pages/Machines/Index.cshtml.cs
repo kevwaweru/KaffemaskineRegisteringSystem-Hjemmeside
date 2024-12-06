@@ -1,5 +1,6 @@
 using CoffeeCrazy.Interfaces;
 using CoffeeCrazy.Models;
+using CoffeeCrazy.Models.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -15,12 +16,21 @@ namespace CoffeeCrazy.Pages.Machines
         }
 
         public List<Machine> Machines { get; set; } = new();
-
-        public async Task<IActionResult> OnGetAsync()
+        
+        public async Task<IActionResult> OnGetAsync(int? Id)
         {
+            var user = HttpContext.Session.GetInt32("UserId");
+            if (user == null)
+            {
+               return RedirectToPage("/Login/Login");
+           
+            }
             // Henter alle maskiner fra databasen
             Machines = await _machineRepo.GetAllAsync();
+            
             return Page();
         }
+
+
     }
 }

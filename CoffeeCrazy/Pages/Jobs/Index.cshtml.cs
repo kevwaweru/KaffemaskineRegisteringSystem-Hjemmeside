@@ -48,12 +48,34 @@ namespace CoffeeCrazy.Pages.Jobs
             {
                 Frequencies.Add((Frequency)item.FrequencyId);
             }
+            //foreach (var machine in Machines)
+            //{
+            //    // Get jobs for the machine
+            //    var machineJobs = Jobs.Where(j => j.MachineId == machine.MachineId).ToList();
+
+            //    // Calculate and set the CardClass for each machine
+            //    machine.CardClass = GetCardClass(machine, machineJobs);
+            //}
         }
-        public async Task<IActionResult> OnPostDeleteAsync(int id)
-        {
-            await _jobRepo.DeleteAsync(await _jobRepo.GetByIdAsync(id));
-            return Page();
-        }
+        //private string GetCardClass(Machine machine, List<Job> machineJobs)
+        //{
+           
+        //    if (machine.Status && !machineJobs.Any())
+        //    {
+        //        return "border-success text-success";
+        //    }
+
+        //    if (!machine.Status)
+        //    {
+        //        return "border-danger text-danger"; 
+        //    }
+        //    return "border-secondary"; 
+        //}
+        //public async Task<IActionResult> OnPostDeleteAsync(int id)
+        //{
+        //    await _jobRepo.DeleteAsync(await _jobRepo.GetByIdAsync(id));
+        //    return Page();
+        //}
     }
 }
 
