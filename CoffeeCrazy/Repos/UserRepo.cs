@@ -96,7 +96,7 @@ namespace CoffeeCrazy.Repos
                                 PasswordSalt = (string)reader["PasswordSalt"],
                                 Role = (Role)reader["RoleId"],
                                 Campus = (Campus)reader["CampusId"],
-                                UserImage = (byte[]?)reader["UserImage"]
+                                UserImage = ValidateDataRepo.GetImageValue(reader["UserImage"])
                             };
 
                             users.Add(user);
@@ -149,7 +149,7 @@ namespace CoffeeCrazy.Repos
                                 PasswordSalt = (string)reader["PasswordSalt"],
                                 Role = (Role)reader["RoleId"],
                                 Campus = (Campus)reader["CampusId"],
-                                UserImage = (byte[]?)reader["UserImage"]
+                                UserImage = ValidateDataRepo.GetImageValue(reader["UserImage"])
                             };
                         }
                         else
