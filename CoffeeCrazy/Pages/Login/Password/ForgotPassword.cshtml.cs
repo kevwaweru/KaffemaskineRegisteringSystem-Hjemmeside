@@ -1,6 +1,7 @@
 using CoffeeCrazy.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Dynamic;
 
 namespace CoffeeCrazy.Pages.Login.Password
 {
@@ -17,6 +18,16 @@ namespace CoffeeCrazy.Pages.Login.Password
         public string Email { get; set; }
 
         public string Message { get; set; }
+
+        public IActionResult OnGet()
+        {
+            var user = HttpContext.Session.GetInt32("UserId");
+            if (user == null)
+            {
+                return RedirectToPage("/Machines/Index"); // Skal sende folk til hvad vi synes er main siden når man er logget ind :)
+            }
+            return Page();
+        }
 
         public async Task<IActionResult> OnPostAsync(string email)
         {

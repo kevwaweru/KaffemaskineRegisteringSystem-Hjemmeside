@@ -22,6 +22,17 @@ namespace CoffeeCrazy.Pages.Login
 
         public string ErrorMessage { get; set; }
 
+        public IActionResult OnGet()
+        {
+            var user = HttpContext.Session.GetInt32("UserId");
+            if (user == null)
+            {
+                return RedirectToPage("/Machines/Index"); // Skal sende folk til main siden
+
+            }
+            return Page();
+        }
+
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid) 

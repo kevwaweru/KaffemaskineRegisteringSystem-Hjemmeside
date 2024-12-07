@@ -26,11 +26,11 @@ namespace CoffeeCrazy.Pages.Login.Password
         [BindProperty]
         [Required]
         [DataType(DataType.Password)]
-        [Compare(nameof(NewPassword), ErrorMessage = "Du har ikke skrevet det samme...")]
+        [Compare(nameof(NewPassword), ErrorMessage = "Du har ikke skrevet det samme.")]
         public string ConfirmPassword { get; set; }
         [BindProperty]
         [TempData]
-        public bool IsTokenValidated { get; set; } = false;
+        public bool IsTokenValidated { get; set; } = false; // det der tempData er jeg bange for kommer til at fucke med programmet. Har haft bugs hvor den giver mig en "ValidToken" uden jeg har intastet en. og kommer derekte videre til else statement :(
         public string Message { get; set; }       
         
         public async Task<IActionResult> OnPostAsync()

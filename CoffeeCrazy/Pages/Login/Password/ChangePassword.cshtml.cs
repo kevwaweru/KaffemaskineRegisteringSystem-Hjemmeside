@@ -28,7 +28,6 @@ namespace CoffeeCrazy.Pages.Login.Password
         {
             var email = HttpContext.Session.GetString("Email");
 
-            // Check if the user is logged in
             if (email == null)
             {
                 ErrorMessage = "Du skal være logget ind. du bliver rediregeret til Login Page";
