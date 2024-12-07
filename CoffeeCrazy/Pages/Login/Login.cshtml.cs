@@ -25,7 +25,7 @@ namespace CoffeeCrazy.Pages.Login
         public IActionResult OnGet()
         {
             var user = HttpContext.Session.GetInt32("UserId");
-            if (user == null)
+            if (user != null)
             {
                 return RedirectToPage("/Machines/Index"); // Skal sende folk til main siden
 
