@@ -15,7 +15,7 @@ namespace CoffeeCrazy.Repos
         }
 
         /// <summary>
-        /// This creates a token. with an expiredate and connect with User Email.
+        /// Creates a token. with an expiredate and connect with User Email.
         /// </summary>
         /// <param name="email">Users Email</param>
         /// <returns>Dunno?</returns>
@@ -41,18 +41,21 @@ namespace CoffeeCrazy.Repos
             }
             catch (SqlException ex)
             {
-                // SQL Errors
                 Console.Error.WriteLine($"SQL error: {ex.Message}");
                 throw;
             }
             catch (Exception ex)
             {
-                // Other Errors
                 Console.Error.WriteLine($"Mistakes has happened: {ex.Message}");
                 throw;
             }
         }
-
+        /// <summary>
+        /// This search the DB where Email and token is hand in hand
+        /// </summary>
+        /// <param name="email">Users Email</param>
+        /// <returns>The Token linked to the Email</returns>
+        /// <exception cref="InvalidOperationException"></exception>
         public async Task<string> GetTokenAsync(string email)
         {
             try
@@ -84,18 +87,20 @@ namespace CoffeeCrazy.Repos
             }
             catch (SqlException ex)
             {
-                // Log database-related errors.
                 Console.WriteLine($"Database error: {ex.Message}");
                 throw;
             }
             catch (Exception ex)
             {
-                // Log general errors.
                 Console.WriteLine($"An error occurred: {ex.Message}");
                 throw;
             }
         }
-
+        /// <summary>
+        /// Check the the token that is intered in HTML is in the DB.
+        /// </summary>
+        /// <param name="token">The Token the user get by mail</param>
+        /// <returns>True if token match false if dont</returns>
         public async Task<bool> ValidateTokenAsync(string token)
         {
             try
@@ -117,18 +122,20 @@ namespace CoffeeCrazy.Repos
             }
             catch (SqlException ex)
             {
-                // SQL Errors
                 Console.Error.WriteLine($"SQL error: {ex.Message}");
                 throw;
             }
             catch (Exception ex)
             {
-                // Other Errors
                 Console.Error.WriteLine($"Mistakes has happened: {ex.Message}");
                 throw;
             }
         }
-
+        /// <summary>
+        /// Deletes the token.
+        /// </summary>
+        /// <param name="token">A token</param>
+        /// <returns>Query thats delete the token that match the intered token.</returns>
         public async Task DeleteTokenAsync(string token)
         {
             try
