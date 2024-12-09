@@ -20,7 +20,7 @@ namespace CoffeeCrazy.Repos
         }
 
         /// <summary>
-        /// Create method
+        /// Create User
         /// </summary>
         /// <param name="user"></param>
         /// <returns> Nil </returns>
@@ -68,7 +68,7 @@ namespace CoffeeCrazy.Repos
         /// <summary>
         /// Read/Get all Users
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A list of Users</returns>
         public async Task<List<User>> GetAllAsync()
         {
             List<User> users = new List<User>();
@@ -128,7 +128,7 @@ namespace CoffeeCrazy.Repos
             {
                 using (SqlConnection connection = new SqlConnection(_connectionString))
                 {
-                    string query = "SELECT * WHERE UserId = @UserId";
+                    string query = "SELECT * FROM Users WHERE UserId = @UserId";
 
                     SqlCommand command = new SqlCommand(query, connection);
                     command.Parameters.AddWithValue("@UserId", userId);
