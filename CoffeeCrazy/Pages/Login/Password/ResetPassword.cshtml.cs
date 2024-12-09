@@ -1,5 +1,6 @@
 using CoffeeCrazy.Interfaces;
 using CoffeeCrazy.Repos;
+using CoffeeCrazy.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
@@ -10,10 +11,12 @@ namespace CoffeeCrazy.Pages.Login.Password
     {
         private readonly IUserRepo _userRepo;
         private readonly ITokenRepo _tokenGeneratorRepo;
-        public ResetPasswordModel(IUserRepo userRepo, ITokenRepo tokenGeneratorRepo)
+        private readonly IAccessService _accessService;
+        public ResetPasswordModel(IUserRepo userRepo, ITokenRepo tokenGeneratorRepo, IAccessService accessService)
         {
             _userRepo = userRepo;
             _tokenGeneratorRepo = tokenGeneratorRepo;
+            _accessService = accessService;
         }
         [BindProperty]
         public string Token { get; set; }
@@ -33,6 +36,13 @@ namespace CoffeeCrazy.Pages.Login.Password
         public bool IsTokenValidated { get; set; } = false; // det der tempData er jeg bange for kommer til at fucke med programmet. Har haft bugs hvor den giver mig en "ValidToken" uden jeg har intastet en. og kommer derekte videre til else statement :(
         public string Message { get; set; }       
         
+        public IActionResult OnGet()
+        {
+            if (_accessService.IsUserLoggedIn(HttpContext))
+                return RedirectToPage("/Machines/Index"); // Skal sende folk til main siden
+            return Page();
+        }
+
         public async Task<IActionResult> OnPostAsync()
         {
             Console.WriteLine($"IsTokenValidated: {IsTokenValidated}");

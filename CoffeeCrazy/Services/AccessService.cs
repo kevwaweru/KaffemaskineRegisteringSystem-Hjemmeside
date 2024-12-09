@@ -45,5 +45,19 @@ namespace CoffeeCrazy.Services
         {
             return GetLoggedUserId(httpContext).HasValue;
         }
+        public bool IsAdmin(HttpContext httpContext)
+        {
+            return GetLoggedUserRoleId(httpContext) == (int)Role.Admin;
+        }
+
+        public bool IsSuperAdmin(HttpContext httpContext)
+        {
+            return GetLoggedUserRoleId(httpContext) == (int)Role.MasterAdmin;
+        }
+
+        public bool IsUser(HttpContext httpContext)
+        {
+            return GetLoggedUserRoleId(httpContext) == (int)Role.Employee;
+        }
     }
 }

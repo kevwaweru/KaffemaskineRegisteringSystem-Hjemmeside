@@ -7,11 +7,12 @@ namespace CoffeeCrazy.Pages.Users
 {
     public class CreateModel : PageModel
     {
-        private IUserRepo _userRepo;
-
-        public CreateModel(IUserRepo userRepo)
+        private readonly IUserRepo _userRepo;
+        private readonly IAccessService _accessService;
+        public CreateModel(IUserRepo userRepo, IAccessService accessService)
         {
             _userRepo = userRepo;
+            _accessService = accessService;
         }
 
         [BindProperty]
@@ -23,6 +24,9 @@ namespace CoffeeCrazy.Pages.Users
         }
         public async Task<IActionResult> OnPost()
         {
+            if (!_accessService.IsUserLoggedIn(HttpContext))
+                return RedirectToPage("/Login/Login");
+
             //ModelState.Remove("PasswordSalt");
             //if (!ModelState.IsValid)
             //{

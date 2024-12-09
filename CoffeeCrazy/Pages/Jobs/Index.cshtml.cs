@@ -11,6 +11,7 @@ namespace CoffeeCrazy.Pages.Jobs
         private readonly ICRUDRepo<Job> _jobRepo;
         private readonly IUserRepo _userRepo;
         private readonly ICRUDRepo<Machine> _machineRepo;
+        private readonly IAccessService _accessService;
 
 
         public List<Frequency> Frequencies = new List<Frequency>();
@@ -21,19 +22,22 @@ namespace CoffeeCrazy.Pages.Jobs
 
         private List<Job> OlderThan6MonthsJobs { get; set; }
 
-        public IndexModel(ICRUDRepo<Job> jobRepo, IUserRepo userRepo, ICRUDRepo<Machine> machineRepo)
+        public IndexModel(ICRUDRepo<Job> jobRepo, IUserRepo userRepo, ICRUDRepo<Machine> machineRepo, IAccessService accessService)
         {
             _jobRepo = jobRepo;
             _userRepo = userRepo;
             _machineRepo = machineRepo;
-
+            _accessService = accessService;
         }
 
-        public async Task OnGetAsync()
+
+        public async Task<IActionResult> OnGetAsync()
         {
+            if (!_accessService.IsUserLoggedIn(HttpContext))
+                return RedirectToPage("/Login/Login");
 
             //Finder jobs som er ældre end 6 måneder
-            OlderThan6MonthsJobs = _jobRepo.GetAllAsync().Result.FindAll(parameter => parameter.Deadline < DateTime.UtcNow.AddMonths(-6)); 
+            OlderThan6MonthsJobs = _jobRepo.GetAllAsync().Result.FindAll(parameter => parameter.Deadline < DateTime.UtcNow.AddMonths(-6));
 
             //Sletter jobs som er ældre end 6 måneder
             foreach (Job oldJob in OlderThan6MonthsJobs)
@@ -44,38 +48,13 @@ namespace CoffeeCrazy.Pages.Jobs
             Jobs = await _jobRepo.GetAllAsync();
             Users = await _userRepo.GetAllAsync();
             Machines = await _machineRepo.GetAllAsync();
+
             foreach (var item in Jobs)
             {
                 Frequencies.Add((Frequency)item.FrequencyId);
             }
-            //foreach (var machine in Machines)
-            //{
-            //    // Get jobs for the machine
-            //    var machineJobs = Jobs.Where(j => j.MachineId == machine.MachineId).ToList();
-
-            //    // Calculate and set the CardClass for each machine
-            //    machine.CardClass = GetCardClass(machine, machineJobs);
-            //}
+            return Page();
         }
-        //private string GetCardClass(Machine machine, List<Job> machineJobs)
-        //{
-           
-        //    if (machine.Status && !machineJobs.Any())
-        //    {
-        //        return "border-success text-success";
-        //    }
-
-        //    if (!machine.Status)
-        //    {
-        //        return "border-danger text-danger"; 
-        //    }
-        //    return "border-secondary"; 
-        //}
-        //public async Task<IActionResult> OnPostDeleteAsync(int id)
-        //{
-        //    await _jobRepo.DeleteAsync(await _jobRepo.GetByIdAsync(id));
-        //    return Page();
-        //}
     }
 }
 

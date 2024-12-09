@@ -8,10 +8,12 @@ namespace CoffeeCrazy.Pages.Login
     public class LoginModel : PageModel
     {
         private readonly IUserRepo _userRepo;
+        private readonly IAccessService _accessService;
 
-        public LoginModel(IUserRepo userRepo)
+        public LoginModel(IUserRepo userRepo, IAccessService accessService)
         {
             _userRepo = userRepo;
+            _accessService = accessService;
         }
 
         [BindProperty]
@@ -24,12 +26,10 @@ namespace CoffeeCrazy.Pages.Login
 
         public IActionResult OnGet()
         {
-            var user = HttpContext.Session.GetInt32("UserId");
-            if (user != null)
-            {
-                return RedirectToPage("/Machines/Index"); // Skal sende folk til main siden
-
-            }
+         
+            if (_accessService.IsUserLoggedIn(HttpContext))
+                return RedirectToPage("/Machines/Index"); 
+            
             return Page();
         }
 

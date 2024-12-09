@@ -7,10 +7,12 @@ namespace CoffeeCrazy.Pages.Login.Password
     public class ChangePasswordModel : PageModel
     {
         private readonly IUserRepo _userRepo;
+        private readonly IAccessService _accessService;
 
-        public ChangePasswordModel(IUserRepo userRepo)
+        public ChangePasswordModel(IUserRepo userRepo, IAccessService accessService)
         {
             _userRepo = userRepo;
+            _accessService = accessService;
         }
 
         [BindProperty]
@@ -26,14 +28,11 @@ namespace CoffeeCrazy.Pages.Login.Password
 
         public async Task<IActionResult> OnPostAsync()
         {
-            var email = HttpContext.Session.GetString("Email");
-
-            if (email == null)
-            {
-                ErrorMessage = "Du skal være logget ind. du bliver rediregeret til Login Page";
-                Thread.Sleep(2000);
+            if (!_accessService.IsUserLoggedIn(HttpContext))
                 return RedirectToPage("/Login/Login");
-            }
+
+            string email = _accessService.GetLoggedUserEmail(HttpContext);
+
             if (NewPassword == RepeatNewPassword)
             {
                 try

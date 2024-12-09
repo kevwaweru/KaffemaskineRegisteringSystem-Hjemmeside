@@ -1,5 +1,6 @@
 using CoffeeCrazy.Interfaces;
 using CoffeeCrazy.Models;
+using CoffeeCrazy.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -10,19 +11,26 @@ namespace CoffeeCrazy.Pages.Jobs
         private readonly ICRUDRepo<Job> _jobRepo;
         private readonly ICRUDRepo<Machine> _machineRepo;
 
+        IAccessService _accessService;
+
         public List<Machine> Machines { get; set; } = new ();
 
         [BindProperty]
         public Job NewJob { get; set; } = new Job();
 
-        public CreateModel(ICRUDRepo<Job> jobRepo, ICRUDRepo<Machine> machineRepo)
+        public CreateModel(ICRUDRepo<Job> jobRepo, ICRUDRepo<Machine> machineRepo, IAccessService accessService)
         {
             _jobRepo = jobRepo;
             _machineRepo = machineRepo;
+            _accessService = accessService;
         }
-        public async Task OnGetAsync()
+        public async Task<IActionResult> OnGetAsync()
         {
+            if (!_accessService.IsUserLoggedIn(HttpContext))
+                return RedirectToPage("/Login/Login");
+
             Machines = await _machineRepo.GetAllAsync();
+            return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()

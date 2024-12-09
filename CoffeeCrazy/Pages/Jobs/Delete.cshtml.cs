@@ -1,5 +1,6 @@
 using CoffeeCrazy.Interfaces;
 using CoffeeCrazy.Models;
+using CoffeeCrazy.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -8,15 +9,19 @@ namespace CoffeeCrazy.Pages.Jobs
     public class DeleteModel : PageModel
     {
         private readonly ICRUDRepo<Job> _jobRepo;
-
-        public DeleteModel(ICRUDRepo<Job> jobRepo)
+        private readonly IAccessService _accessService;
+        public DeleteModel(ICRUDRepo<Job> jobRepo, IAccessService accessService)
         {
             _jobRepo = jobRepo;
-
+            _accessService = accessService;
         }
         public async Task<IActionResult> OnGetAsync(int id)
         {
+            if (!_accessService.IsUserLoggedIn(HttpContext))
+                return RedirectToPage("/Login/Login");
+
             await _jobRepo.DeleteAsync(await _jobRepo.GetByIdAsync(id));
+
             return RedirectToPage("Index");
         }
     }

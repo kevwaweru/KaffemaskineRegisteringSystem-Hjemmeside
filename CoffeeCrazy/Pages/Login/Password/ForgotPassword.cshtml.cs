@@ -1,4 +1,5 @@
 using CoffeeCrazy.Interfaces;
+using CoffeeCrazy.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Dynamic;
@@ -8,10 +9,12 @@ namespace CoffeeCrazy.Pages.Login.Password
     public class ForgotPasswordModel : PageModel
     {
         private readonly IEmailService _emailService;
+        private readonly IAccessService _accessService;
 
-        public ForgotPasswordModel( IEmailService emailService)
+        public ForgotPasswordModel( IEmailService emailService, IAccessService accessService)
         {
             _emailService = emailService;
+            _accessService = accessService;
         }
 
         [BindProperty]
@@ -21,11 +24,9 @@ namespace CoffeeCrazy.Pages.Login.Password
 
         public IActionResult OnGet()
         {
-            var user = HttpContext.Session.GetInt32("UserId");
-            if (user == null)
-            {
-                return RedirectToPage("/Machines/Index"); // Skal sende folk til hvad vi synes er main siden når man er logget ind :)
-            }
+            if (_accessService.IsUserLoggedIn(HttpContext))
+                return RedirectToPage("/Machines/Index"); // Skal sende folk til main siden
+
             return Page();
         }
 

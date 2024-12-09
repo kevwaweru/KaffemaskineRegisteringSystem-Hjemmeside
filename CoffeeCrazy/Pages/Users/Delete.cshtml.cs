@@ -10,7 +10,6 @@ namespace CoffeeCrazy.Pages.Users
     {
         private readonly IUserRepo _userRepo;
         private readonly IAccessService _accessService;
-        //private int currentAdminUserId;
 
         public DeleteModel(IUserRepo userRepo, IAccessService accessService)
         {
