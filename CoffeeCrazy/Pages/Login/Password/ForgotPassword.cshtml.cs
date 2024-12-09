@@ -43,13 +43,13 @@ namespace CoffeeCrazy.Pages.Login.Password
             if (emailSent)
             {
                 Message = "En mail med nyt password er sendt til dig.";
-                Thread.Sleep(5000);
+  
                 return RedirectToPage("/Login/Password/ResetPassword");
             }
             else
             {
                 Message = "Der er sket en fejl Token bliv ikke sendt prøv igen";
-                Thread.Sleep(5000);
+
 
                 return Page();
             }                  

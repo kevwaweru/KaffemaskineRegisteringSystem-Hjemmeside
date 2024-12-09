@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace CoffeeCrazy.Pages.Accessdined
+namespace CoffeeCrazy.Pages.Errors
 {
     public class AccessDeniedModel : PageModel
     {
