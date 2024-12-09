@@ -1,5 +1,6 @@
 using CoffeeCrazy.Interfaces;
 using CoffeeCrazy.Models;
+using CoffeeCrazy.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -8,14 +9,18 @@ namespace CoffeeCrazy.Pages.Users
     public class CreateModel : PageModel
     {
         private IUserRepo _userRepo;
-
-        public CreateModel(IUserRepo userRepo)
-        {
-            _userRepo = userRepo;
-        }
+        private IImageService _imageService;
+        
+        public IFormFile PictureToBeUploaded { get; set; }
 
         [BindProperty]
         public User NewUser { get; set; } = new User();
+
+        public CreateModel(IUserRepo userRepo, IImageService imageService)
+        {
+            _userRepo = userRepo;
+            _imageService = imageService;
+        }
 
         public IActionResult OnGet()
         {
@@ -29,6 +34,8 @@ namespace CoffeeCrazy.Pages.Users
             //    return Page();
             //}
 
+            NewUser.UserImage = _imageService.ConvertImageToByteArray(PictureToBeUploaded);
+            
             await _userRepo.CreateAsync(NewUser);
             return RedirectToPage("Index");
         }

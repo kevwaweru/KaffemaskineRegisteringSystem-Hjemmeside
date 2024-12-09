@@ -9,13 +9,16 @@ namespace CoffeeCrazy.Pages.Machines
     public class CreateModel : PageModel
     {
         private readonly ICRUDRepo<Machine> _machineRepo;
+        private IImageService _imageService;
+        public IFormFile PictureToBeUploaded { get; set; }
 
         [BindProperty]
         public Machine Machine { get; set; }
 
-        public CreateModel(ICRUDRepo<Machine> machineRepo)
+        public CreateModel(ICRUDRepo<Machine> machineRepo, IImageService imageService)
         {
             _machineRepo = machineRepo;
+            _imageService = imageService;
         }
 
         public void Onget()
@@ -29,6 +32,8 @@ namespace CoffeeCrazy.Pages.Machines
             {
                 return Page();
             }
+            
+            Machine.MachineImage = _imageService.ConvertImageToByteArray(PictureToBeUploaded);
 
             await _machineRepo.CreateAsync(Machine);
             return RedirectToPage("./Index"); // Redirect to a list page

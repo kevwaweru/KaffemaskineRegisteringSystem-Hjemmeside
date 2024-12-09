@@ -1,8 +1,9 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using CoffeeCrazy.Interfaces;
+using Microsoft.Data.SqlClient;
 
 namespace CoffeeCrazy.Services
 {
-    public class ImageService
+    public class ImageService : IImageService
     {
         // Convert IFormFile to byte array
         public byte[] ConvertImageToByteArray(IFormFile imageFile)

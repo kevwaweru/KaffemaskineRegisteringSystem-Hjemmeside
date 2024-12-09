@@ -78,7 +78,7 @@ namespace CoffeeCrazy.Repos
                                 Status = (bool)reader["Status"],
                                 Placement = reader["Placement"] as string,
                                 Campus = (Campus)reader["CampusId"],
-                                MachineImage = ValidateDataRepo.GetImageValue(reader["MachineImage"])   //MachineImage tilføjet 05.12 Datavalideringsmetode indsat, men vi har besluttet os at gøre det frontend primært.                               
+                                MachineImage = (byte[])reader["MachineImage"]   //MachineImage tilføjet 05.12 Datavalideringsmetode indsat, men vi har besluttet os at gøre det frontend primært.                               
 
                             };
 
@@ -131,7 +131,7 @@ namespace CoffeeCrazy.Repos
                                 Status = (bool)reader["Status"],
                                 Placement = reader["Placement"] as string,
                                 Campus = (Campus)reader["CampusId"],
-                                MachineImage = ValidateDataRepo.GetImageValue(reader["MachineImage"])
+                                MachineImage = (byte[])reader["MachineImage"]
                             };
                         }
                         else
@@ -154,8 +154,6 @@ namespace CoffeeCrazy.Repos
                 throw;
             }
         }
-
-
 
 
         /// <summary>
@@ -189,7 +187,7 @@ namespace CoffeeCrazy.Repos
                     command.Parameters.AddWithValue("@Placement", toBeUpdatedMachine.Placement);
                     command.Parameters.AddWithValue("@CampusId", (int)toBeUpdatedMachine.Campus);
                     command.Parameters.AddWithValue("@MachineId", toBeUpdatedMachine.MachineId);
-                    command.Parameters.AddWithValue("@MachineImage", (byte[]?)toBeUpdatedMachine.MachineImage);
+                    command.Parameters.AddWithValue("@MachineImage", (byte[])toBeUpdatedMachine.MachineImage);
 
 
                     await connection.OpenAsync();

@@ -28,6 +28,7 @@ namespace CoffeeCrazy.Repos
         {
             try
             {
+                
                 var (passwordHash, passwordSalt) = PasswordHelper.CreatePasswordHash(user.Password);
                 user.Password = Convert.ToBase64String(passwordHash);
                 user.PasswordSalt = Convert.ToBase64String(passwordSalt);
@@ -40,12 +41,12 @@ namespace CoffeeCrazy.Repos
                     SqlCommand command = new SqlCommand(query, connection);
                     command.Parameters.AddWithValue("@FirstName", user.FirstName);
                     command.Parameters.AddWithValue("@LastName", user.LastName);
-                    command.Parameters.AddWithValue("@Email", user.Email);
+                    command.Parameters.AddWithValue("@Email", user.Email.ToLower());
                     command.Parameters.AddWithValue("@Password", user.Password);
                     command.Parameters.AddWithValue("@PasswordSalt", user.PasswordSalt);
                     command.Parameters.AddWithValue("@CampusId", (int)user.Campus);
                     command.Parameters.AddWithValue("@RoleId", (int)user.Role);
-                    command.Parameters.AddWithValue("@UserImage", (byte[]?)user.UserImage);
+                    command.Parameters.AddWithValue("@UserImage", user.UserImage);
 
                     await connection.OpenAsync();
                     await command.ExecuteNonQueryAsync();
@@ -96,7 +97,7 @@ namespace CoffeeCrazy.Repos
                                 PasswordSalt = (string)reader["PasswordSalt"],
                                 Role = (Role)reader["RoleId"],
                                 Campus = (Campus)reader["CampusId"],
-                                UserImage = ValidateDataRepo.GetImageValue(reader["UserImage"])
+                                UserImage = (byte[])reader["UserImage"]
                             };
 
                             users.Add(user);
@@ -128,7 +129,7 @@ namespace CoffeeCrazy.Repos
             {
                 using (SqlConnection connection = new SqlConnection(_connectionString))
                 {
-                    string query = "SELECT * WHERE UserId = @UserId";
+                    string query = "SELECT * FROM Users WHERE UserId = @UserId";
 
                     SqlCommand command = new SqlCommand(query, connection);
                     command.Parameters.AddWithValue("@UserId", userId);
@@ -149,7 +150,7 @@ namespace CoffeeCrazy.Repos
                                 PasswordSalt = (string)reader["PasswordSalt"],
                                 Role = (Role)reader["RoleId"],
                                 Campus = (Campus)reader["CampusId"],
-                                UserImage = ValidateDataRepo.GetImageValue(reader["UserImage"])
+                                UserImage = (byte[])reader["UserImage"]
                             };
                         }
                         else
@@ -203,7 +204,7 @@ namespace CoffeeCrazy.Repos
                     command.Parameters.AddWithValue("@CampusId", (int)toBeUpdatedUser.Campus);
                     command.Parameters.AddWithValue("@RoleId", (int)toBeUpdatedUser.Role);
                     command.Parameters.AddWithValue("@UserId", toBeUpdatedUser.UserId);
-                    command.Parameters.AddWithValue("@UserImage", (byte[]?)toBeUpdatedUser.UserImage);
+                    command.Parameters.AddWithValue("@UserImage", (byte[])toBeUpdatedUser.UserImage);
 
                     await connection.OpenAsync();
                     await command.ExecuteNonQueryAsync();

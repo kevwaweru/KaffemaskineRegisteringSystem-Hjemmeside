@@ -13,7 +13,7 @@ namespace CoffeeCrazy.Models
         public string PasswordSalt { get; set; }
         public Role Role { get; set; }
         public Campus Campus { get; set; }
-        public byte[]? UserImage { get; set; }
+        public byte[] UserImage { get; set; }
     }
 }
     
