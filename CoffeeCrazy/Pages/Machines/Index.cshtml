@@ -8,7 +8,7 @@
 }
 
 <h1>Maskine Oversigt</h1>
-    
+
 <div class="mb-3 d-flex justify-content-between align-items-center">
     @if (HttpContext.Session.GetInt32("RoleId") == (int)Role.Admin)
     {
@@ -23,7 +23,7 @@
         @foreach (var machine in Model.Machines)
         {
             <div class="col-md-6 mb-4">
-                <div class="card @GetCardClass(machine)">
+                <div class="card @GetCardClass(machine, Model.Jobs)">
                     <div class="card-body">
                         <h5 class="card-title">Maskine ID: @machine.MachineId</h5>
                         <p class="card-text">
@@ -58,14 +58,21 @@
     </div>
 </div>
 
- @functions {
-    private string GetCardClass(Machine machine)
+@functions {
+
+    private string GetCardClass(Machine machine, List<Job> jobs)
     {
-        // Hvis ingen jobs og maskinen er aktiv, gør kortet grønt
-        if (machine.Status) !machine) return "border-success text-success";
-        // Hvis maskinen er inaktiv, gør kortet rødt
+        // Filter jobs by MachineId
+        var jobsForMachine = jobs.Where(job => job.MachineId == machine.MachineId).ToList();
+
+        // Check if all jobs for this machine are completed
+        bool allJobsCompleted = jobsForMachine.All(job => job.IsCompleted);
+
+        // If no jobs and the machine is active, set green border
+        if (machine.Status && allJobsCompleted) return "border-success text-success";
+        // If the machine is inactive, set red border
         if (!machine.Status) return "border-danger text-danger";
-        // Standard kortstil
+        // Default border style
         return "border-secondary";
     }
 } 
