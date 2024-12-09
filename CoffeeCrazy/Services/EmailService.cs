@@ -18,11 +18,11 @@ namespace CoffeeCrazy.Services
         }
 
         /// <summary>
-        /// 
+        /// Sendt an email with a body
         /// </summary>
-        /// <param name="emailToResive"></param>
-        /// <param name="subject"></param>
-        /// <param name="body"></param>
+        /// <param name="emailToResive">Resiveing email</param>
+        /// <param name="subject">What it is about</param>
+        /// <param name="body">The text</param>
         /// <returns></returns>
         public async Task<bool> SendEmailAsync(string emailToResive, string subject, string body)
         {
@@ -60,12 +60,18 @@ namespace CoffeeCrazy.Services
                return false;
             }
         }
-
+        /// <summary>
+        /// Generate at token and sends a email
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
         public async Task<bool> GenerateTokenAndSendResetEmail(string email)
         {
             try
             {
+                if () 
                 await _tokenGeneratorRepo.CreateTokenAsync(email);
+
 
                 string token = await _tokenGeneratorRepo.GetTokenAsync(email);
 

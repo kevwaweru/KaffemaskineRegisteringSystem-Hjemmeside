@@ -77,7 +77,6 @@ namespace CoffeeCrazy.Pages.Login.Password
             if (!isStillValid)
             {
                 ModelState.AddModelError("", "Engangskoden er udløbet. Ansøg om en ny.");
-                Thread.Sleep(1000);
                 return RedirectToPage("/Login/Password/ForgotPassword");
             }
 
@@ -87,14 +86,11 @@ namespace CoffeeCrazy.Pages.Login.Password
 
                 if (isResetSuccessful)
                 {
-                    Message = "Nyt kodeord er opretter du bliver diregeret til Login siden.";
-                    Thread.Sleep(2000);
                     return RedirectToPage("/Login/Login");
                 }
                 else
                 {
                     ModelState.AddModelError("", "Udløbet engangskode. Ansøg om ny");
-                    Thread.Sleep(2000);
                     return RedirectToPage("/Login/Password/ForgotPassword");
                 }
             }

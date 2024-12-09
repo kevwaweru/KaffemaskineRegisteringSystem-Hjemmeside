@@ -1,5 +1,6 @@
 ﻿using CoffeeCrazy.Interfaces;
 using Microsoft.Data.SqlClient;
+using Microsoft.IdentityModel.Tokens;
 
 namespace CoffeeCrazy.Repos
 {
@@ -23,7 +24,11 @@ namespace CoffeeCrazy.Repos
         {
             try
             {
+
+
                 string token = _tokenService.GenerateToken();
+
+               
 
                 using (SqlConnection connection = new SqlConnection(_connectionString))
                 {
@@ -116,7 +121,7 @@ namespace CoffeeCrazy.Repos
 
                     await connection.OpenAsync();
 
-                    int result = await command.ExecuteNonQueryAsync();
+                    int result = (int)await command.ExecuteScalarAsync();
                     return result > 0;
                 }
             }
@@ -163,6 +168,13 @@ namespace CoffeeCrazy.Repos
                 Console.Error.WriteLine($"Mistakes has happened: {ex.Message}");
                 throw;
             }
+        }
+        private bool CheckIfEmailHasToken(string email)
+        {
+            // implamenter
+
+
+            return true;
         }
     }
 }
