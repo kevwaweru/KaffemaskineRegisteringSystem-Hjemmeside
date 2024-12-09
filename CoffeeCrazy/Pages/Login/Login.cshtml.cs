@@ -45,8 +45,8 @@ namespace CoffeeCrazy.Pages.Login
 
                 if (PasswordHelper.VerifyPasswordHash(Password, storedHash, storedSalt))
                 {
-                    
-                    HttpContext.Session.SetString("Email", Email);
+
+                    HttpContext.Session.SetString("Email", Email.ToLower());
                     HttpContext.Session.SetInt32("RoleId", (int)role);
                     HttpContext.Session.SetString("FirstName", firstName);
                     HttpContext.Session.SetInt32("UserId",(int)userId);

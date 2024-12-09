@@ -18,6 +18,7 @@ namespace CoffeeCrazy
             builder.Services.AddScoped<ICRUDRepo<Machine>, MachineRepo>();
             builder.Services.AddScoped<ITokenRepo, TokenRepo>();
             builder.Services.AddTransient<IUserRepo, UserRepo>();
+            builder.Services.AddScoped<IPasswordRepo, PasswordRepo>();
 
 
             // Services
