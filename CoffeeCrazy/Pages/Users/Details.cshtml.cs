@@ -7,23 +7,16 @@ namespace CoffeeCrazy.Pages.Users
 {
     public class DetailsModel : PageModel
     {
-        private readonly IUserRepo _userRepo;
-        private readonly IImageService _imageService;
-
-        public DetailsModel(IUserRepo userRepo, IImageService userImage)
-        {
-            _userRepo = userRepo;
-            _imageService = userImage;
-        }
-
         public User User { get; set; }
 
-        // Impl noget det gør så man ikke kan se andres details, men kun den der er logget ind.
+        private readonly IUserRepo _userRepo;
 
-        public IFormFile UserImage { get; set; }
+        public DetailsModel(IUserRepo userRepo)
+        {
+            _userRepo = userRepo;
+        }
 
-
-        public async Task<IActionResult> OnGetAsync(int userId)
+        public async Task<IActionResult> OnGetAsync(int id)
         {
 
             if (HttpContext.Session.GetString("UserId") == null)
@@ -32,16 +25,16 @@ namespace CoffeeCrazy.Pages.Users
             }
 
 
-                User = await _userRepo.GetByIdAsync(userId);
-                UserImage = _imageService.ConvertArrayToIFormFile(User.UserImage); //validering hvis null.
+            User = await _userRepo.GetByIdAsync(id);
 
-                if (User == null)
-                {
-                    return NotFound("Brugeren blev ikke fundet.");
-                }
 
-                return Page();
-            
+            if (User == null)
+            {
+                return NotFound("Brugeren blev ikke fundet.");
+            }
+
+            return Page();
+
         }
     }
 }

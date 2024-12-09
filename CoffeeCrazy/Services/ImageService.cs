@@ -19,7 +19,7 @@ namespace CoffeeCrazy.Services
         public IFormFile ConvertArrayToIFormFile(byte[] imageByte)
         {
 
-            var file = new FormFile(new MemoryStream(imageByte), 0, imageByte.Length, "file", $"{imageByte}image.jpg");
+            var file = new FormFile(new MemoryStream(imageByte), 0, imageByte.Length, "file", "image.jpg");
             return file;
 
         }

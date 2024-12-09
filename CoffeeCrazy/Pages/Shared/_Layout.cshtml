@@ -40,7 +40,7 @@
                         @if (Context.Session.GetString("FirstName") != null)
                         {
                             <li class="nav-item">
-                                <a class="nav-link" asp-page="/Users/Details" asp-route-userId="@Context.Session.GetInt32("UserId")">
+                                <a class="nav-link" asp-page="/Users/Details" asp-route-id="@Context.Session.GetInt32("UserId")">
                                     @Context.Session.GetString("FirstName")'s profil
                                 </a>
                             </li>

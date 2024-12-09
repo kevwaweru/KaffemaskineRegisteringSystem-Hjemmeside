@@ -10,7 +10,6 @@ namespace CoffeeCrazy.Pages.Users
     {
         private IUserRepo _userRepo;
         private IImageService _imageService;
-        
         public IFormFile PictureToBeUploaded { get; set; }
 
         [BindProperty]

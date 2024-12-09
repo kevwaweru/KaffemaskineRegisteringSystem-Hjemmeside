@@ -27,6 +27,18 @@
                 <td>@user.Email</td>
                 <td>@user.Role</td>
                 <td>@user.Campus</td>
+                @if (user.UserImage != null)
+                {
+                    <td>
+                        <img src="data:image/jpeg;base64,@Convert.ToBase64String(user.UserImage)" alt="User Image" style="max-width:80px;max-height:80px;" />
+                    </td>
+                }
+                else
+                {
+                    <td class="text-danger">
+                        No Image
+                    </td>
+                }
                 <td>
                     <a class="btn btn-prmiary" asp-page="Details" asp-route-id="@user.UserId">Gå Til Profil</a>
                 </td>

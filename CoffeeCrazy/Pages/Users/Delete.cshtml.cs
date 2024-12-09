@@ -11,14 +11,14 @@ namespace CoffeeCrazy.Pages.Users
         private readonly IUserRepo _userRepo;
         private int currentAdminUserId;
 
+        [BindProperty]
+        public int UserIdToDelete { get; set; }
+
         public DeleteModel(IUserRepo userRepo)
         {
             _userRepo = userRepo;
 
         }
-
-        [BindProperty]
-        public int UserIdToDelete { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int id)
         {
