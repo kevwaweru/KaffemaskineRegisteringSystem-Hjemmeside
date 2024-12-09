@@ -9,12 +9,12 @@ namespace CoffeeCrazy.Pages.Login.Password
 {
     public class ResetPasswordModel : PageModel
     {
-        private readonly IUserRepo _userRepo;
+        private readonly IPasswordRepo _passwordRepo;
         private readonly ITokenRepo _tokenGeneratorRepo;
         private readonly IAccessService _accessService;
-        public ResetPasswordModel(IUserRepo userRepo, ITokenRepo tokenGeneratorRepo, IAccessService accessService)
+        public ResetPasswordModel(IPasswordRepo passwordRepo, ITokenRepo tokenGeneratorRepo, IAccessService accessService)
         {
-            _userRepo = userRepo;
+            _passwordRepo = passwordRepo;
             _tokenGeneratorRepo = tokenGeneratorRepo;
             _accessService = accessService;
         }
@@ -83,7 +83,7 @@ namespace CoffeeCrazy.Pages.Login.Password
 
             try
             {
-                bool isResetSuccessful = await _userRepo.ResetPasswordAsync(Token, NewPassword);
+                bool isResetSuccessful = await _passwordRepo.ResetPasswordAsync(Token, NewPassword);
 
                 if (isResetSuccessful)
                 {

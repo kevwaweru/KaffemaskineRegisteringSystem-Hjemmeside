@@ -7,12 +7,12 @@ namespace CoffeeCrazy.Pages.Login
 {
     public class LoginModel : PageModel
     {
-        private readonly IUserRepo _userRepo;
+        private readonly IPasswordRepo _PasswordRepo;
         private readonly IAccessService _accessService;
 
-        public LoginModel(IUserRepo userRepo, IAccessService accessService)
+        public LoginModel(IPasswordRepo passwordRepo, IAccessService accessService)
         {
-            _userRepo = userRepo;
+            _PasswordRepo = passwordRepo;
             _accessService = accessService;
         }
 
@@ -41,7 +41,7 @@ namespace CoffeeCrazy.Pages.Login
 
             try
             {
-                var (storedHash, storedSalt, role, firstName, userId) = await _userRepo.GetUserByEmailAsync(Email);
+                var (storedHash, storedSalt, role, firstName, userId) = await _PasswordRepo.GetUserByEmailAsync(Email);
 
                 if (PasswordHelper.VerifyPasswordHash(Password, storedHash, storedSalt))
                 {

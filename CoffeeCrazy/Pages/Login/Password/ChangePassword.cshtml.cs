@@ -6,12 +6,12 @@ namespace CoffeeCrazy.Pages.Login.Password
 {
     public class ChangePasswordModel : PageModel
     {
-        private readonly IUserRepo _userRepo;
+        private readonly IPasswordRepo _passwordRepo;
         private readonly IAccessService _accessService;
 
-        public ChangePasswordModel(IUserRepo userRepo, IAccessService accessService)
+        public ChangePasswordModel(IPasswordRepo passwordRepo, IAccessService accessService)
         {
-            _userRepo = userRepo;
+            _passwordRepo = passwordRepo;
             _accessService = accessService;
         }
 
@@ -37,7 +37,7 @@ namespace CoffeeCrazy.Pages.Login.Password
             {
                 try
                 {
-                    await _userRepo.ChangePasswordAsync(email, CurrentPassword, NewPassword);
+                    await _passwordRepo.ChangePasswordAsync(email, CurrentPassword, NewPassword);
                     SuccessMessage = "Nyt password er lavet.";
                 }
                 catch (Exception ex)
