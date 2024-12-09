@@ -22,7 +22,7 @@ namespace CoffeeCrazy.Pages.Machines
             var user = HttpContext.Session.GetInt32("UserId");
             if (user == null)
             {
-               return RedirectToPage("/Login/Login");
+               return RedirectToPage("/Login/login");
            
             }
             // Henter alle maskiner fra databasen

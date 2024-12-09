@@ -23,46 +23,49 @@
         @foreach (var machine in Model.Machines)
         {
             <div class="col-md-6 mb-4">
-                <a href="@Url.Page("Details", new { id = machine.MachineId })" class="text-decoration-none">
-                    <div class="card @GetCardClass(machine)">
-                        <div class="card-body">
-                            <h5 class="card-title">Maskine ID: @machine.MachineId</h5>
-                            <p class="card-text">
-                                Placering: @machine.Placement <br />
-                                Status: @(machine.Status ? "Aktiv" : "Inaktiv") <br />
-                                Campus: @machine.Campus
-                            </p>
-                            <p class="card-text">Beskrivelse: @machine.Placement</p>
+                <div class="card @GetCardClass(machine)">
+                    <div class="card-body">
+                        <h5 class="card-title">Maskine ID: @machine.MachineId</h5>
+                        <p class="card-text">
+                            Placering: @machine.Placement <br />
+                            Status: @(machine.Status ? "Aktiv" : "Inaktiv") <br />
+                            Campus: @machine.Campus
+                        </p>
+                        <p class="card-text">Beskrivelse: @machine.Placement</p>
 
-                            @if (HttpContext.Session.GetInt32("RoleId") == (int)Role.Admin)
-                            {
-                                <div class="dropdown">
-                                    <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Handlinger
-                                    </button>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <li><a class="dropdown-item" asp-page="Edit" asp-route-id="@machine.MachineId">Rediger</a></li>
-                                        <li><a class="dropdown-item" asp-page="Delete" asp-route-id="@machine.MachineId">Slet</a></li>
-                                        <li><a class="dropdown-item" asp-page="Details" asp-route-id="@machine.MachineId">Vis Detaljer</a></li>
-                                    </ul>
-                                </div>
-                            }
-                        </div>
+                        <a href="@Url.Page("Details", new { id = machine.MachineId })" class="text-decoration-none">
+                            View Details
+                        </a>
+
+                        @if (HttpContext.Session.GetInt32("RoleId") == (int)Role.Admin)
+                        {
+                            <div class="dropdown mt-2">
+                                <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Actions
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" asp-page="Edit" asp-route-id="@machine.MachineId">Edit</a></li>
+                                    <li><a class="dropdown-item" asp-page="Delete" asp-route-id="@machine.MachineId">Delete</a></li>
+                                    <li><a class="dropdown-item" asp-page="Details" asp-route-id="@machine.MachineId">View Details</a></li>
+                                </ul>
+                            </div>
+                        }
                     </div>
-                </a>
+                </div>
             </div>
+
         }
     </div>
 </div>
 
-@functions {
+ @functions {
     private string GetCardClass(Machine machine)
     {
         // Hvis ingen jobs og maskinen er aktiv, gør kortet grønt
-        if (machine.Status) //!machine.HasJobs) return "border-success text-success";
+        if (machine.Status) !machine) return "border-success text-success";
         // Hvis maskinen er inaktiv, gør kortet rødt
         if (!machine.Status) return "border-danger text-danger";
         // Standard kortstil
         return "border-secondary";
     }
-}
+} 
