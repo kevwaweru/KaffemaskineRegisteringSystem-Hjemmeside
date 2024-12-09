@@ -10,9 +10,18 @@ namespace CoffeeCrazy.Services
         {
             using (var memoryStream = new MemoryStream())
             {
+                //imageFile.FileName.ToString();
                 imageFile.CopyTo(memoryStream);
                 return memoryStream.ToArray();
             }
+        }
+
+        public IFormFile ConvertArrayToIFormFile(byte[] imageByte)
+        {
+
+            var file = new FormFile(new MemoryStream(imageByte), 0, imageByte.Length, "file", $"{imageByte}image.jpg");
+            return file;
+
         }
     }
 }

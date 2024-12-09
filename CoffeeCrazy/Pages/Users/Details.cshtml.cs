@@ -8,15 +8,19 @@ namespace CoffeeCrazy.Pages.Users
     public class DetailsModel : PageModel
     {
         private readonly IUserRepo _userRepo;
+        private readonly IImageService _imageService;
 
-        public DetailsModel(IUserRepo userRepo)
+        public DetailsModel(IUserRepo userRepo, IImageService userImage)
         {
             _userRepo = userRepo;
+            _imageService = userImage;
         }
 
         public User User { get; set; }
 
         // Impl noget det gør så man ikke kan se andres details, men kun den der er logget ind.
+
+        public IFormFile UserImage { get; set; }
 
 
         public async Task<IActionResult> OnGetAsync(int userId)
@@ -27,9 +31,9 @@ namespace CoffeeCrazy.Pages.Users
                 return RedirectToPage("/Login/Login");
             }
 
-            try
-            {
+
                 User = await _userRepo.GetByIdAsync(userId);
+                UserImage = _imageService.ConvertArrayToIFormFile(User.UserImage); //validering hvis null.
 
                 if (User == null)
                 {
@@ -37,12 +41,7 @@ namespace CoffeeCrazy.Pages.Users
                 }
 
                 return Page();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-                return StatusCode(500, "Der opstod en fejl. Prøv igen senere.");
-            }
+            
         }
     }
 }
