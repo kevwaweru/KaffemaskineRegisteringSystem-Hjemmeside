@@ -12,6 +12,6 @@
         bool HasPermissionToDeleteAdmin(HttpContext httpContext, int userIdToDelete);
         public bool IsAdmin(HttpContext httpContext);
         public bool IsSuperAdmin(HttpContext httpContext);
-        bool IsUser(HttpContext httpContext);
+        bool IsEmployee(HttpContext httpContext);
     }
 }

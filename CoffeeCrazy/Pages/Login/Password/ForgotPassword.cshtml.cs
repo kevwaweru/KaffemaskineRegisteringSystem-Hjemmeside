@@ -25,7 +25,7 @@ namespace CoffeeCrazy.Pages.Login.Password
         public IActionResult OnGet()
         {
             if (_accessService.IsUserLoggedIn(HttpContext))
-                return RedirectToPage("/Machines/Index"); // Skal sende folk til main siden
+                return RedirectToPage("/Machines/Index");
 
             return Page();
         }
@@ -37,7 +37,7 @@ namespace CoffeeCrazy.Pages.Login.Password
                 ModelState.AddModelError("","Venligst intast email.");
                 return Page(); 
             }   
-                
+               
                bool emailSent = await _emailService.GenerateTokenAndSendResetEmail(email);
 
             if (emailSent)

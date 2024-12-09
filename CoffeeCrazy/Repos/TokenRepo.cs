@@ -4,6 +4,9 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace CoffeeCrazy.Repos
 {
+    /// <summary>
+    /// Repository for handling token-related operations in the database.
+    /// </summary>
     public class TokenRepo : ITokenRepo
     {
         private readonly ITokenGeneratorService _tokenService;
@@ -16,26 +19,22 @@ namespace CoffeeCrazy.Repos
         }
 
         /// <summary>
-        /// Creates a token. with an expiredate and connect with User Email.
+        /// Creates a new token, associates it with a user's email, and sets an expiration date.
         /// </summary>
-        /// <param name="email">Users Email</param>
-        /// <returns>Dunno?</returns>
+        /// <param name="email">The email address to associate the token with.</param>
+        /// <exception cref="SqlException">Thrown if a database-related error accurs.</exception>
         public async Task CreateTokenAsync(string email)
         {
             try
             {
-
-
                 string token = _tokenService.GenerateToken();
-
-               
 
                 using (SqlConnection connection = new SqlConnection(_connectionString))
                 {
-                    string SQLquery = @"INSERT INTO PasswordResetTokens (Token, ExpireDate, Email)
-                                        VALUES (@Token, @ExpireDate, @Email)";
+                    string sqlQuery = @"INSERT INTO PasswordResetTokens (Token, ExpireDate, Email)
+                                    VALUES (@Token, @ExpireDate, @Email)";
 
-                    SqlCommand command = new SqlCommand(SQLquery, connection);
+                    SqlCommand command = new SqlCommand(sqlQuery, connection);
                     command.Parameters.AddWithValue("@Token", token);
                     command.Parameters.AddWithValue("@ExpireDate", DateTime.UtcNow.AddMinutes(30));
                     command.Parameters.AddWithValue("@Email", email);
@@ -55,23 +54,25 @@ namespace CoffeeCrazy.Repos
                 throw;
             }
         }
+
         /// <summary>
-        /// This search the DB where Email and token is hand in hand
+        /// Retrieves the token associated with a given email, provided the token has not expired.
         /// </summary>
-        /// <param name="email">Users Email</param>
-        /// <returns>The Token linked to the Email</returns>
-        /// <exception cref="InvalidOperationException"></exception>
+        /// <param name="email">The email address to look up the token for.</param>
+        /// <returns>The token associated with the email.</returns>
+        /// <exception cref="InvalidOperationException">Thrown if no token is found for the email.</exception>
+        /// <exception cref="SqlException">Thrown if a database-related error accurs.</exception>
         public async Task<string> GetTokenAsync(string email)
         {
             try
             {
                 using (SqlConnection connection = new SqlConnection(_connectionString))
                 {
-                    string SQLquery = @"SELECT Token FROM PasswordResetTokens
-                                        WHERE Email = @Email
-                                        AND ExpireDate > @CurrentDate";
+                    string sqlQuery = @"SELECT Token FROM PasswordResetTokens
+                                    WHERE Email = @Email
+                                    AND ExpireDate > @CurrentDate";
 
-                    SqlCommand command = new SqlCommand(SQLquery, connection);
+                    SqlCommand command = new SqlCommand(sqlQuery, connection);
                     command.Parameters.AddWithValue("@CurrentDate", DateTime.UtcNow);
                     command.Parameters.AddWithValue("@Email", email);
 
@@ -101,22 +102,24 @@ namespace CoffeeCrazy.Repos
                 throw;
             }
         }
+
         /// <summary>
-        /// Check the the token that is intered in HTML is in the DB.
+        /// Validates if a given token exists in the database.
         /// </summary>
-        /// <param name="token">The Token the user get by mail</param>
-        /// <returns>True if token match false if dont</returns>
+        /// <param name="token">The token to validate.</param>
+        /// <returns>True if the token exists. otherwise false.</returns>
+        /// <exception cref="SqlException">Thrown if a database-related error occurs.</exception>
         public async Task<bool> ValidateTokenAsync(string token)
         {
             try
             {
                 using (SqlConnection connection = new SqlConnection(_connectionString))
                 {
-                    string SQLquery = @"SELECT COUNT(1)
-                                        FROM PasswordResetTokens 
-                                        WHERE Token = @Token";
+                    string sqlQuery = @"SELECT COUNT(1)
+                                    FROM PasswordResetTokens 
+                                    WHERE Token = @Token";
 
-                    SqlCommand command = new SqlCommand(SQLquery, connection);
+                    SqlCommand command = new SqlCommand(sqlQuery, connection);
                     command.Parameters.AddWithValue("@Token", token);
 
                     await connection.OpenAsync();
@@ -136,11 +139,12 @@ namespace CoffeeCrazy.Repos
                 throw;
             }
         }
+
         /// <summary>
-        /// Deletes the token.
+        /// Deletes a specific token from the database.
         /// </summary>
-        /// <param name="token">A token</param>
-        /// <returns>Query thats delete the token that match the intered token.</returns>
+        /// <param name="token">The token to delete.</param>
+        /// <exception cref="SqlException">Thrown if a database-related error accurs.</exception>
         public async Task DeleteTokenAsync(string token)
         {
             try
@@ -158,23 +162,14 @@ namespace CoffeeCrazy.Repos
             }
             catch (SqlException ex)
             {
-                // SQL Errors
                 Console.Error.WriteLine($"SQL error: {ex.Message}");
                 throw;
             }
             catch (Exception ex)
             {
-                // Other Errors
                 Console.Error.WriteLine($"Mistakes has happened: {ex.Message}");
                 throw;
             }
-        }
-        private bool CheckIfEmailHasToken(string email)
-        {
-            // implamenter
-
-
-            return true;
         }
     }
 }
