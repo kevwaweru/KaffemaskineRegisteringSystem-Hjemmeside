@@ -1,4 +1,53 @@
-﻿@page
+﻿@page "{id:int}"
+@using CoffeeCrazy.Models
 @model CoffeeCrazy.Pages.Machines.DetailsModel
 @{
+    ViewData["Title"] = "Machine Details";
 }
+
+<h1>Machine Details</h1>
+
+<div>
+    <h3>Machine ID: @Model.Machine.MachineId</h3>
+    <p><strong>Placement:</strong> @Model.Machine.Placement</p>
+    <p><strong>Status:</strong> @(Model.Machine.Status ? "Active" : "Inactive")</p>
+    <p><strong>Campus:</strong> @Model.Machine.Campus</p>
+</div>
+
+<h4>Jobs for this Machine</h4>
+
+<form method="post">
+    @foreach (var job in Model.job)
+    {
+        <div class="mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">@job.Title</h5>
+                    <p>@job.Description</p>
+                    <p><strong>Deadline:</strong> @job.Deadline.ToString("d")</p>
+
+                  <div class="form-check">
+                        <input class="form-check-input"
+                               type="checkbox"
+                               asp-for="Job.IsCompleted"  
+                               id="job_@job.JobId" 
+                               value="true" />
+                        <label class="form-check-label" for="job_@job.JobId">Completed</label>
+                    </div>
+
+                    <div class="mt-2">
+                        <label for="comment_@job.JobId">Comment</label>
+                        <textarea class="form-control"
+                                  id="comment_@job.JobId"
+                                  asp-for="Job.Comment"  
+                                  placeholder="Write a comment..."></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <button type="submit" class="btn btn-primary mt-3">Update Jobs</button>
+</form>
+
+<a class="btn btn-secondary btn-sm mt-3" asp-page="Index">Back to Overview</a>
