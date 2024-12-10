@@ -7,20 +7,22 @@
 
 <h1>Rediger Maskine</h1>
 
-<form method="post">
+<form method="post" enctype="multipart/form-data">
+    >
+
     <div class="form-group">
         <label for="MachineId">Maskine ID</label>
-        <input type="text" class="form-control" id="MachineId" value="@Model.Machine.MachineId" readonly />
+        <input type="text" class="form-control" id="MachineId" value="@Model.MachinetoUpdate.MachineId" readonly />
     </div>
 
     <div class="form-group">
         <label for="Placement">Placering</label>
-        <input type="text" class="form-control" id="Placement" asp-for="Machine.Placement" />
+        <input type="text" class="form-control" id="Placement" asp-for="MachinetoUpdate.Placement" />
     </div>
 
     <div class="form-group">
         <label for="Campus">Campus</label>
-        <select asp-for="Machine.Campus" class="form-control">
+        <select asp-for="MachinetoUpdate.Campus" class="form-control">
             @foreach (var campus in Enum.GetValues(typeof(CoffeeCrazy.Models.Enums.Campus)))
             {
                 <option value="@((int)campus)">@campus</option>
@@ -30,12 +32,32 @@
 
     <div class="form-group">
         <label for="Status">Status</label>
-        <select asp-for="Machine.Status" class="form-control">
-            <option value="true" selected="@(Model.Machine.Status)">Aktiv</option>
-            <option value="false" selected="@(!Model.Machine.Status)">Inaktiv</option>
+        <select asp-for="MachinetoUpdate.Status" class="form-control">
+            <option value="true" selected="@(Model.MachinetoUpdate.Status)">Aktiv</option>
+            <option value="false" selected="@(!Model.MachinetoUpdate.Status)">Inaktiv</option>
         </select>
     </div>
+    <div>
+        @if (Model.MachinetoUpdate.MachineImage != null)
+        {
+            <td>
+                <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.MachinetoUpdate.MachineImage)" alt="Machine Image" style="max-width:80px;max-height:80px;" />
+            </td>
+        }
+        else
+        {
+            <td class="text-danger">
+                No Image
+            </td>
+        }
+    </div>
 
+    
+        <div>
+            <label class="fs-3" for="inputGroupFile01">Maskine Billed</label> <br />
+            <input asp-for="PictureToUpload" type="file" class="form-control" id="inputGroupFile01" />
+            <span asp-validation-for="PictureToUpload" class="text-danger"></span>
+        </div>
     <button type="submit" class="btn btn-primary">Opdater Maskine</button>
 </form>
 

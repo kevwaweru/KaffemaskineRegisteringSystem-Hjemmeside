@@ -8,20 +8,23 @@ namespace CoffeeCrazy.Pages.Machines
     public class EditModel : PageModel
     {
         private readonly ICRUDRepo<Machine> _machineRepo;
+        private readonly IImageService _imageService;
 
-        public EditModel(ICRUDRepo<Machine> machineRepo)
+        public EditModel(ICRUDRepo<Machine> machineRepo, IImageService imageService)
         {
             _machineRepo = machineRepo;
+            _imageService = imageService;
         }
 
         [BindProperty]
-        public Machine Machine { get; set; }
+        public Machine MachinetoUpdate { get; set; }
+        public IFormFile PictureToUpload { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int id)
+    public async Task<IActionResult> OnGetAsync(int id)
         {
             // Henter maskinen baseret på ID
-            Machine = await _machineRepo.GetByIdAsync(id);
-            if (Machine == null)
+            MachinetoUpdate = await _machineRepo.GetByIdAsync(id);
+            if (MachinetoUpdate == null)
             {
                 return NotFound();
             }
@@ -30,13 +33,15 @@ namespace CoffeeCrazy.Pages.Machines
 
         public async Task<IActionResult> OnPostAsync(int id)
         {
+            MachinetoUpdate.MachineImage = _imageService.ConvertImageToByteArray(PictureToUpload);
             if (!ModelState.IsValid)
             {
                 return Page();
             }
-            Machine.MachineId = id;
+           
+            MachinetoUpdate.MachineId = id;
             // Opdaterer maskinen i databasen
-            await _machineRepo.UpdateAsync(Machine);
+            await _machineRepo.UpdateAsync(MachinetoUpdate);
 
             // Redirecter til Index (oversigten)
             return RedirectToPage("./Index");

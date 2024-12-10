@@ -2,6 +2,7 @@
 using CoffeeCrazy.Models;
 using CoffeeCrazy.Models.Enums;
 using Microsoft.Data.SqlClient;
+using System.Collections;
 using System.Data;
 
 namespace CoffeeCrazy.Repos
@@ -177,7 +178,7 @@ namespace CoffeeCrazy.Repos
                                         Status = @Status,
                                         Placement = @Placement,
                                         CampusId = @CampusId,
-                                        MachineImage = @MachineImage
+                                        MachineImage=@MachineImage
                                     WHERE
                                         MachineId = @MachineId";
 
