@@ -324,11 +324,6 @@ namespace CoffeeCrazy.Repos
             //        }
             //    } //tilføj evt fejl kommentar hvis brugen prøver at hente et biled men ikke har uploadet et først 
             //}
-
-
-
-            // -- Jeg kunne godt tænke mig vi flytte disse til et PasswordRepo --
-
         }
     }
 }

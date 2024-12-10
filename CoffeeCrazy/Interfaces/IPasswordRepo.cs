@@ -7,5 +7,6 @@ namespace CoffeeCrazy.Interfaces
         Task ChangePasswordAsync(string email, string currentPassword, string newPassword);
         Task<(byte[] passwordHash, byte[] passwordSalt, Role role, string firstName, int userId)> GetUserByEmailAsync(string username);
         Task<bool> ResetPasswordAsync(string token, string newPassword);
+        Task<bool> ValidateAndDeleteEmail(string email);
     }
 }

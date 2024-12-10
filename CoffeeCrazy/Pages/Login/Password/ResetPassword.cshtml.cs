@@ -33,20 +33,21 @@ namespace CoffeeCrazy.Pages.Login.Password
         public string ConfirmPassword { get; set; }
         [BindProperty]
         [TempData]
-        public bool IsTokenValidated { get; set; } = false; // det der tempData er jeg bange for kommer til at fucke med programmet. Har haft bugs hvor den giver mig en "ValidToken" uden jeg har intastet en. og kommer derekte videre til else statement :(
+        public bool IsTokenValidated { get; set; } = false; 
         public string Message { get; set; }       
         
         public IActionResult OnGet()
         {
             if (_accessService.IsUserLoggedIn(HttpContext))
-                return RedirectToPage("/Machines/Index"); // Skal sende folk til main siden
+                return RedirectToPage("/Machines/Index");
+
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
             Console.WriteLine($"IsTokenValidated: {IsTokenValidated}");
-            //Første del af if statement i HTML.
+            //First part of the If statement
             if (!IsTokenValidated)
             {
                 if (string.IsNullOrEmpty(Token))
@@ -67,7 +68,7 @@ namespace CoffeeCrazy.Pages.Login.Password
                     return Page();
                 }             
             }
-            //Anden del af if statement
+            //second part of the if statement
             if (!ModelState.IsValid)
             {
                 return Page();
