@@ -8,6 +8,8 @@ namespace CoffeeCrazy.Pages.Users
 {
     public class IndexModel : PageModel
     {
+        public List<User> Users { get; private set; }
+
         private readonly IUserRepo _UserRepo;
         private readonly IAccessService _accessService;
         public IndexModel(IUserRepo userCrudRepository, IAccessService accessService)
@@ -16,8 +18,6 @@ namespace CoffeeCrazy.Pages.Users
             _accessService = accessService;
         }
 
-        public List<User> Users { get; private set; }
-
         public async Task<IActionResult> OnGetAsync()
         {
             if (!_accessService.IsUserLoggedIn(HttpContext))
@@ -25,6 +25,7 @@ namespace CoffeeCrazy.Pages.Users
             try
             {
                 Users = await _UserRepo.GetAllAsync();
+
                 return Page();
             }
             catch (Exception ex)

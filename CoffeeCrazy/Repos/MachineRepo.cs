@@ -9,7 +9,7 @@ namespace CoffeeCrazy.Repos
     public class MachineRepo : ICRUDRepo<Machine>
     {
         private readonly string _connectionString;
-        private readonly ValidateDataRepo _validateDatabaseRepo;
+        //private readonly ValidateDataRepo _validateDatabaseRepo;
 
         public MachineRepo(IConfiguration configuration)
         {
@@ -30,7 +30,7 @@ namespace CoffeeCrazy.Repos
                     SqlCommand command = new SqlCommand(SQLquery, connection);
                     command.Parameters.AddWithValue("@Placement", toBeCreatedMachine.Placement);
                     command.Parameters.AddWithValue("@CampusId", (int)toBeCreatedMachine.Campus);
-                    //command.Parameters.AddWithValue("@MachineImage", (byte[]?)toBeCreatedMachine.MachineImage); //tilføjet MachineImage til Create.
+                    command.Parameters.AddWithValue("@MachineImage", (byte[]?)toBeCreatedMachine.MachineImage); //tilføjet MachineImage til Create.
 
                     await connection.OpenAsync();
                     await command.ExecuteNonQueryAsync();
@@ -78,7 +78,7 @@ namespace CoffeeCrazy.Repos
                                 Status = (bool)reader["Status"],
                                 Placement = reader["Placement"] as string,
                                 Campus = (Campus)reader["CampusId"],
-                                MachineImage = ValidateDataRepo.GetImageValue(reader["MachineImage"])   //MachineImage tilføjet 05.12 Datavalideringsmetode indsat, men vi har besluttet os at gøre det frontend primært.                               
+                                MachineImage = reader["MachineImage"] != DBNull.Value ? (byte[])reader["MachineImage"] : null                               
 
                             };
 
@@ -131,7 +131,7 @@ namespace CoffeeCrazy.Repos
                                 Status = (bool)reader["Status"],
                                 Placement = reader["Placement"] as string,
                                 Campus = (Campus)reader["CampusId"],
-                                MachineImage = ValidateDataRepo.GetImageValue(reader["MachineImage"])
+                                MachineImage = reader["MachineImage"] != DBNull.Value ? (byte[])reader["MachineImage"] : null
                             };
                         }
                         else
@@ -154,8 +154,6 @@ namespace CoffeeCrazy.Repos
                 throw;
             }
         }
-
-
 
 
         /// <summary>

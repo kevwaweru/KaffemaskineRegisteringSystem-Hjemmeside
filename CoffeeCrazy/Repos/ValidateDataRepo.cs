@@ -88,17 +88,17 @@ namespace CoffeeCrazy.Repos
         /// </summary>
         /// <param name="value"></param>
         /// <returns> returnerer en byte hvis der er noget i den gældende kolonne. Ellers sætter den kolonnen til at indeholde null, hvilekt den godt må </returns>
-        public static byte[]? GetImageValue(object value)
-        {
-            if (value != DBNull.Value)  //validere at vores værdi ikke er null så der kunne komme en 
-            {
-                return (byte[])value;
-            }
-            else
-            {
-                return null;
-            }
-        }
+        //public static byte[]? GetImageValue(object value)
+        //{
+        //    if (value != DBNull.Value)  //validere at vores værdi ikke er null så der kunne komme en 
+        //    {
+        //        return (byte[])value;
+        //    }
+        //    else
+        //    {
+        //        return null;
+        //    }
+        //}
 
 
     }

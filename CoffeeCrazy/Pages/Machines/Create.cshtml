@@ -22,6 +22,15 @@
         </select>
         <span asp-validation-for="Machine.Campus" class="text-danger"></span>
     </div>
+
+    <div>
+        <label class="fs-3" for="inputGroupFile01">Billede af kaffemaskinen</label> <br />
+
+        <input asp-for="PictureToBeUploaded" type="file" class="form-control" id="inputGroupFile01">
+
+        <span asp-validation-for="PictureToBeUploaded" class="text-danger"></span>
+    </div>
+
     <button type="submit" class="btn btn-primary">Create</button>
     <a class="btn btn-secondary btn-sm" asp-page="Index">Tilbage til oversigt</a>
 </form>

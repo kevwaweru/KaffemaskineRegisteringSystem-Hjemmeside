@@ -8,6 +8,8 @@ namespace CoffeeCrazy.Pages.Users
 {
     public class DetailsModel : PageModel
     {
+        public User User { get; set; }
+
         private readonly IUserRepo _userRepo;
         private readonly IAccessService _accessService;
 
@@ -17,33 +19,23 @@ namespace CoffeeCrazy.Pages.Users
             _accessService = accessService;
         }
 
-        public User User { get; set; }
-
-        // Impl noget det gør så man ikke kan se andres details, men kun den der er logget ind.
-
-
-        public async Task<IActionResult> OnGetAsync(int userId)
+        public async Task<IActionResult> OnGetAsync(int id)
         {
 
             if (!_accessService.IsUserLoggedIn(HttpContext))
                 return RedirectToPage("/Login/Login");
 
-            try
-            {
-                User = await _userRepo.GetByIdAsync(userId);
 
-                if (User == null)
-                {
-                    return NotFound("Brugeren blev ikke fundet.");
-                }
+            User = await _userRepo.GetByIdAsync(id);
 
-                return Page();
-            }
-            catch (Exception ex)
+
+            if (User == null)
             {
-                Console.WriteLine($"Error: {ex.Message}");
-                return StatusCode(500, "Der opstod en fejl. Prøv igen senere.");
+                return NotFound("Brugeren blev ikke fundet.");
             }
+
+            return Page();
+
         }
     }
 }

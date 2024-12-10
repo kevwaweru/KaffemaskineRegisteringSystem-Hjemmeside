@@ -26,6 +26,7 @@ namespace CoffeeCrazy.Repos
         {
             try
             {
+                
                 var (passwordHash, passwordSalt) = PasswordHelper.CreatePasswordHash(user.Password);
                 user.Password = Convert.ToBase64String(passwordHash);
                 user.PasswordSalt = Convert.ToBase64String(passwordSalt);
@@ -38,12 +39,13 @@ namespace CoffeeCrazy.Repos
                     SqlCommand command = new SqlCommand(query, connection);
                     command.Parameters.AddWithValue("@FirstName", user.FirstName);
                     command.Parameters.AddWithValue("@LastName", user.LastName);
-                    command.Parameters.AddWithValue("@Email", user.Email);
+                    command.Parameters.AddWithValue("@Email", user.Email.ToLower());
                     command.Parameters.AddWithValue("@Password", user.Password);
                     command.Parameters.AddWithValue("@PasswordSalt", user.PasswordSalt);
                     command.Parameters.AddWithValue("@CampusId", (int)user.Campus);
                     command.Parameters.AddWithValue("@RoleId", (int)user.Role);
                     command.Parameters.AddWithValue("@UserImage", (byte[]?)user.UserImage);
+
 
                     await connection.OpenAsync();
                     await command.ExecuteNonQueryAsync();
@@ -94,7 +96,9 @@ namespace CoffeeCrazy.Repos
                                 PasswordSalt = (string)reader["PasswordSalt"],
                                 Role = (Role)reader["RoleId"],
                                 Campus = (Campus)reader["CampusId"],
-                                UserImage = ValidateDataRepo.GetImageValue(reader["UserImage"])
+                                UserImage = reader["UserImage"] != DBNull.Value ? (byte[])reader["UserImage"] : null
+                                //UserImage = (byte[])reader["UserImage"]
+                                //UserId = reader["UserId"] != DBNull.Value ? (int?)reader["UserId"] : null
                             };
 
                             users.Add(user);
@@ -147,7 +151,7 @@ namespace CoffeeCrazy.Repos
                                 PasswordSalt = (string)reader["PasswordSalt"],
                                 Role = (Role)reader["RoleId"],
                                 Campus = (Campus)reader["CampusId"],
-                                UserImage = ValidateDataRepo.GetImageValue(reader["UserImage"])
+                                UserImage = reader["UserImage"] != DBNull.Value ? (byte[])reader["UserImage"] : null
                             };
                         }
                         else
