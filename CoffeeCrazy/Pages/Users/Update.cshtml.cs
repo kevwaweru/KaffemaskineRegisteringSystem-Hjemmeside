@@ -10,14 +10,19 @@ namespace CoffeeCrazy.Pages.Users
     {
         private readonly IUserRepo _userRepo;
         private readonly IAccessService _accessService;
+        private readonly IImageService _imageService;
 
-        public UpdateModel(IUserRepo userRepo, IAccessService accessService)
+        [BindProperty]
+        public User UserToBeUpdated { get; set; } 
+
+        public UpdateModel(IUserRepo userRepo, IAccessService accessService, IImageService imageService)
         {
             _userRepo = userRepo;
             _accessService = accessService;
+            _imageService = imageService;
         }
 
-        [BindProperty]
+        public async Task<IActionResult> OnGetAsync(int id)
         public User UserToBeUpdated { get; set; }
 
         public IActionResult OnGet(int id)
@@ -25,19 +30,23 @@ namespace CoffeeCrazy.Pages.Users
             if (!_accessService.IsUserLoggedIn(HttpContext))
                 return RedirectToPage("/Login/Login");
 
+            UserToBeUpdated = await _userRepo.GetByIdAsync(id);
+
             return Page();
         }
 
-        public IActionResult OnPost()
+        public async Task<IActionResult> OnPostAsync()
         {
+            ModelState.Remove("UserToBeUpdated.PasswordSalt");
+            ModelState.Remove("UserToBeUpdated.Password");
           
             if (!ModelState.IsValid)
             {
                 return Page();
             }
 
-            _userRepo.UpdateAsync(UserToBeUpdated);
-            return RedirectToPage("ResidentOverview");
+            await _userRepo.UpdateAsync(UserToBeUpdated);
+            return RedirectToPage("Index");
         }
     }
 }
