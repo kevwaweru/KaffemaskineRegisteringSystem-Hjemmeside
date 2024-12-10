@@ -16,7 +16,7 @@ namespace CoffeeCrazy.Pages.Machines
             _machineRepo = machineRepo;
             _jobRepo = jobRepo;
         }
-
+        
         public List<Machine> Machines { get; set; } = new();
         public List<Job> Jobs { get; set; } = new();
 

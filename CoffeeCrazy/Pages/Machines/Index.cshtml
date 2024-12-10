@@ -27,23 +27,37 @@
                         "background-color: #f0f0f0;")">
                     <div class="card-body d-flex flex-column justify-content-between">
                         
+                    
                         <a href="@Url.Page("Details", new { id = machine.MachineId })" class="text-decoration-none">
                            
                         </a>
 
-                        @if (HttpContext.Session.GetInt32("RoleId") == (int)Role.Admin)
-                        {
-                            <div class="dropdown mt-2">
+
+                        <div class="d-flex justify-content-between mt-auto">
+                            <div class="dropdown">
                                 <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Actions
+                                    Placement
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" asp-page="Edit" asp-route-id="@machine.MachineId">Edit</a></li>
-                                    <li><a class="dropdown-item" asp-page="Delete" asp-route-id="@machine.MachineId">Delete</a></li>
-                                    <li><a class="dropdown-item" asp-page="Details" asp-route-id="@machine.MachineId">View Details</a></li>
+                                    <li><a class="dropdown-item" href="#">@machine.Placement</a></li>
                                 </ul>
                             </div>
-                        }
+
+                            <!-- Admin Actions dropdown -->
+                            @if (HttpContext.Session.GetInt32("RoleId") == (int)Role.Admin)
+                            {
+                                <div class="dropdown">
+                                    <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Actions
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" asp-page="Edit" asp-route-id="@machine.MachineId">Edit</a></li>
+                                        <li><a class="dropdown-item" asp-page="Delete" asp-route-id="@machine.MachineId">Delete</a></li>
+                                        <li><a class="dropdown-item" asp-page="Details" asp-route-id="@machine.MachineId">View Details</a></li>
+                                    </ul>
+                                </div>
+                            }
+                        </div>
                     </div>
                 </div>
             </div>
@@ -52,6 +66,7 @@
 </div>
 
 <style>
+   
     .square-card {
         width: 100%;
         padding-top: 100%;
@@ -71,6 +86,7 @@
             background-color: rgba(0, 0, 0, 0.5); /* Optional: Add a translucent overlay for better readability */
         }
 </style>
+
 
 @functions {
     private string GetCardClass(Machine machine, List<Job> jobs)
