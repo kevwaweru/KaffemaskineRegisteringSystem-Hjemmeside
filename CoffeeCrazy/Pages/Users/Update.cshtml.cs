@@ -14,7 +14,6 @@ namespace CoffeeCrazy.Pages.Users
 
         [BindProperty]
         public User UserToBeUpdated { get; set; }
-        public IFormFile PictureToBeUploaded { get; set; }
 
         public UpdateModel(IUserRepo userRepo, IAccessService accessService, IImageService imageService)
         {
@@ -29,7 +28,6 @@ namespace CoffeeCrazy.Pages.Users
                 return RedirectToPage("/Login/Login");
 
             UserToBeUpdated = await _userRepo.GetByIdAsync(id);
-            PictureToBeUploaded = _imageService.ConvertArrayToIFormFile(UserToBeUpdated.UserImage);
             return Page();
         }
 
@@ -37,7 +35,8 @@ namespace CoffeeCrazy.Pages.Users
         {
             ModelState.Remove("UserToBeUpdated.PasswordSalt");
             ModelState.Remove("UserToBeUpdated.Password");
-          
+            ModelState.Remove("UserToBeUpdated.UserImage");
+
             if (!ModelState.IsValid)
             {
                 return Page();
@@ -46,5 +45,6 @@ namespace CoffeeCrazy.Pages.Users
             await _userRepo.UpdateAsync(UserToBeUpdated);
             return RedirectToPage("Index");
         }
+
     }
 }

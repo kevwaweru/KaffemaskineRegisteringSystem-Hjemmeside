@@ -10,11 +10,12 @@ namespace CoffeeCrazy.Repos
     public class UserRepo : IUserRepo
     {
         private readonly string _connectionString;
-        private readonly ImageService _imageService;
+        private readonly IImageService _imageService;
 
-        public UserRepo(IConfiguration configuration, ITokenRepo tokenGeneratorRepo)
+        public UserRepo(IConfiguration configuration, IImageService imageService)
         {
             _connectionString = configuration.GetConnectionString("DefaultConnection");
+            _imageService = imageService;
         }
 
         /// <summary>
@@ -26,7 +27,6 @@ namespace CoffeeCrazy.Repos
         {
             try
             {
-                
                 var (passwordHash, passwordSalt) = PasswordHelper.CreatePasswordHash(user.Password);
                 user.Password = Convert.ToBase64String(passwordHash);
                 user.PasswordSalt = Convert.ToBase64String(passwordSalt);
@@ -44,7 +44,7 @@ namespace CoffeeCrazy.Repos
                     command.Parameters.AddWithValue("@PasswordSalt", user.PasswordSalt);
                     command.Parameters.AddWithValue("@CampusId", (int)user.Campus);
                     command.Parameters.AddWithValue("@RoleId", (int)user.Role);
-                    command.Parameters.AddWithValue("@UserImage", (byte[]?)user.UserImage);
+                    command.Parameters.AddWithValue("@UserImage", user.UserImage != null ? _imageService.ConvertImageToByteArray(user.UserImage) : DBNull.Value);
 
 
                     await connection.OpenAsync();
@@ -92,11 +92,9 @@ namespace CoffeeCrazy.Repos
                                 FirstName = (string)reader["FirstName"],
                                 LastName = (string)reader["LastName"],
                                 Email = (string)reader["Email"],
-                                Password = (string)reader["Password"],
-                                PasswordSalt = (string)reader["PasswordSalt"],
                                 Role = (Role)reader["RoleId"],
                                 Campus = (Campus)reader["CampusId"],
-                                UserImage = reader["UserImage"] != DBNull.Value ? (byte[])reader["UserImage"] : null
+                                UserImage = reader["UserImage"] != DBNull.Value ? _imageService.ConvertArrayToIFormFile((byte[])reader["UserImage"]) : null
                             };
 
                             users.Add(user);
@@ -145,11 +143,9 @@ namespace CoffeeCrazy.Repos
                                 FirstName = (string)reader["FirstName"],
                                 LastName = (string)reader["LastName"],
                                 Email = (string)reader["Email"],
-                                Password = (string)reader["Password"],
-                                PasswordSalt = (string)reader["PasswordSalt"],
                                 Role = (Role)reader["RoleId"],
                                 Campus = (Campus)reader["CampusId"],
-                                UserImage = reader["UserImage"] != DBNull.Value ? (byte[])reader["UserImage"] : null
+                                UserImage = reader["UserImage"] != DBNull.Value ? _imageService.ConvertArrayToIFormFile((byte[])reader["UserImage"]) : null
                             };
                         }
                         else
@@ -176,34 +172,26 @@ namespace CoffeeCrazy.Repos
         {
             try
             {
-                var (passwordHash, passwordSalt) = PasswordHelper.CreatePasswordHash(toBeUpdatedUser.Password);
-                toBeUpdatedUser.Password = Convert.ToBase64String(passwordHash);
-                toBeUpdatedUser.PasswordSalt = Convert.ToBase64String(passwordSalt);
-
                 using (SqlConnection connection = new SqlConnection(_connectionString))
                 {
                     string query = @"UPDATE Users SET
                                         FirstName = @FirstName,
                                         LastName = @LastName,
                                         Email = @Email,
-                                        Password = @Password,
-                                        PasswordSalt = @PasswordSalt,
                                         CampusId = @CampusId,
                                         RoleId = @RoleId,
                                         UserImage = @UserImage
                                     WHERE
-                                        JobId = @JobId";
+                                        UserId = @UserId";
 
                     SqlCommand command = new SqlCommand(query, connection);
                     command.Parameters.AddWithValue("@FirstName", toBeUpdatedUser.FirstName);
                     command.Parameters.AddWithValue("@LastName", toBeUpdatedUser.LastName);
                     command.Parameters.AddWithValue("@Email", toBeUpdatedUser.Email);
-                    command.Parameters.AddWithValue("@Password", toBeUpdatedUser.Password);
-                    command.Parameters.AddWithValue("@PasswordSalt", toBeUpdatedUser.PasswordSalt);
                     command.Parameters.AddWithValue("@CampusId", (int)toBeUpdatedUser.Campus);
                     command.Parameters.AddWithValue("@RoleId", (int)toBeUpdatedUser.Role);
                     command.Parameters.AddWithValue("@UserId", toBeUpdatedUser.UserId);
-                    command.Parameters.AddWithValue("@UserImage", (byte[]?)toBeUpdatedUser.UserImage);
+                    command.Parameters.AddWithValue("@UserImage", toBeUpdatedUser.UserImage != null ? _imageService.ConvertImageToByteArray(toBeUpdatedUser.UserImage) : DBNull.Value);
 
                     await connection.OpenAsync();
                     await command.ExecuteNonQueryAsync();
