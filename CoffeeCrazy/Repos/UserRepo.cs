@@ -97,8 +97,6 @@ namespace CoffeeCrazy.Repos
                                 Role = (Role)reader["RoleId"],
                                 Campus = (Campus)reader["CampusId"],
                                 UserImage = reader["UserImage"] != DBNull.Value ? (byte[])reader["UserImage"] : null
-                                //UserImage = (byte[])reader["UserImage"]
-                                //UserId = reader["UserId"] != DBNull.Value ? (int?)reader["UserId"] : null
                             };
 
                             users.Add(user);

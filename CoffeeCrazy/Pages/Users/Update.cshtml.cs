@@ -13,7 +13,8 @@ namespace CoffeeCrazy.Pages.Users
         private readonly IImageService _imageService;
 
         [BindProperty]
-        public User UserToBeUpdated { get; set; } 
+        public User UserToBeUpdated { get; set; }
+        public IFormFile PictureToBeUploaded { get; set; }
 
         public UpdateModel(IUserRepo userRepo, IAccessService accessService, IImageService imageService)
         {
@@ -23,15 +24,12 @@ namespace CoffeeCrazy.Pages.Users
         }
 
         public async Task<IActionResult> OnGetAsync(int id)
-        public User UserToBeUpdated { get; set; }
-
-        public IActionResult OnGet(int id)
         {
             if (!_accessService.IsUserLoggedIn(HttpContext))
                 return RedirectToPage("/Login/Login");
 
             UserToBeUpdated = await _userRepo.GetByIdAsync(id);
-
+            PictureToBeUploaded = _imageService.ConvertArrayToIFormFile(UserToBeUpdated.UserImage);
             return Page();
         }
 

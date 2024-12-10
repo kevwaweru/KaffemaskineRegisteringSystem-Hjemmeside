@@ -5,6 +5,10 @@
 <h2>Update User</h2>
 
 <form method="post" enctype="multipart/form-data">
+    <input asp-for="UserToBeUpdated.UserId" type="hidden" />
+    <input asp-for="UserToBeUpdated.Role" type="hidden" />
+
+
     <div>
         <label>Fornavn</label>
         <input asp-for="UserToBeUpdated.FirstName" class="form-control" />
@@ -19,11 +23,6 @@
         <label>Email</label>
         <input asp-for="UserToBeUpdated.Email" class="form-control" />
         <span asp-validation-for="UserToBeUpdated.Email" class="text-danger"></span>
-    </div>
-    <div>
-        <label>Adgangskode</label>
-        <input asp-for="UserToBeUpdated.Password" type="password" class="form-control" />
-        <span asp-validation-for="UserToBeUpdated.Password" class="text-danger"></span>
     </div>
 
     <div>
@@ -51,7 +50,15 @@
         </div>
 
     }
-    
+    </<div>
+
+        <label class="fs-3">Profilbillede</label> <br />
+
+        <input asp-for="PictureToBeUploaded" type="file" class="form-control">
+
+        <span asp-validation-for="PictureToBeUploaded" class="text-danger"></span>
+
+    </div>
 
     <button type="submit" class="btn btn-primary">Update</button>
 </form>
