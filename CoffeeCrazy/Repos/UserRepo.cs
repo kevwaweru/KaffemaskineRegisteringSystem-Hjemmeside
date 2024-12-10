@@ -288,42 +288,6 @@ namespace CoffeeCrazy.Repos
                 Console.WriteLine("Error: " + ex.Message);
                 return false;
             }
-
-            //public async Task SaveProfilePictureAsync(int userId, IFormFile profilePicture)
-            //{
-            //    byte[] imageBytes = _imageService.ConvertImageToByteArray(profilePicture);
-            //
-            //    using (var connection = new SqlConnection(_connectionString))
-            //    {
-            //        await connection.OpenAsync();
-            //        string query = "UPDATE UserProfiles SET ProfilePicture = @ProfilePicture WHERE UserId = @UserId";
-            //
-            //        using (var command = new SqlCommand(query, connection))
-            //        {
-            //            command.Parameters.AddWithValue("@ProfilePicture", imageBytes);
-            //            command.Parameters.AddWithValue("@UserId", userId);
-            //            await command.ExecuteNonQueryAsync();
-            //        }
-            //    }
-            //}
-
-            // Method to retrieve profile picture from the database //Read method
-            //public async Task<byte[]> GetProfilePictureAsync(int userId)
-            //{
-            //    using (var connection = new SqlConnection(_connectionString))
-            //    {
-            //        await connection.OpenAsync();
-            //        string query = "SELECT ProfilePicture FROM UserProfiles WHERE UserId = @UserId";
-            //
-            //        using (var command = new SqlCommand(query, connection))
-            //        {
-            //            command.Parameters.AddWithValue("@UserId", userId);
-            //
-            //            var result = await command.ExecuteScalarAsync();
-            //            return result as byte[];  // Return the byte array of the profile picture
-            //        }
-            //    } //tilføj evt fejl kommentar hvis brugen prøver at hente et biled men ikke har uploadet et først 
-            //}
         }
     }
 }
