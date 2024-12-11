@@ -16,10 +16,10 @@
         <dd class="col-sm-10">@Model.User.Campus</dd>
 
         <dt class="col-sm-2">Billede:</dt>
-        @if (Model.User.UserImage != null)
+        @if (Model.User.UserImageFile != null)
         {
             <dd class="col-sm-10">
-                <img src="data:image/jpeg;base64,@Model.User.UserImageBase64" alt="User Image" style="max-width:150px; max-height:150px;" />
+                <img src="data:image/jpeg;base64,@Model.Base64StringUserImage" alt="Billede af @Model.User.FirstName" style="max-width:150px; max-height:150px;" />
             </dd>
         }
         else

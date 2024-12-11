@@ -11,17 +11,20 @@ namespace CoffeeCrazy.Pages.Users
     {
         private readonly IUserRepo _userRepo;
         private readonly IAccessService _accessService;
+        private readonly IImageService _imageService;
 
         public List<User> Users { get; private set; } = new List<User>();
-        public List<User> FilteredUsers { get; private set; } = new List<User>();
+        public List<User> FilteredUsersByCampus { get; private set; } = new List<User>();
+        public Dictionary<int, string?> UserImageBase64Strings { get; private set; } = new();
 
         [BindProperty(SupportsGet = true)]
         public Campus? CampusFilter { get; set; }
 
-        public IndexModel(IUserRepo userRepo, IAccessService accessService)
+        public IndexModel(IUserRepo userRepo, IAccessService accessService, IImageService imageService)
         {
             _userRepo = userRepo;
             _accessService = accessService;
+            _imageService = imageService;
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -33,17 +36,19 @@ namespace CoffeeCrazy.Pages.Users
 
             try
             {
-                // Hent brugere
                 Users = await _userRepo.GetAllAsync();
 
-                // Standard til Campus Roskilde, hvis CampusFilter er null
                 if (!CampusFilter.HasValue)
                 {
                     CampusFilter = Campus.Roskilde;
                 }
 
-                // Filtrer brugere baseret på valgt Campus
-                FilteredUsers = Users.Where(user => user.Campus == CampusFilter).ToList();
+                FilteredUsersByCampus = Users.Where(user => user.Campus == CampusFilter).ToList();
+
+                foreach (User user in FilteredUsersByCampus)
+                {
+                    UserImageBase64Strings.Add(user.UserId, _imageService.FormFileToBase64String(user.UserImageFile));
+                }
 
                 return Page();
             }

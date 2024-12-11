@@ -7,7 +7,6 @@
 <form method="post" enctype="multipart/form-data">
     <input asp-for="UserToBeUpdated.UserId" type="hidden" />
     <input asp-for="UserToBeUpdated.Role" type="hidden" />
-    <input asp-for="UserToBeUpdated.UserImage" type="hidden" />
 
     <div>
         <label>Fornavn</label>
@@ -37,13 +36,11 @@
         </select>
         <span asp-validation-for="UserToBeUpdated.Campus" class="text-danger"></span>
     </div>
-    @if (Model.UserToBeUpdated.UserImage != null)
+    @if (Model.UserToBeUpdated.UserImageFile != null)
     {
         <div class="mb-3">
-            <img src="data:image/jpeg;base64,@Model.UserToBeUpdated.UserImageBase64" alt="User Image" style="max-width:150px; max-height:150px;" />
+            <img src="data:image/jpeg;base64,@Model.Base64StringUserImage" alt="User Image" style="max-width:150px; max-height:150px;" />
         </div>
-        <!-- Hidden field to store existing image -->
-        <input type="hidden" asp-for="UserToBeUpdated.UserImageBase64" />
     }
     else
     {
@@ -54,8 +51,8 @@
 
     <div>
         <label for="UserImage" class="form-label">Profilbillede</label>
-        <input asp-for="UserToBeUpdated.UserImage" type="file" class="form-control" id="UserImage">
-        <span asp-validation-for="UserToBeUpdated.UserImage" class="text-danger"></span>
+        <input asp-for="UserToBeUpdated.UserImageFile" type="file" class="form-control" id="UserImage">
+        <span asp-validation-for="UserToBeUpdated.UserImageFile" class="text-danger"></span>
     </div>
 
     <button type="submit" class="btn btn-primary">Update</button>

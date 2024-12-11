@@ -15,22 +15,7 @@ namespace CoffeeCrazy.Models
         public string PasswordSalt { get; set; }
         public Role Role { get; set; }
         public Campus Campus { get; set; }
-        public IFormFile? UserImage { get; set; }
-        public string? UserImageBase64
-        {
-            get
-            {
-                if (UserImage != null)
-                {
-                    using (var memoryStream = new MemoryStream())
-                    {
-                        UserImage.CopyTo(memoryStream);
-                        return Convert.ToBase64String(memoryStream.ToArray());
-                    }
-                }
-                return null;
-            }
-        }
+        public IFormFile? UserImageFile { get; set; }
     }
 }
     

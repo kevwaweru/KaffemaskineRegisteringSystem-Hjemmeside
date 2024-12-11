@@ -44,7 +44,7 @@ namespace CoffeeCrazy.Repos
                     command.Parameters.AddWithValue("@PasswordSalt", user.PasswordSalt);
                     command.Parameters.AddWithValue("@CampusId", (int)user.Campus);
                     command.Parameters.AddWithValue("@RoleId", (int)user.Role);
-                    command.Parameters.AddWithValue("@UserImage", user.UserImage != null ? _imageService.ConvertImageToByteArray(user.UserImage) : DBNull.Value);
+                    command.Parameters.AddWithValue("@UserImage", user.UserImageFile != null ? _imageService.FormFileToByteArray(user.UserImageFile) : DBNull.Value);
 
 
                     await connection.OpenAsync();
@@ -94,7 +94,7 @@ namespace CoffeeCrazy.Repos
                                 Email = (string)reader["Email"],
                                 Role = (Role)reader["RoleId"],
                                 Campus = (Campus)reader["CampusId"],
-                                UserImage = reader["UserImage"] != DBNull.Value ? _imageService.ConvertArrayToIFormFile((byte[])reader["UserImage"]) : null
+                                UserImageFile = reader["UserImage"] != DBNull.Value ? _imageService.ByteArrayToFormFile((byte[])reader["UserImage"]) : null
                             };
 
                             users.Add(user);
@@ -145,7 +145,7 @@ namespace CoffeeCrazy.Repos
                                 Email = (string)reader["Email"],
                                 Role = (Role)reader["RoleId"],
                                 Campus = (Campus)reader["CampusId"],
-                                UserImage = reader["UserImage"] != DBNull.Value ? _imageService.ConvertArrayToIFormFile((byte[])reader["UserImage"]) : null
+                                UserImageFile = reader["UserImage"] != DBNull.Value ? _imageService.ByteArrayToFormFile((byte[])reader["UserImage"]) : null
                             };
                         }
                         else
@@ -191,7 +191,7 @@ namespace CoffeeCrazy.Repos
                     command.Parameters.AddWithValue("@CampusId", (int)toBeUpdatedUser.Campus);
                     command.Parameters.AddWithValue("@RoleId", (int)toBeUpdatedUser.Role);
                     command.Parameters.AddWithValue("@UserId", toBeUpdatedUser.UserId);
-                    command.Parameters.AddWithValue("@UserImage", toBeUpdatedUser.UserImage != null ? _imageService.ConvertImageToByteArray(toBeUpdatedUser.UserImage) : DBNull.Value);
+                    command.Parameters.AddWithValue("@UserImage", toBeUpdatedUser.UserImageFile != null ? _imageService.FormFileToByteArray(toBeUpdatedUser.UserImageFile) : _imageService.FormFileToByteArray((await GetByIdAsync(toBeUpdatedUser.UserId)).UserImageFile));
 
                     await connection.OpenAsync();
                     await command.ExecuteNonQueryAsync();

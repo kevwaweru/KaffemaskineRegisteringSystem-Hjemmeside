@@ -8,15 +8,18 @@ namespace CoffeeCrazy.Pages.Users
 {
     public class DetailsModel : PageModel
     {
-        public User User { get; set; }
-
         private readonly IUserRepo _userRepo;
         private readonly IAccessService _accessService;
+        private readonly IImageService _imageService;
 
-        public DetailsModel(IUserRepo userRepo, IAccessService accessService)
+        public User User { get; set; }
+        public string? Base64StringUserImage { get; set; }
+
+        public DetailsModel(IUserRepo userRepo, IAccessService accessService, IImageService imageService)
         {
             _userRepo = userRepo;
             _accessService = accessService;
+            _imageService = imageService;
         }
 
         public async Task<IActionResult> OnGetAsync(int id)
@@ -27,6 +30,7 @@ namespace CoffeeCrazy.Pages.Users
 
 
             User = await _userRepo.GetByIdAsync(id);
+            Base64StringUserImage = _imageService.FormFileToBase64String(User.UserImageFile);
 
 
             if (User == null)

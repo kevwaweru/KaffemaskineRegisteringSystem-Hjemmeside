@@ -4,12 +4,13 @@
 @model CoffeeCrazy.Pages.Users.IndexModel
 
 <div class="container-fluid mt-4">
+
     <div class="row">
         @* Venstre Sidebar til campus filter *@
         <div class="col-2">
             <h5>Vælg Campus</h5>
             <div class="btn-group-vertical w-100" role="group">
-                @foreach (Campus campus in Enum.GetValues(typeof(Campus)).Cast<Campus>())
+                @foreach (Campus campus in Enum.GetValues<Campus>())
                 {
                     string buttonClass;
 
@@ -21,8 +22,7 @@
                     {
                         buttonClass = "btn-outline-dark";
                     }
-
-                    <a href="@($"?CampusFilter={(int)campus}")" class="btn @buttonClass">
+                    <a href="@($"?CampusFilter={campus}")" class="btn @buttonClass">
                         @campus
                     </a>
                 }
@@ -32,7 +32,7 @@
         @*User oversigt *@
         <div class="col-10">
             <div class="d-flex justify-content-between align-items-center">
-                <h3>
+                <h4>
                     @if (Model.CampusFilter.HasValue)
                     {
                         <text>Brugere for Campus: @Model.CampusFilter.Value</text>
@@ -41,12 +41,12 @@
                     {
                         <text>Brugere for Campus: Roskilde</text>
                     }
-                </h3>
+                </h4>
                 <a class="btn btn-success btn-sm" asp-page="Create">Opret Bruger</a>
             </div>
 
             <div class="d-flex flex-wrap mt-3">
-                @foreach (User user in Model.FilteredUsers)
+                @foreach (User user in Model.FilteredUsersByCampus)
                 {
                     <div class="card me-3 mb-3" style="width: 18rem;">
                         <div class="card-header text-center">
@@ -56,11 +56,9 @@
                             <p class="mb-1"><strong>Email:</strong> @user.Email</p>
                             <p class="mb-1"><strong>Rolle:</strong> @user.Role</p>
                             <p class="mb-1"><strong>Campus:</strong> @user.Campus</p>
-                            @if (!string.IsNullOrEmpty(user.UserImageBase64))
+                            @if (user.UserImageFile != null)
                             {
-                                <div class="text-center mb-3">
-                                    <img src="data:image/jpeg;base64,@user.UserImageBase64" alt="Brugerbillede" class="img-thumbnail" style="max-width: 100px;">
-                                </div>
+                                <img src="data:image/jpeg;base64,@Model.UserImageBase64Strings[user.UserId]" alt="Brugerbillede" style="padding: 0.1rem; height: 6rem; width: 8rem; object-fit: cover">
                             }
                             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                                 <a class="btn btn-warning btn-sm" asp-page="Update" asp-route-id="@user.UserId">Rediger</a>
@@ -69,7 +67,7 @@
                         </div>
                     </div>
                 }
-                @if (!Model.FilteredUsers.Any())
+                @if (!Model.FilteredUsersByCampus.Any())
                 {
                     <p>Ingen brugere fundet for dette campus.</p>
                 }

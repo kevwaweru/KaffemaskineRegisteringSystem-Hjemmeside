@@ -14,6 +14,7 @@ namespace CoffeeCrazy.Pages.Users
 
         [BindProperty]
         public User UserToBeUpdated { get; set; }
+        public string? Base64StringUserImage { get; set; }
 
         public UpdateModel(IUserRepo userRepo, IAccessService accessService, IImageService imageService)
         {
@@ -25,9 +26,13 @@ namespace CoffeeCrazy.Pages.Users
         public async Task<IActionResult> OnGetAsync(int id)
         {
             if (!_accessService.IsUserLoggedIn(HttpContext))
+            {
                 return RedirectToPage("/Login/Login");
+            }
 
             UserToBeUpdated = await _userRepo.GetByIdAsync(id);
+            Base64StringUserImage = _imageService.FormFileToBase64String(UserToBeUpdated.UserImageFile);
+
             return Page();
         }
 
@@ -45,6 +50,6 @@ namespace CoffeeCrazy.Pages.Users
             await _userRepo.UpdateAsync(UserToBeUpdated);
             return RedirectToPage("Index");
         }
-
+       
     }
 }
