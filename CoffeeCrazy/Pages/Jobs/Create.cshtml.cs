@@ -11,7 +11,7 @@ namespace CoffeeCrazy.Pages.Jobs
         private readonly ICRUDRepo<Job> _jobRepo;
         private readonly ICRUDRepo<Machine> _machineRepo;
 
-        IAccessService _accessService;
+        private readonly IAccessService _accessService;
 
         public List<Machine> Machines { get; set; } = new ();
 
@@ -27,7 +27,13 @@ namespace CoffeeCrazy.Pages.Jobs
         public async Task<IActionResult> OnGetAsync()
         {
             if (!_accessService.IsUserLoggedIn(HttpContext))
+            {
                 return RedirectToPage("/Login/Login");
+            }
+            if (!_accessService.IsAdmin(HttpContext))
+            {
+                return RedirectToPage("/Errors/AccessDenied");
+            }
 
             Machines = await _machineRepo.GetAllAsync();
             return Page();
@@ -44,10 +50,6 @@ namespace CoffeeCrazy.Pages.Jobs
 
                     jobToBeCreated.Title = NewJob.Title;
                     jobToBeCreated.Description = NewJob.Description;
-                    jobToBeCreated.Comment = "null";
-                    jobToBeCreated.IsCompleted = false;
-                    jobToBeCreated.DateCreated = DateTime.UtcNow;
-                    jobToBeCreated.Deadline = DateTime.UtcNow.AddMinutes(1);
                     jobToBeCreated.FrequencyId = NewJob.FrequencyId;
                     jobToBeCreated.MachineId = machine.MachineId;
                     
@@ -56,10 +58,6 @@ namespace CoffeeCrazy.Pages.Jobs
             }
             else
             {
-                NewJob.IsCompleted = false;
-                NewJob.Comment = "null";
-                NewJob.DateCreated = DateTime.UtcNow;
-                NewJob.Deadline = DateTime.UtcNow.AddMinutes(1);
                 await _jobRepo.CreateAsync(NewJob);
             }
             return RedirectToPage("/Jobs/Index");

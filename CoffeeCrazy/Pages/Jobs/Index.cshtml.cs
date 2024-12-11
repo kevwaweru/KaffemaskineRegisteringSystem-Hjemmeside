@@ -37,6 +37,10 @@ namespace CoffeeCrazy.Pages.Jobs
             {
                 return RedirectToPage("/Login/Login");
             }
+            if (!_accessService.IsAdmin(HttpContext))
+            {
+                return RedirectToPage("/Errors/AccessDenied");
+            }
 
             //Finder jobs som er ældre end 6 måneder
             OlderThan6MonthsJobs = _jobRepo.GetAllAsync().Result.FindAll(parameter => parameter.Deadline < DateTime.UtcNow.AddMonths(-6));

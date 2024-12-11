@@ -25,10 +25,13 @@ namespace CoffeeCrazy.Pages.Jobs
         public async Task <IActionResult> OnGetAsync(int Id)
         {
             if (!_accessService.IsUserLoggedIn(HttpContext))
+            {
                 return RedirectToPage("/Login/Login");
-
+            }
             if (!_accessService.IsAdmin(HttpContext))
+            {
                 return RedirectToPage("/Errors/AccessDenied");
+            }
 
             JobToUpdate = await _jobRepo.GetByIdAsync(Id);
             Machines = await _machineRepo.GetAllAsync();
