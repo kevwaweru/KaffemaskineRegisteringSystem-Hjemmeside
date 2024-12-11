@@ -1,49 +1,52 @@
 ﻿@page
 @model CoffeeCrazy.Pages.Jobs.CreateModel
 @{
-    ViewData["Title"] = "Opret Opgaver";
+    ViewData["Title"] = "Opret Opgave";
 }
-
-<h1>Opret Opgaver</h1>
-
-<form method="post">
-    <div>
-        <label>Title</label>
-        <input class="form-control" asp-for="NewJob.Title" />
-        <span asp-validation-for="NewJob.Title" class="text-danger"></span>
+<div class="card shadow p-4">
+    <div class="mb-2">
+        <h1>Opret Opgave</h1>
     </div>
 
-    <div>
-        <label>Description</label>
-        <input class="form-control" asp-for="NewJob.Description" />
-        <span asp-validation-for="NewJob.Description" class="text-danger"></span>
-    </div>
+    <form method="post">
+        <div class="mb-2">
+            <label>Titel</label>
+            <input class="form-control" asp-for="NewJob.Title" />
+            <span asp-validation-for="NewJob.Title" class="text-danger"></span>
+        </div>
 
-    <div>
-        <label>Hvor tit?</label>
-        <select class="form-select" asp-for="NewJob.FrequencyId">
+        <div class="mb-2">
+            <label>Description</label>
+            <input class="form-control" asp-for="NewJob.Description" />
+            <span asp-validation-for="NewJob.Description" class="text-danger"></span>
+        </div>
 
-            <option value=1>Daglig</option>
-            <option value=2>Ugenligt</option>
-            <option value=3>Månedligt</option>
+        <div class="mb-2">
+            <label>Hvor tit?</label>
+            <select class="form-select" asp-for="NewJob.FrequencyId">
 
-        </select>
-        <span asp-validation-for="NewJob.FrequencyId" class="text-danger"></span>
-    </div>
+                <option value=1>Daglig</option>
+                <option value=2>Ugenligt</option>
+                <option value=3>Månedligt</option>
 
-    <div>
-        <label>Vælg Kaffemaskine</label>
-        <select asp-for="NewJob.MachineId" class="form-control">
-            <option value=99>Alle maskiner</option>
-            @foreach (var Machine in Model.Machines)
-            {
-                <option value="@Machine.MachineId">@Machine.Placement</option>
-            }
-        </select>
-        <span asp-validation-for="NewJob.MachineId" class="text-danger"></span>
-    </div>
+            </select>
+            <span asp-validation-for="NewJob.FrequencyId" class="text-danger"></span>
+        </div>
 
-    <button type="submit" class="btn btn-primary">Opret opgave</button>
-    <a class="btn btn-secondary btn-sm" asp-page="Index">Tilbage til oversigt</a>
+        <div class="mb-2">
+            <label>Vælg Kaffemaskine</label>
+            <select asp-for="NewJob.MachineId" class="form-control">
+                <option value=99>Alle maskiner</option>
+                @foreach (var Machine in Model.Machines)
+                {
+                    <option value="@Machine.MachineId">@Machine.Placement</option>
+                }
+            </select>
+            <span asp-validation-for="NewJob.MachineId" class="text-danger"></span>
+        </div>
 
-</form>
+        <button type="submit" class="btn btn-success">Opret opgave</button>
+        <a class="btn btn-dark" asp-page="Index">Tilbage til oversigt</a>
+
+    </form>
+</div>

@@ -1,62 +1,66 @@
-﻿@page 
+﻿@page
 @model CoffeeCrazy.Pages.Jobs.UpdateModel
 @{
 }
-
-<h1>Opdater dine opgaver, samt template PAS PÅ man retter det orginale template!!!!!!!!!!!!!!!!</h1>
-
-<input type="hidden" asp-for="JobToUpdate.JobId" />
-<form method="post">
-    <div>
-        <label>Title</label>
-        <input class="form-control" asp-for="JobToUpdate.Title" />
-        <span asp-validation-for="JobToUpdate.Title" class="text-danger"></span>
+<div class="card shadow p-4">
+    <div class="mb-2">
+        <h1>Rediger Opgave</h1>
     </div>
 
-    <div>
-        <label>Description</label>
-        <input class="form-control" asp-for="JobToUpdate.Description" />
-        <span asp-validation-for="JobToUpdate.Description" class="text-danger"></span>
-    </div>
+    <input type="hidden" asp-for="JobToUpdate.JobId" />
+    <form method="post">
+        <div class="mb-2">
+            <label>Title</label>
+            <input class="form-control" asp-for="JobToUpdate.Title" />
+            <span asp-validation-for="JobToUpdate.Title" class="text-danger"></span>
+        </div>
 
-    <div>
-        <label>Comment</label>
-        <input class ="form-control" asp-for="JobToUpdate.Comment" />
-        <span asp-validation-for="JobToUpdate.Comment" class="text-danger"></span>
-    </div>
+        <div class="mb-2">
+            <label>Description</label>
+            <input class="form-control" asp-for="JobToUpdate.Description" />
+            <span asp-validation-for="JobToUpdate.Description" class="text-danger"></span>
+        </div>
 
-    <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-        <input asp-for="JobToUpdate.IsCompleted" value="true" type="radio" class="btn-check" id="btnradio1" autocomplete="off" />
-        <label class="btn btn-outline-primary" for="btnradio1">Yes</label>
+        <div class="mb-2">
+            <label>Comment</label>
+            <input class="form-control" asp-for="JobToUpdate.Comment" />
+            <span asp-validation-for="JobToUpdate.Comment" class="text-danger"></span>
+        </div>
 
-        <input asp-for="JobToUpdate.IsCompleted" value="false" type="radio" class="btn-check" id="btnradio2" autocomplete="off" />
-        <label class="btn btn-outline-primary" for="btnradio2">No</label>
-    </div>
+        <div class="btn-group mb-2" role="group" aria-label="Basic radio toggle button group">
+            <input asp-for="JobToUpdate.IsCompleted" value="true" type="radio" class="btn-check" id="btnradio1" autocomplete="off" />
+            <label class="btn btn-outline-primary" for="btnradio1">Yes</label>
 
-    <div>
-        <label>Hvor tit?</label>
-        <select asp-for="JobToUpdate.FrequencyId" class="form-select">
+            <input asp-for="JobToUpdate.IsCompleted" value="false" type="radio" class="btn-check" id="btnradio2" autocomplete="off" />
+            <label class="btn btn-outline-primary" for="btnradio2">No</label>
+        </div>
 
-            <option value=1>Daglig</option>
-            <option value=2>Ugenligt</option>
-            <option value=3>Månedligt</option>
+        <div class="mb-2">
+            <label>Hvor tit?</label>
+            <select asp-for="JobToUpdate.FrequencyId" class="form-select">
 
-        </select>
-        <span asp-validation-for="JobToUpdate.FrequencyId" class="text-danger"></span>
-    </div>
+                <option value=1>Daglig</option>
+                <option value=2>Ugenligt</option>
+                <option value=3>Månedligt</option>
 
-    <div>
-        <label>Vælg Kaffemaskine</label>
-        <select asp-for="JobToUpdate.MachineId" class="form-control">
-            <option value=99>Alle maskiner</option>
-            @foreach (var Machine in Model.Machines)
-            {
-                <option value="@Machine.MachineId">@Machine.Placement</option>
-            }
-        </select>
-        <span asp-validation-for="JobToUpdate.MachineId" class="text-danger"></span>
-    </div>
+            </select>
+            <span asp-validation-for="JobToUpdate.FrequencyId" class="text-danger"></span>
+        </div>
 
-    <button type="submit">Opdater</button>
+        <div class="mb-2">
+            <label>Vælg Kaffemaskine</label>
+            <select asp-for="JobToUpdate.MachineId" class="form-control">
+                <option value=99>Alle maskiner</option>
+                @foreach (var Machine in Model.Machines)
+                {
+                    <option value="@Machine.MachineId">@Machine.Placement</option>
+                }
+            </select>
+            <span asp-validation-for="JobToUpdate.MachineId" class="text-danger"></span>
+        </div>
 
-</form>
+        <button type="submit" class="btn btn-success">Opdater</button>
+        <a class="btn btn-dark" asp-page="Index">Tilbage til oversigt</a>
+
+    </form>
+</div>
