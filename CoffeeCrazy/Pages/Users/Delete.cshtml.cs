@@ -26,9 +26,9 @@ namespace CoffeeCrazy.Pages.Users
             {
                 return RedirectToPage("/Login/Login");
             }
-            if (!_accessService.HasPermissionToDeleteAdmin(HttpContext, id))
+            if (!_accessService.IsAdmin(HttpContext))
             {
-                return RedirectToPage("/Login/Login");
+                return RedirectToPage("/Errors/AccessDenied");
             }
 
             await _userRepo.DeleteAsync(await _userRepo.GetByIdAsync(id));

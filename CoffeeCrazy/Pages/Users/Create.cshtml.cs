@@ -32,6 +32,10 @@ namespace CoffeeCrazy.Pages.Users
             {
                 return RedirectToPage("/Login/Login");
             }
+            if (!_accessService.IsAdmin(HttpContext))
+            {
+                return RedirectToPage("/Errors/AccessDenied");
+            }
 
             //ModelState.Remove("PasswordSalt");
             //if (!ModelState.IsValid)

@@ -29,6 +29,10 @@ namespace CoffeeCrazy.Pages.Users
             {
                 return RedirectToPage("/Login/Login");
             }
+            if (!_accessService.IsAdmin(HttpContext))
+            {
+                return RedirectToPage("/Errors/AccessDenied");
+            }
 
             UserToBeUpdated = await _userRepo.GetByIdAsync(id);
             Base64StringUserImage = _imageService.FormFileToBase64String(UserToBeUpdated.UserImageFile);
