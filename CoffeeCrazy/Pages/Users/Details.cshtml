@@ -31,6 +31,23 @@
             </dd>
         }
     </div>
+    <form method="post" enctype="multipart/form-data">
+        <input asp-for="User.UserId" type="hidden" />
+        <input asp-for="User.FirstName" type="hidden" />
+        <input asp-for="User.LastName" type="hidden" />
+        <input asp-for="User.Email" type="hidden" />
+        <input asp-for="User.Role" type="hidden" />
+        <input asp-for="User.Campus" type="hidden" />
+
+        <div class="mb-2">
+            <label for="UserImage" class="form-label">Skift Profilbillede</label>
+            <input asp-for="User.UserImageFile" type="file" class="form-control" id="UserImage">
+            <span asp-validation-for="User.UserImageFile" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-success">Update</button>
+
+    </form>
+
     <div class="mt-2 d-grid gap-2 d-md-flex justify-content-md-end">
         <a class="btn btn-warning" asp-page="/Login/Password/ChangePassword">Skift Password</a>
         <a class="btn btn-dark" asp-page="/Machines/Index">Tilbage</a>

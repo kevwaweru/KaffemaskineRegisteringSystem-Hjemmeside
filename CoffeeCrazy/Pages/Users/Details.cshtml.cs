@@ -41,5 +41,19 @@ namespace CoffeeCrazy.Pages.Users
             return Page();
 
         }
+        public async Task<IActionResult> OnPostAsync()
+        {
+            ModelState.Remove("UserToBeUpdated.PasswordSalt");
+            ModelState.Remove("UserToBeUpdated.Password");
+            ModelState.Remove("UserToBeUpdated.UserImage");
+
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
+
+            await _userRepo.UpdateAsync(User);
+            return RedirectToPage("Index");
+        }
     }
 }
