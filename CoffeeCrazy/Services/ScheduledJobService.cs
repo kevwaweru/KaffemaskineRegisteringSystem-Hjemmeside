@@ -26,14 +26,14 @@ namespace CoffeeCrazy.Services
             {
                 var now = DateTime.UtcNow;
 
-                if (now.Hour == 7 && now.Minute == 0)
+                if (now.Hour == 07 && now.Minute == 00)
                 {
                     await CreateJobsForTodayAsync(now);
                 }
 
-           
-            await Task.Delay(TimeSpan.FromHours(1), stoppingToken); 
-    
+
+                await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
+
 
             }
         }
@@ -71,17 +71,20 @@ namespace CoffeeCrazy.Services
         {
             foreach (var machine in machines)
             {
-                var existingJobs = await _jobRepo.GetAllAsync();
-                var dailyJobs = existingJobs.Where(j => j.MachineId == machine.MachineId && j.FrequencyId == 1).ToList();
+                var allJobs = await _jobRepo.GetAllAsync();
+                var dailyJobs = allJobs.Where(j => j.MachineId == machine.MachineId && j.FrequencyId == 1).ToList();
+                var groupedDailyJobs = dailyJobs.GroupBy(j => j.Title).ToList();
 
-                foreach (var job in dailyJobs)
+                foreach (var jobGroup in groupedDailyJobs)
                 {
+                    var job = jobGroup.First();
+
                     var newJob = new Job
                     {
                         Title = job.Title,
                         Description = job.Description,
                         Comment = job.Comment,
-                        IsCompleted = job.IsCompleted,
+                        IsCompleted = false,
                         DateCreated = currentTime,
                         Deadline = currentTime.AddDays(1),
                         FrequencyId = 1,
@@ -91,7 +94,7 @@ namespace CoffeeCrazy.Services
                     await _jobRepo.CreateAsync(newJob);
                 }
             }
-        }   
+        }
 
         /// <summary>
         /// Creates weekly jobs for all machines.
@@ -102,17 +105,20 @@ namespace CoffeeCrazy.Services
         {
             foreach (var machine in machines)
             {
-                var existingJobs = await _jobRepo.GetAllAsync();
-                var weeklyJobs = existingJobs.Where(j => j.MachineId == machine.MachineId && j.FrequencyId == 1).ToList();
+                var allJobs = await _jobRepo.GetAllAsync();
+                var weeklyJobs = allJobs.Where(j => j.MachineId == machine.MachineId && j.FrequencyId == 1).ToList();
+                var groupedWeeklyJobs = weeklyJobs.GroupBy(j => j.Title).ToList();
 
-                foreach (var job in weeklyJobs)
+                foreach (var jobGroup in groupedWeeklyJobs)
                 {
+                    var job = jobGroup.First();
+
                     var newJob = new Job
                     {
                         Title = job.Title,
                         Description = job.Description,
                         Comment = job.Comment,
-                        IsCompleted = job.IsCompleted,
+                        IsCompleted = false,
                         DateCreated = currentTime,
                         Deadline = currentTime.AddDays(7),
                         FrequencyId = 2,
@@ -133,22 +139,24 @@ namespace CoffeeCrazy.Services
         {
             foreach (var machine in machines)
             {
-                       var existingJobs = await _jobRepo.GetAllAsync();
-                var monthlyJob = existingJobs.Where(j => j.MachineId == machine.MachineId && j.FrequencyId == 1).ToList();
-
-                foreach (var job in monthlyJob)
+                var allJobs = await _jobRepo.GetAllAsync();
+                var monthlyJob = allJobs.Where(j => j.MachineId == machine.MachineId && j.FrequencyId == 1).ToList();
+                var groupedWeeklyJobs = monthlyJob.GroupBy(j => j.Title).ToList();
+                foreach (var jobGroup in groupedWeeklyJobs)
                 {
+                    var job = jobGroup.First();
+
                     var newJob = new Job
                     {
                         Title = job.Title,
                         Description = job.Description,
                         Comment = job.Comment,
-                        IsCompleted = job.IsCompleted,
+                        IsCompleted = false,
                         DateCreated = currentTime,
                         Deadline = currentTime.AddDays(7),
                         FrequencyId = 2,
                         MachineId = machine.MachineId,
-                        UserId = job.UserId,
+                        UserId = null,
                     };
                     await _jobRepo.CreateAsync(newJob);
                 }

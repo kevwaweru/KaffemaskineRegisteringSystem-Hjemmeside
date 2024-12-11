@@ -13,11 +13,10 @@ namespace CoffeeCrazy
 
             // Add services to the container.
             builder.Services.AddRazorPages();
-            builder.Services.AddHostedService<ScheduledJobService>();
 
             // repositories
             builder.Services.AddTransient<ICRUDRepo<Job>, JobRepo>();
-            builder.Services.AddScoped<ICRUDRepo<Machine>, MachineRepo>();
+            builder.Services.AddTransient<ICRUDRepo<Machine>, MachineRepo>();
             builder.Services.AddScoped<ITokenRepo, TokenRepo>();
             builder.Services.AddTransient<IUserRepo, UserRepo>();
             builder.Services.AddScoped<IPasswordRepo, PasswordRepo>();
@@ -37,6 +36,9 @@ namespace CoffeeCrazy
                 options.Cookie.HttpOnly = true; // Makes Cookies Safe
                 options.Cookie.IsEssential = true; // Reqires "GDPR-samtykke"
             });
+
+            // BackgroundService
+            builder.Services.AddHostedService<ScheduledJobService>();
 
             var app = builder.Build();
 

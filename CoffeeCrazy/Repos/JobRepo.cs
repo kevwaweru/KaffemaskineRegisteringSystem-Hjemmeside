@@ -25,7 +25,7 @@ namespace CoffeeCrazy.Repos
                     SqlCommand command = new SqlCommand(SQLquery, connection);
                     command.Parameters.AddWithValue("@Title", toBeCreatedJob.Title);
                     command.Parameters.AddWithValue("@Description", toBeCreatedJob.Description);
-                    command.Parameters.AddWithValue("@Comment", toBeCreatedJob.Comment);
+                    command.Parameters.AddWithValue("@Comment", string.IsNullOrEmpty(toBeCreatedJob.Comment) ? DBNull.Value : (object)toBeCreatedJob.Comment);
                     command.Parameters.AddWithValue("@IsCompleted", toBeCreatedJob.IsCompleted);
                     command.Parameters.AddWithValue("@DateCreated", toBeCreatedJob.DateCreated);
                     command.Parameters.AddWithValue("@Deadline", toBeCreatedJob.Deadline);
