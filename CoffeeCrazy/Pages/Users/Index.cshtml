@@ -3,7 +3,7 @@
 @using CoffeeCrazy.Models.Enums
 @model CoffeeCrazy.Pages.Users.IndexModel
 
-<div class="container-fluid mt-4">
+<div class="container-fluid card shadow p-4">
     <div class="row">
         @* Venstre Sidebar til campus filter *@
         <div class="col-2">
@@ -52,14 +52,14 @@
                             <h5>@user.FirstName @user.LastName</h5>
                         </div>
                         <div class="card-body">
+                            @if (user.UserImageFile != null)
+                            {
+                                <img src="data:image/jpeg;base64,@Model.UserImageBase64Strings[user.UserId]" alt="Brugerbillede" class="rounded mx-auto d-block" style="height: 10rem; width: 16rem; object-fit: cover">
+                            }
                             <p class="mb-1"><strong>Email:</strong> @user.Email</p>
                             <p class="mb-1"><strong>Rolle:</strong> @user.Role</p>
                             <p class="mb-1"><strong>Campus:</strong> @user.Campus</p>
-                            @if (user.UserImageFile != null)
-                            {
-                                <img src="data:image/jpeg;base64,@Model.UserImageBase64Strings[user.UserId]" alt="Brugerbillede" style="padding: 0.1rem; height: 6rem; width: 8rem; object-fit: cover">
-                            }
-                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <div class="d-grid gap-2 mt-1 d-md-flex justify-content-md-end">
                                 <a class="btn btn-warning btn-sm" asp-page="Update" asp-route-id="@user.UserId">Rediger</a>
                                 <a class="btn btn-danger btn-sm" asp-page="Delete" asp-route-id="@user.UserId">Slet</a>
                             </div>

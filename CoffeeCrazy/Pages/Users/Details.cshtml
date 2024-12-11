@@ -1,11 +1,13 @@
 ﻿@page
 @model CoffeeCrazy.Pages.Users.DetailsModel
 
-<h1>Bruger Detaljer</h1>
+<div class="card shadow p-4">
+    <div class="mb-2">
+        <h1>Bruger Detaljer</h1>
+        <h3>@Model.User.FirstName @Model.User.LastName</h3>
+    </div>
 
-<div>
-    <h3>@Model.User.FirstName @Model.User.LastName</h3>
-    <dl class="row">
+    <div class="row mb-2">
         <dt class="col-sm-2">Email:</dt>
         <dd class="col-sm-10">@Model.User.Email</dd>
 
@@ -19,7 +21,7 @@
         @if (Model.User.UserImageFile != null)
         {
             <dd class="col-sm-10">
-                <img src="data:image/jpeg;base64,@Model.Base64StringUserImage" alt="Billede af @Model.User.FirstName" style="max-width:150px; max-height:150px;" />
+                <img src="data:image/jpeg;base64,@Model.Base64StringUserImage" alt="Billede af @Model.User.FirstName" style="max-width: 30rem; max-height: 30rem;" />
             </dd>
         }
         else
@@ -27,7 +29,6 @@
             <dd class="col-sm-10 text-danger">
                 Ingen Billede
             </dd>
-
         }
-    </dl>
+    </div>
 </div>

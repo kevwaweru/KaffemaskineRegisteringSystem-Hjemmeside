@@ -2,66 +2,71 @@
 @model CoffeeCrazy.Pages.Users.CreateModel
 @{
 }
-<h2>Opret bruger</h2>
 
-<form method="post" enctype="multipart/form-data">
-    
-     <div>
-        <label class="fs-3">Fornavn</label>
-         <input asp-for="NewUser.FirstName" class="form-control" placeholder="Lars"/>
-         <span asp-validation-for="NewUser.FirstName" class="text-danger"></span>
-     </div>
-     <div>
-        <label class="fs-3">Efternavn</label>
-         <input asp-for="NewUser.LastName" class="form-control" placeholder="Jensen"/>
-         <span asp-validation-for="NewUser.LastName" class="text-danger"></span>
-     </div>
-     <div>
-        <label class="fs-3">Email</label>
-         <input asp-for="NewUser.Email" class="form-control" placeholder="Lars.Jensen@hotmail.dk" />
-         <span asp-validation-for="NewUser.Email" class="text-danger"></span>
-     </div>
-     <div>
-        <label class="fs-3">Adgangskode</label>
-         <input asp-for="NewUser.Password" type="password" class="form-control" placeholder="F.eks. 123456" />
-         <span asp-validation-for="NewUser.Password" class="text-danger"></span>
-     </div>
-     
-     <div>
-        <label class="fs-3">Campus</label>
-         <select asp-for="NewUser.Campus" class="form-control">
-             <option value=1>Roskilde</option>
-             <option value=2>Køge</option>
-             <option value=3>Næstved</option>
-             <option value=4>Slagelse</option>
-             <option value=5>Nykøbing Falster</option>
-             <option value=6>Holbæk</option>
-         </select>
-         <span asp-validation-for="NewUser.Campus" class="text-danger"></span>
-     </div>
-     <div>
-        <label class="fs-3">Roles</label>
-         <select asp-for="NewUser.Role" class="form-control">
-             <option value=1>Master Admin</option>
-             <option value=2>Admin</option>
-             <option value=3>User</option>
-         </select>
-         <span asp-validation-for="NewUser.Role" class="text-danger"></span>
-     </div>
+<div class="card shadow p-4">
+    <h2>Opret bruger</h2>
 
-    </<div >
-        
-        <label class="fs-3" for="inputGroupFile01">Profilbillede</label> <br />
+    <form method="post" enctype="multipart/form-data">
 
-        <input asp-for="NewUser.UserImageFile" type="file" class="form-control" id="inputGroupFile01" >
-        
-        <span asp-validation-for="NewUser.UserImageFile" class="text-danger"></span>
-        
-     </div>
+        <div class="mb-2">
+            <label class="fs-3">Fornavn</label>
+            <input asp-for="NewUser.FirstName" class="form-control" placeholder="Lars" />
+            <span asp-validation-for="NewUser.FirstName" class="text-danger"></span>
+        </div>
 
-       
+        <div class="mb-2">
+            <label class="fs-3">Efternavn</label>
+            <input asp-for="NewUser.LastName" class="form-control" placeholder="Jensen" />
+            <span asp-validation-for="NewUser.LastName" class="text-danger"></span>
+        </div>
 
-    <button type="submit" class="btn btn-primary">Create</button>
-    <a class="btn btn-secondary btn-sm" asp-page="Index">Tilbage til oversigt</a>
+        <div class="mb-2">
+            <label class="fs-3">Email</label>
+            <input asp-for="NewUser.Email" class="form-control" placeholder="Lars.Jensen@hotmail.dk" />
+            <span asp-validation-for="NewUser.Email" class="text-danger"></span>
+        </div>
 
-</form>
+        <div class="mb-2">
+            <label class="fs-3">Adgangskode</label>
+            <input asp-for="NewUser.Password" type="password" class="form-control" placeholder="F.eks. 123456" />
+            <span asp-validation-for="NewUser.Password" class="text-danger"></span>
+        </div>
+
+        <div class="mb-2">
+            <label class="fs-3">Campus</label>
+            <select asp-for="NewUser.Campus" class="form-control">
+                <option value=1>Roskilde</option>
+                <option value=2>Køge</option>
+                <option value=3>Næstved</option>
+                <option value=4>Slagelse</option>
+                <option value=5>Nykøbing Falster</option>
+                <option value=6>Holbæk</option>
+            </select>
+            <span asp-validation-for="NewUser.Campus" class="text-danger"></span>
+        </div>
+
+        <div class="mb-2">
+            <label class="fs-3">Roles</label>
+            <select asp-for="NewUser.Role" class="form-control">
+                <option value=1>Master Admin</option>
+                <option value=2>Admin</option>
+                <option value=3>User</option>
+            </select>
+            <span asp-validation-for="NewUser.Role" class="text-danger"></span>
+        </div>
+
+        <div class="mb-2">
+            <label class="fs-3" for="inputGroupFile01">Profilbillede</label> <br />
+
+            <input asp-for="NewUser.UserImageFile" type="file" class="form-control" id="inputGroupFile01">
+
+            <span asp-validation-for="NewUser.UserImageFile" class="text-danger"></span>
+
+        </div>
+
+        <div class="mb-2">
+            <button type="submit" class="btn btn-primary">Create</button>
+            <a class="btn btn-secondary" asp-page="Index">Tilbage til oversigt</a>
+        </div>
+    </form>
+</div>

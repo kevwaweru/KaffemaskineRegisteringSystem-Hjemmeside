@@ -2,58 +2,57 @@
 @model CoffeeCrazy.Pages.Users.UpdateModel
 @{
 }
-<h2>Update User</h2>
+<div class="card shadow p-4">
+    <h2>Update User</h2>
 
-<form method="post" enctype="multipart/form-data">
-    <input asp-for="UserToBeUpdated.UserId" type="hidden" />
-    <input asp-for="UserToBeUpdated.Role" type="hidden" />
+    <form method="post" enctype="multipart/form-data">
+        <input asp-for="UserToBeUpdated.UserId" type="hidden" />
+        <input asp-for="UserToBeUpdated.Role" type="hidden" />
 
-    <div>
-        <label>Fornavn</label>
-        <input asp-for="UserToBeUpdated.FirstName" class="form-control" />
-        <span asp-validation-for="UserToBeUpdated.FirstName" class="text-danger"></span>
-    </div>
-    <div>
-        <label>Efternavn</label>
-        <input asp-for="UserToBeUpdated.LastName" class="form-control" />
-        <span asp-validation-for="UserToBeUpdated.LastName" class="text-danger"></span>
-    </div>
-    <div>
-        <label>Email</label>
-        <input asp-for="UserToBeUpdated.Email" class="form-control" />
-        <span asp-validation-for="UserToBeUpdated.Email" class="text-danger"></span>
-    </div>
-
-    <div>
-        <label>Campus</label>
-        <select asp-for="UserToBeUpdated.Campus" class="form-control">
-            <option value=1>Roskilde</option>
-            <option value=2>Køge</option>
-            <option value=3>Næstved</option>
-            <option value=4>Slagelse</option>
-            <option value=5>Nykøbing Falster</option>
-            <option value=6>Holbæk</option>
-        </select>
-        <span asp-validation-for="UserToBeUpdated.Campus" class="text-danger"></span>
-    </div>
-    @if (Model.UserToBeUpdated.UserImageFile != null)
-    {
-        <div class="mb-3">
-            <img src="data:image/jpeg;base64,@Model.Base64StringUserImage" alt="User Image" style="max-width:150px; max-height:150px;" />
+        <div>
+            <label>Fornavn</label>
+            <input asp-for="UserToBeUpdated.FirstName" class="form-control" />
+            <span asp-validation-for="UserToBeUpdated.FirstName" class="text-danger"></span>
         </div>
-    }
-    else
-    {
-        <div class="mb-3 text-danger">
-            Ingen Billede
+        <div>
+            <label>Efternavn</label>
+            <input asp-for="UserToBeUpdated.LastName" class="form-control" />
+            <span asp-validation-for="UserToBeUpdated.LastName" class="text-danger"></span>
         </div>
-    }
+        <div>
+            <label>Email</label>
+            <input asp-for="UserToBeUpdated.Email" class="form-control" />
+            <span asp-validation-for="UserToBeUpdated.Email" class="text-danger"></span>
+        </div>
 
-    <div>
-        <label for="UserImage" class="form-label">Profilbillede</label>
-        <input asp-for="UserToBeUpdated.UserImageFile" type="file" class="form-control" id="UserImage">
-        <span asp-validation-for="UserToBeUpdated.UserImageFile" class="text-danger"></span>
-    </div>
+        <div>
+            <label>Campus</label>
+            <select asp-for="UserToBeUpdated.Campus" class="form-control">
+                <option value=1>Roskilde</option>
+                <option value=2>Køge</option>
+                <option value=3>Næstved</option>
+                <option value=4>Slagelse</option>
+                <option value=5>Nykøbing Falster</option>
+                <option value=6>Holbæk</option>
+            </select>
+            <span asp-validation-for="UserToBeUpdated.Campus" class="text-danger"></span>
+        </div>
+        @if (Model.UserToBeUpdated.UserImageFile != null)
+        {
+            <div class="mb-3">
+                <img src="data:image/jpeg;base64,@Model.Base64StringUserImage" alt="User Image" style="max-width:150px; max-height:150px;" />
+            </div>
+        }
+        else
+        {
+            <div class="mb-3 text-danger">
+                Ingen Billede
+            </div>
+        }
 
-    <button type="submit" class="btn btn-primary">Update</button>
-</form>
+            <label for="UserImage" class="form-label">Profilbillede</label>
+            <input asp-for="UserToBeUpdated.UserImageFile" type="file" class="form-control" id="UserImage">
+            <span asp-validation-for="UserToBeUpdated.UserImageFile" class="text-danger"></span>
+        <button type="submit" class="btn btn-primary">Update</button>
+    </form>
+</div>
