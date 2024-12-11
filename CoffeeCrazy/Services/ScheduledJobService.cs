@@ -1,5 +1,6 @@
 ﻿using CoffeeCrazy.Interfaces;
 using CoffeeCrazy.Models;
+using Microsoft.Data.SqlClient;
 
 namespace CoffeeCrazy.Services
 {
@@ -30,9 +31,9 @@ namespace CoffeeCrazy.Services
                     await CreateJobsForTodayAsync(now);
                 }
 
-                await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken); //Hver minut
-          //      await Task.Delay(TimeSpan.FromHours(1), stoppingToken); // hver Time
-            //    await Task.Delay(TimeSpan.FromHours(24), stoppingToken); /// Hver dag
+           
+            await Task.Delay(TimeSpan.FromHours(1), stoppingToken); 
+    
 
             }
         }
@@ -70,43 +71,27 @@ namespace CoffeeCrazy.Services
         {
             foreach (var machine in machines)
             {
-                var dailyJobs = new List<Job>
-        {
-            new Job
-            {
-                Title = "Påfyld Kaffe",
-                Description = "",
-                DateCreated = currentTime,
-                Deadline = currentTime.AddDays(1),
-                FrequencyId = 1,
-                MachineId = machine.MachineId
-            },
-            new Job
-            {
-                Title = "Påfyld mælk",
-                Description = "",
-                DateCreated = currentTime,
-                Deadline = currentTime.AddDays(1),
-                FrequencyId = 1,
-                MachineId = machine.MachineId
-            },
-            new Job
-            {
-                Title = "Rengør",
-                Description = "",
-                DateCreated = currentTime,
-                Deadline = currentTime.AddDays(1),
-                FrequencyId = 1,
-                MachineId = machine.MachineId
-            }
-        };
+                var existingJobs = await _jobRepo.GetAllAsync();
+                var dailyJobs = existingJobs.Where(j => j.MachineId == machine.MachineId && j.FrequencyId == 1).ToList();
 
                 foreach (var job in dailyJobs)
                 {
-                    await _jobRepo.CreateAsync(job);
+                    var newJob = new Job
+                    {
+                        Title = job.Title,
+                        Description = job.Description,
+                        Comment = job.Comment,
+                        IsCompleted = job.IsCompleted,
+                        DateCreated = currentTime,
+                        Deadline = currentTime.AddDays(1),
+                        FrequencyId = 1,
+                        MachineId = machine.MachineId,
+                        UserId = job.UserId,
+                    };
+                    await _jobRepo.CreateAsync(newJob);
                 }
             }
-        }
+        }   
 
         /// <summary>
         /// Creates weekly jobs for all machines.
@@ -117,16 +102,25 @@ namespace CoffeeCrazy.Services
         {
             foreach (var machine in machines)
             {
-                var weeklyJob = new Job
+                var existingJobs = await _jobRepo.GetAllAsync();
+                var weeklyJobs = existingJobs.Where(j => j.MachineId == machine.MachineId && j.FrequencyId == 1).ToList();
+
+                foreach (var job in weeklyJobs)
                 {
-                    Title = "Genfyld kaffekopper",
-                    Description = "Husk ikke at sætte flere end 40 stk. op.",
-                    DateCreated = currentTime,
-                    Deadline = currentTime.AddDays(7),
-                    FrequencyId = 2,
-                    MachineId = machine.MachineId
-                };
-                await _jobRepo.CreateAsync(weeklyJob);
+                    var newJob = new Job
+                    {
+                        Title = job.Title,
+                        Description = job.Description,
+                        Comment = job.Comment,
+                        IsCompleted = job.IsCompleted,
+                        DateCreated = currentTime,
+                        Deadline = currentTime.AddDays(7),
+                        FrequencyId = 2,
+                        MachineId = machine.MachineId,
+                        UserId = job.UserId,
+                    };
+                    await _jobRepo.CreateAsync(newJob);
+                }
             }
         }
 
@@ -139,16 +133,25 @@ namespace CoffeeCrazy.Services
         {
             foreach (var machine in machines)
             {
-                var monthlyJob = new Job
+                       var existingJobs = await _jobRepo.GetAllAsync();
+                var monthlyJob = existingJobs.Where(j => j.MachineId == machine.MachineId && j.FrequencyId == 1).ToList();
+
+                foreach (var job in monthlyJob)
                 {
-                    Title = "Rens Tube",
-                    Description = "Følg Guiden, gør som der bliver sagt.",
-                    DateCreated = currentTime,
-                    Deadline = currentTime.AddMonths(1),
-                    FrequencyId = 3,
-                    MachineId = machine.MachineId
-                };
-                await _jobRepo.CreateAsync(monthlyJob);
+                    var newJob = new Job
+                    {
+                        Title = job.Title,
+                        Description = job.Description,
+                        Comment = job.Comment,
+                        IsCompleted = job.IsCompleted,
+                        DateCreated = currentTime,
+                        Deadline = currentTime.AddDays(7),
+                        FrequencyId = 2,
+                        MachineId = machine.MachineId,
+                        UserId = job.UserId,
+                    };
+                    await _jobRepo.CreateAsync(newJob);
+                }
             }
         }
     }
