@@ -183,15 +183,28 @@ namespace CoffeeCrazy.Repos
                                         UserImage = @UserImage
                                     WHERE
                                         UserId = @UserId";
-
+                    var existingUser = await GetByIdAsync(toBeUpdatedUser.UserId);
                     SqlCommand command = new SqlCommand(query, connection);
-                    command.Parameters.AddWithValue("@FirstName", toBeUpdatedUser.FirstName);
-                    command.Parameters.AddWithValue("@LastName", toBeUpdatedUser.LastName);
-                    command.Parameters.AddWithValue("@Email", toBeUpdatedUser.Email);
-                    command.Parameters.AddWithValue("@CampusId", (int)toBeUpdatedUser.Campus);
-                    command.Parameters.AddWithValue("@RoleId", (int)toBeUpdatedUser.Role);
-                    command.Parameters.AddWithValue("@UserId", toBeUpdatedUser.UserId);
-                    command.Parameters.AddWithValue("@UserImage", toBeUpdatedUser.UserImageFile != null ? _imageService.FormFileToByteArray(toBeUpdatedUser.UserImageFile) : _imageService.FormFileToByteArray((await GetByIdAsync(toBeUpdatedUser.UserId)).UserImageFile));
+                    command.Parameters.AddWithValue("@FirstName", toBeUpdatedUser.FirstName ?? existingUser.FirstName);
+                    command.Parameters.AddWithValue("@LastName", toBeUpdatedUser.LastName ?? existingUser.LastName);
+                    command.Parameters.AddWithValue("@Email", toBeUpdatedUser.Email ?? existingUser.Email);
+                    command.Parameters.AddWithValue("@CampusId", toBeUpdatedUser.Campus != 0 ? (int)toBeUpdatedUser.Campus : (int)existingUser.Campus);
+                    command.Parameters.AddWithValue("@RoleId", toBeUpdatedUser.Role != 0 ? (int)toBeUpdatedUser.Role : (int)existingUser.Role);
+
+                    if (toBeUpdatedUser.UserImageFile != null)
+                    {
+                        command.Parameters.AddWithValue("@UserImage", _imageService.FormFileToByteArray(toBeUpdatedUser.UserImageFile));
+                    }
+                    else if (existingUser.UserImageFile != null)
+                    {
+                        command.Parameters.AddWithValue("@UserImage", _imageService.FormFileToByteArray(existingUser.UserImageFile));
+                    }
+                    else
+                    {
+                        command.Parameters.AddWithValue("@UserImage", DBNull.Value);
+                    }
+
+                    command.Parameters.AddWithValue("@UserId", toBeUpdatedUser.UserId); 
 
                     await connection.OpenAsync();
                     await command.ExecuteNonQueryAsync();

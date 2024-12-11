@@ -29,14 +29,16 @@ namespace CoffeeCrazy.Pages.Users
         public async Task<IActionResult> OnPost()
         {
             if (!_accessService.IsUserLoggedIn(HttpContext))
+            {
                 return RedirectToPage("/Login/Login");
+            }
 
             //ModelState.Remove("PasswordSalt");
             //if (!ModelState.IsValid)
             //{
             //    return Page();
             //}
-            
+
             await _userRepo.CreateAsync(NewUser);
             return RedirectToPage("Index");
         }

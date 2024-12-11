@@ -23,10 +23,13 @@ namespace CoffeeCrazy.Pages.Users
         {
 
             if (!_accessService.IsUserLoggedIn(HttpContext))
+            {
                 return RedirectToPage("/Login/Login");
-
+            }
             if (!_accessService.HasPermissionToDeleteAdmin(HttpContext, id))
-                return RedirectToPage("/Error");
+            {
+                return RedirectToPage("/Login/Login");
+            }
 
             await _userRepo.DeleteAsync(await _userRepo.GetByIdAsync(id));
 

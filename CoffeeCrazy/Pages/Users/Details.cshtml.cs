@@ -12,7 +12,9 @@ namespace CoffeeCrazy.Pages.Users
         private readonly IAccessService _accessService;
         private readonly IImageService _imageService;
 
+        [BindProperty]
         public User User { get; set; }
+
         public string? Base64StringUserImage { get; set; }
 
         public DetailsModel(IUserRepo userRepo, IAccessService accessService, IImageService imageService)
@@ -26,8 +28,10 @@ namespace CoffeeCrazy.Pages.Users
         {
 
             if (!_accessService.IsUserLoggedIn(HttpContext))
+            {
                 return RedirectToPage("/Login/Login");
 
+            }
 
             User = await _userRepo.GetByIdAsync(id);
             Base64StringUserImage = _imageService.FormFileToBase64String(User.UserImageFile);
@@ -41,19 +45,28 @@ namespace CoffeeCrazy.Pages.Users
             return Page();
 
         }
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(int id)
         {
-            ModelState.Remove("UserToBeUpdated.PasswordSalt");
-            ModelState.Remove("UserToBeUpdated.Password");
-            ModelState.Remove("UserToBeUpdated.UserImage");
+            ModelState.Remove("User.PasswordSalt");
+            ModelState.Remove("User.Password");
+            User existingUser = await _userRepo.GetByIdAsync(id);
 
             if (!ModelState.IsValid)
             {
+                Base64StringUserImage = _imageService.FormFileToBase64String(existingUser.UserImageFile);
                 return Page();
             }
 
+            if (User.UserImageFile == null)
+            {
+                User.UserImageFile = existingUser.UserImageFile;
+            }
+
             await _userRepo.UpdateAsync(User);
-            return RedirectToPage("Index");
+
+            Base64StringUserImage = _imageService.FormFileToBase64String(User.UserImageFile);
+
+            return Page();
         }
     }
 }
