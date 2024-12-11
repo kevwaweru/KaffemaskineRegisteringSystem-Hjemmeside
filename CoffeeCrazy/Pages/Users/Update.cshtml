@@ -9,23 +9,25 @@
         <input asp-for="UserToBeUpdated.UserId" type="hidden" />
         <input asp-for="UserToBeUpdated.Role" type="hidden" />
 
-        <div>
+        <div class="mb-2">
             <label>Fornavn</label>
             <input asp-for="UserToBeUpdated.FirstName" class="form-control" />
             <span asp-validation-for="UserToBeUpdated.FirstName" class="text-danger"></span>
         </div>
-        <div>
+
+        <div class="mb-2">
             <label>Efternavn</label>
             <input asp-for="UserToBeUpdated.LastName" class="form-control" />
             <span asp-validation-for="UserToBeUpdated.LastName" class="text-danger"></span>
         </div>
-        <div>
+
+        <div class="mb-2">
             <label>Email</label>
             <input asp-for="UserToBeUpdated.Email" class="form-control" />
             <span asp-validation-for="UserToBeUpdated.Email" class="text-danger"></span>
         </div>
 
-        <div>
+        <div class="mb-2">
             <label>Campus</label>
             <select asp-for="UserToBeUpdated.Campus" class="form-control">
                 <option value=1>Roskilde</option>
@@ -39,20 +41,21 @@
         </div>
         @if (Model.UserToBeUpdated.UserImageFile != null)
         {
-            <div class="mb-3">
+            <div class="mb-2">
                 <img src="data:image/jpeg;base64,@Model.Base64StringUserImage" alt="User Image" style="max-width:150px; max-height:150px;" />
             </div>
         }
         else
         {
-            <div class="mb-3 text-danger">
+            <div class="mb-2 text-danger">
                 Ingen Billede
             </div>
         }
-
+        <div class="mb-2">
             <label for="UserImage" class="form-label">Profilbillede</label>
             <input asp-for="UserToBeUpdated.UserImageFile" type="file" class="form-control" id="UserImage">
             <span asp-validation-for="UserToBeUpdated.UserImageFile" class="text-danger"></span>
+        </div>
         <button type="submit" class="btn btn-primary">Update</button>
     </form>
 </div>
