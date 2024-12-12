@@ -83,7 +83,7 @@ namespace CoffeeCrazy.Services
                         Comment = job.Comment,
                         IsCompleted = false,
                         DateCreated = currentTime,
-                        Deadline = currentTime.AddDays(1),
+                        Deadline = currentTime.AddHours(12),
                         FrequencyId = 1, 
                         MachineId = machine.MachineId,
                         UserId = job.UserId
