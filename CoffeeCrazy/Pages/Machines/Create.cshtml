@@ -8,12 +8,13 @@
     <h1>Lav Maskine</h1>
 
     <form method="post">
-        <div>
+        <div class="mb-2">
             <label>Placering</label>
             <input asp-for="Machine.Placement" class="form-control" />
             <span asp-validation-for="Machine.Placement" class="text-danger"></span>
         </div>
-        <div>
+
+        <div class="mb-2">
             <label>Campus</label>
             <select asp-for="Machine.Campus" class="form-control">
                 @foreach (var campus in Enum.GetValues(typeof(CoffeeCrazy.Models.Enums.Campus)))
@@ -24,7 +25,7 @@
             <span asp-validation-for="Machine.Campus" class="text-danger"></span>
         </div>
 
-        <div>
+        <div class="mb-2">
             <label class="fs-3" for="inputGroupFile01">Billede af kaffemaskinen</label> <br />
 
             <input asp-for="PictureToBeUploaded" type="file" class="form-control" id="inputGroupFile01">
