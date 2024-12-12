@@ -38,16 +38,16 @@
                                 </p>
 
                                 <div class="form-check mt-2">
-                                    <input class="form-check-input" type="checkbox" asp-for="Job.IsCompleted" id="job_@job.JobId" value="true" />
-                                    <label class="form-check-label" for="job_@job.JobId">Completed</label>
+                                    <label class="form-check-label" for="job_@job.JobId">Opgaven udført</label>
+                                    <input class="form-check-input" type="checkbox" asp-for="Job.IsCompleted" id="job_@job.JobId" value="true" />                            
                                 </div>
 
                                 <div class="mt-3">
-                                    <label for="comment_@job.JobId" class="form-label">Comment</label>
+                                    <label for="comment_@job.JobId" class="form-label">Fejlmelding</label>
                                     <textarea class="form-control"
                                               id="comment_@job.JobId"
                                               asp-for="Job.Comment"
-                                              placeholder="Write a comment..."
+                                              placeholder="Hvis noget gik galt.."
                                               style="resize: none; height: 100px;"></textarea>
                                 </div>
                             </div>
@@ -57,12 +57,12 @@
             </div>
 
             <div class="text-center mt-4">
-                <button type="submit" class="btn btn-primary">Update Jobs</button>
+                <button type="submit" class="btn btn-dark">Godkend ændringer</button>
             </div>
         </form>
 
         <div class="text-center mt-3">
-            <a class="btn btn-secondary btn-sm" asp-page="Index">Back to Overview</a>
+            <a class="btn btn-secondary btn-sm" asp-page="Index">Tilbage til oversigt</a>
         </div>
     </div>
 </div>
