@@ -22,15 +22,30 @@ namespace CoffeeCrazy.Repos
                     string SQLquery = @"INSERT INTO Jobs (Title, Description, Comment, IsCompleted, DateCreated, Deadline, FrequencyId, MachineId)
                                         VALUES (@Title, @Description, @Comment, @IsCompleted, @DateCreated, @Deadline, @FrequencyId, @MachineId)";
 
+                    DateTime deadline;
+                    if (toBeCreatedJob.FrequencyId == 3)
+                    {
+                        deadline = DateTime.Now.AddMonths(1);
+                    }
+                    else if (toBeCreatedJob.FrequencyId == 2)
+                    {
+                        deadline = DateTime.Now.AddDays(7);
+                    }
+                    else
+                    {
+                        deadline = DateTime.Now.AddDays(1);
+                    }
+
                     SqlCommand command = new SqlCommand(SQLquery, connection);
                     command.Parameters.AddWithValue("@Title", toBeCreatedJob.Title);
                     command.Parameters.AddWithValue("@Description", toBeCreatedJob.Description);
-                    command.Parameters.AddWithValue("@Comment", toBeCreatedJob.Comment);
-                    command.Parameters.AddWithValue("@IsCompleted", toBeCreatedJob.IsCompleted);
-                    command.Parameters.AddWithValue("@DateCreated", toBeCreatedJob.DateCreated);
-                    command.Parameters.AddWithValue("@Deadline", toBeCreatedJob.Deadline);
+                    command.Parameters.AddWithValue("@Comment", toBeCreatedJob.Comment != null ? toBeCreatedJob.Comment : false);
+                    command.Parameters.AddWithValue("@IsCompleted", toBeCreatedJob.IsCompleted != true ? toBeCreatedJob.IsCompleted : false);
+                    command.Parameters.AddWithValue("@DateCreated", toBeCreatedJob.DateCreated != default ? toBeCreatedJob.DateCreated : DateTime.Now);
+                    command.Parameters.AddWithValue("@Deadline", toBeCreatedJob.Deadline != default ? toBeCreatedJob.Deadline : deadline);
                     command.Parameters.AddWithValue("@FrequencyId", toBeCreatedJob.FrequencyId);
                     command.Parameters.AddWithValue("@MachineId", toBeCreatedJob.MachineId);
+
 
                     await connection.OpenAsync();
                     await command.ExecuteNonQueryAsync();
