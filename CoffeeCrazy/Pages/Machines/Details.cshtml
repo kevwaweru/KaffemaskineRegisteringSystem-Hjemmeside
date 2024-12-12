@@ -1,11 +1,10 @@
 ﻿@page "{id:int}"
-@using CoffeeCrazy.Models
 @model CoffeeCrazy.Pages.Machines.DetailsModel
 @{
     ViewData["Title"] = "Opgaver til kaffemaskinen";
 }
-<div class="card shadow p-4">
 
+<div class="card shadow p-4">
     <div class="container mt-4">
         <h2 class="text-dark">Kaffemaskinen ved @Model.Machine.Placement</h2>
 
@@ -13,7 +12,8 @@
             <div class="card border-0 shadow-sm" style="max-width: 600px; margin: auto;">
                 <div class="card-body">
                     <p>
-                        <strong>Status:</strong> <span class="badge @(Model.Machine.Status ? "bg-success" : "bg-secondary")">
+                        <strong>Status:</strong>
+                        <span class="badge @(Model.Machine.Status ? "bg-success" : "bg-secondary")">
                             @(Model.Machine.Status ? "Aktiv" : "Inaktiv")
                         </span>
                     </p>
@@ -26,28 +26,30 @@
 
         <form method="post">
             <div class="row row-cols-1 row-cols-md-2 g-4">
-                @foreach (var job in Model.job)
+                @for (int i = 0; i < Model.Jobs.Count; i++)
                 {
                     <div class="col">
                         <div class="card shadow-sm border-0">
                             <div class="card-body">
-                                <h5 class="card-title text-dark">@job.Title</h5>
-                                <p class="text-muted" style="font-size: 0.9rem;">@job.Description</p>
+                                <h5 class="card-title text-dark">@Model.Jobs[i].Title</h5>
+                                <p class="text-muted" style="font-size: 0.9rem;">@Model.Jobs[i].Description</p>
                                 <p class="text-secondary" style="font-size: 0.85rem;">
-                                    <strong>Deadline:</strong> @job.Deadline.ToString("d")
+                                    <strong>Deadline:</strong> @Model.Jobs[i].Deadline.ToString("d")
                                 </p>
 
+                                <input type="hidden" asp-for="Jobs[i].JobId" />
+
                                 <div class="form-check mt-2">
-                                    <label class="form-check-label" for="job_@job.JobId">Opgaven udført</label>
-                                    <input class="form-check-input" type="checkbox" asp-for="Job.IsCompleted" id="job_@job.JobId" value="true" />                            
+                                    <input class="form-check-input" type="checkbox" asp-for="Jobs[i].IsCompleted" id="job_@Model.Jobs[i].JobId" />
+                                    <label class="form-check-label" for="job_@Model.Jobs[i].JobId">Opgaven udført</label>
                                 </div>
 
                                 <div class="mt-3">
-                                    <label for="comment_@job.JobId" class="form-label">Fejlmelding</label>
+                                    <label for="comment_@Model.Jobs[i].JobId" class="form-label">Fejlmelding</label>
                                     <textarea class="form-control"
-                                              id="comment_@job.JobId"
-                                              asp-for="Job.Comment"
-                                              placeholder="Hvis noget gik galt.."
+                                              asp-for="Jobs[i].Comment"
+                                              id="comment_@Model.Jobs[i].JobId"
+                                              placeholder="Hvis noget gik galt..."
                                               style="resize: none; height: 100px;"></textarea>
                                 </div>
                             </div>
