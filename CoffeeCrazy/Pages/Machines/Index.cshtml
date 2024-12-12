@@ -18,7 +18,7 @@
         @foreach (var machine in Model.Machines)
         {
             <article class="col-6 col-md-4 col-lg-3">
-                <!-- Card Wrapper -->
+                
                 <a href="@Url.Page("Details", new { id = machine.MachineId })" class="card-link">
                     <div class="card square-card @GetCardClass(machine, Model.Jobs)"
                          style="@(machine.MachineImage != null ?
@@ -27,9 +27,9 @@
                     </div>
                 </a>
 
-                <!-- Dropdowns (Outside Clickable Wrapper) -->
+                
                 <div class="d-flex justify-content-between mt-2">
-                    <!-- Placement Dropdown: Visible for All -->
+                    
                     <div class="dropdown">
                         <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Placement
@@ -39,7 +39,7 @@
                         </ul>
                     </div>
 
-                    <!-- Actions Dropdown: Visible for Admin Only -->
+                    
                     @if (HttpContext.Session.GetInt32("RoleId") == (int)Role.Admin)
                     {
                         <div class="dropdown">
@@ -77,17 +77,17 @@
         flex-direction: column;
         justify-content: space-between;
         z-index: 1;
-        background-color: rgba(0, 0, 0, 0.3); /* Optional overlay tint */
+        background-color: rgba(0, 0, 0, 0.3); 
     }
 
     .dropdown {
         position: relative;
-        z-index: 2; /* Ensure dropdowns are above the overlay */
+        z-index: 2; 
     }
 
     .card {
         position: relative;
-        overflow: hidden; /* Ensures dropdowns stay within bounds if needed */
+        overflow: hidden; 
     }
 
     .card-link {
@@ -96,7 +96,7 @@
     }
 
         .card-link:hover .card {
-            filter: brightness(1.1); /* Optional hover effect */
+            filter: brightness(1.1); 
         }
 
     .border-success {
