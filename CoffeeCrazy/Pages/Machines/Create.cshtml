@@ -3,34 +3,36 @@
 @{
     ViewData["Title"] = "Lav ny Maskine";
 }
+<div class="card shadow p-4">
 
-<h1>Lav Maskine</h1>
+    <h1>Lav Maskine</h1>
 
-<form method="post">
-    <div>
-        <label>Placering</label>
-        <input asp-for="Machine.Placement" class="form-control" />
-        <span asp-validation-for="Machine.Placement" class="text-danger"></span>
-    </div>
-    <div>
-        <label>Campus</label>
-        <select asp-for="Machine.Campus" class="form-control">
-            @foreach (var campus in Enum.GetValues(typeof(CoffeeCrazy.Models.Enums.Campus)))
-            {
-                <option value="@((int)campus)">@campus</option>
-            }
-        </select>
-        <span asp-validation-for="Machine.Campus" class="text-danger"></span>
-    </div>
+    <form method="post">
+        <div>
+            <label>Placering</label>
+            <input asp-for="Machine.Placement" class="form-control" />
+            <span asp-validation-for="Machine.Placement" class="text-danger"></span>
+        </div>
+        <div>
+            <label>Campus</label>
+            <select asp-for="Machine.Campus" class="form-control">
+                @foreach (var campus in Enum.GetValues(typeof(CoffeeCrazy.Models.Enums.Campus)))
+                {
+                    <option value="@((int)campus)">@campus</option>
+                }
+            </select>
+            <span asp-validation-for="Machine.Campus" class="text-danger"></span>
+        </div>
 
-    <div>
-        <label class="fs-3" for="inputGroupFile01">Billede af kaffemaskinen</label> <br />
+        <div>
+            <label class="fs-3" for="inputGroupFile01">Billede af kaffemaskinen</label> <br />
 
-        <input asp-for="PictureToBeUploaded" type="file" class="form-control" id="inputGroupFile01">
+            <input asp-for="PictureToBeUploaded" type="file" class="form-control" id="inputGroupFile01">
 
-        <span asp-validation-for="PictureToBeUploaded" class="text-danger"></span>
-    </div>
+            <span asp-validation-for="PictureToBeUploaded" class="text-danger"></span>
+        </div>
 
-    <button type="submit" class="btn btn-primary">Create</button>
-    <a class="btn btn-secondary btn-sm" asp-page="Index">Tilbage til oversigt</a>
-</form>
+        <button type="submit" class="btn btn-primary">Create</button>
+        <a class="btn btn-secondary btn-sm" asp-page="Index">Tilbage til oversigt</a>
+    </form>
+</div>

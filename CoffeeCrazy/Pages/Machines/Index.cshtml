@@ -6,120 +6,123 @@
 @{
     ViewData["Title"] = "Maskine Oversigt";
 }
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h1>Maskine Oversigt</h1>
-    @if (HttpContext.Session.GetInt32("RoleId") == (int)Role.Admin)
-    {
-        <a class="btn btn-primary btn-sm" asp-page="Create">Opret Maskine</a>
-    }
-</div>
-<div class="container">
-    <div class="row g-4">
-        @foreach (var machine in Model.Machines)
+<div class="card shadow p-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1>Maskine Oversigt</h1>
+        @if (HttpContext.Session.GetInt32("RoleId") == (int)Role.Admin)
         {
-            <article class="col-6 col-md-4 col-lg-3">
-                
-                <a href="@Url.Page("Details", new { id = machine.MachineId })" class="card-link">
-                    <div class="card square-card @GetCardClass(machine, Model.Jobs)"
-                         style="@(machine.MachineImage != null ?
-                            "background-image: url('data:image/jpeg;base64," + Convert.ToBase64String(machine.MachineImage) + "'); background-size: cover; background-position: center;" :
-                            "background-color: #f0f0f0;")">
-                    </div>
-                </a>
-
-                
-                <div class="d-flex justify-content-between mt-2">
-                    
-                    <div class="dropdown">
-                        <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Placement
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">@machine.Placement</a></li>
-                        </ul>
-                    </div>
-
-                    
-                    @if (HttpContext.Session.GetInt32("RoleId") == (int)Role.Admin)
-                    {
-                        <div class="dropdown">
-                            <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Actions
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" asp-page="Edit" asp-route-id="@machine.MachineId">Edit</a></li>
-                                <li><a class="dropdown-item" asp-page="Delete" asp-route-id="@machine.MachineId">Delete</a></li>
-                                <li><a class="dropdown-item" asp-page="Details" asp-route-id="@machine.MachineId">View Details</a></li>
-                            </ul>
-                        </div>
-                    }
-                </div>
-            </article>
+            <a class="btn btn-primary btn-sm" asp-page="Create">Opret Maskine</a>
         }
     </div>
-</div>
+    <div class="container">
+        <div class="row g-4">
+            @foreach (var machine in Model.Machines)
+            {
+                <article class="col-6 col-md-4 col-lg-3">
 
-<style>
-    .square-card {
-        width: 100%;
-        padding-top: 100%;
-        position: relative;
-        color: white;
-    }
+                    <a href="@Url.Page("Details", new { id = machine.MachineId })" class="card-link">
+                        <div class="card square-card @GetCardClass(machine, Model.Jobs)"
+                             style="@(machine.MachineImage != null ?
+                            "background-image: url('data:image/jpeg;base64," + Convert.ToBase64String(machine.MachineImage) + "'); background-size: cover; background-position: center;" :
+                            "background-color: #f0f0f0;")">
+                        </div>
+                    </a>
 
-    .overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        z-index: 1;
-        background-color: rgba(0, 0, 0, 0.3); 
-    }
 
-    .dropdown {
-        position: relative;
-        z-index: 2; 
-    }
+                    <div class="d-flex justify-content-between mt-2">
 
-    .card {
-        position: relative;
-        overflow: hidden; 
-    }
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Placement
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">@machine.Placement</a></li>
+                            </ul>
+                        </div>
 
-    .card-link {
-        text-decoration: none;
-        color: inherit;
-    }
 
-        .card-link:hover .card {
-            filter: brightness(1.1); 
+                        @if (HttpContext.Session.GetInt32("RoleId") == (int)Role.Admin)
+                        {
+                            <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Actions
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" asp-page="Edit" asp-route-id="@machine.MachineId">Edit</a></li>
+                                    <li><a class="dropdown-item" asp-page="Delete" asp-route-id="@machine.MachineId">Delete</a></li>
+                                    <li><a class="dropdown-item" asp-page="Details" asp-route-id="@machine.MachineId">View Details</a></li>
+                                </ul>
+                            </div>
+                        }
+                    </div>
+                </article>
+            }
+        </div>
+    </div>
+
+    <style>
+        .square-card {
+            width: 100%;
+            padding-top: 100%;
+            position: relative;
+            color: white;
         }
 
-    .border-success {
-        border: 3px solid green;
-    }
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            z-index: 1;
+            background-color: rgba(0, 0, 0, 0.3);
+        }
 
-    .border-danger {
-        border: 3px solid red;
-    }
+        .dropdown {
+            position: relative;
+            z-index: 2;
+        }
 
-    .border-secondary {
-        border: 3px solid gray;
-    }
-</style>
+        .card {
+            position: relative;
+            overflow: hidden;
+        }
 
-@functions {
-    private string GetCardClass(Machine machine, List<Job> jobs)
-    {
-        var jobsForMachine = jobs.Where(job => job.MachineId == machine.MachineId).ToList();
-        bool allJobsCompleted = jobsForMachine.All(job => job.IsCompleted);
+        .card-link {
+            text-decoration: none;
+            color: inherit;
+        }
 
-        if (machine.Status && allJobsCompleted) return "border-success text-success";
-        if (!machine.Status) return "border-danger text-danger";
-        return "border-secondary";
+            .card-link:hover .card {
+                filter: brightness(1.1);
+            }
+
+        .border-success {
+            border: 3px solid green;
+        }
+
+        .border-danger {
+            border: 3px solid red;
+        }
+
+        .border-secondary {
+            border: 3px solid gray;
+        }
+    </style>
+
+    @functions {
+        private string GetCardClass(Machine machine, List<Job> jobs)
+        {
+            var jobsForMachine = jobs.Where(job => job.MachineId == machine.MachineId).ToList();
+            bool allJobsCompleted = jobsForMachine.All(job => job.IsCompleted);
+
+            if (machine.Status && allJobsCompleted) return "border-success text-success";
+            if (!machine.Status) return "border-danger text-danger";
+            return "border-secondary";
+        }
     }
-}
+</div>

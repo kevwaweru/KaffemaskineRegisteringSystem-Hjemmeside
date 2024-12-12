@@ -3,29 +3,31 @@
 @{
     ViewData["Title"] = "Delete Machine";
 }
+<div class="card shadow p-4">
 
-<div class="container mt-4">
-    <h1 class="text-danger">@ViewData["Title"]</h1>
-    <p class="text-muted">Please select the machine you want to delete:</p>
+    <div class="container mt-4">
+        <h1 class="text-danger">@ViewData["Title"]</h1>
+        <p class="text-muted">Please select the machine you want to delete:</p>
 
-    <form method="post" class="mt-4">
-        <div class="mb-3">
-            <label for="selectedMachine" class="form-label fw-bold">Machines</label>
-            <select id="selectedMachine" asp-for="SelectedMachineId" class="form-select">
-                <option value="" disabled selected>-- Select a machine --</option>
-                @foreach (var machine in Model.Machines)
-                {
-                    <option value="@machine.MachineId">
-                        [ID: @machine.MachineId] @machine.Placement (Campus: @machine.Campus, Status: @(machine.Status ? "Active" : "Inactive"))
-                    </option>
-                }
-            </select>
-            <span asp-validation-for="SelectedMachineId" class="text-danger small"></span>
-        </div>
+        <form method="post" class="mt-4">
+            <div class="mb-3">
+                <label for="selectedMachine" class="form-label fw-bold">Machines</label>
+                <select id="selectedMachine" asp-for="SelectedMachineId" class="form-select">
+                    <option value="" disabled selected>-- Select a machine --</option>
+                    @foreach (var machine in Model.Machines)
+                    {
+                        <option value="@machine.MachineId">
+                            [ID: @machine.MachineId] @machine.Placement (Campus: @machine.Campus, Status: @(machine.Status ? "Active" : "Inactive"))
+                        </option>
+                    }
+                </select>
+                <span asp-validation-for="SelectedMachineId" class="text-danger small"></span>
+            </div>
 
-        <div class="d-flex gap-2">
-            <button type="submit" class="btn btn-danger">Delete</button>
-            <a class="btn btn-secondary" asp-page="Index">Back to Overview</a>
-        </div>
-    </form>
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-danger">Delete</button>
+                <a class="btn btn-secondary" asp-page="Index">Back to Overview</a>
+            </div>
+        </form>
+    </div>
 </div>

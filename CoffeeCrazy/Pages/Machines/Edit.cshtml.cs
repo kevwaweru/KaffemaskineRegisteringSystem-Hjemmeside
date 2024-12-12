@@ -33,7 +33,7 @@ namespace CoffeeCrazy.Pages.Machines
 
         public async Task<IActionResult> OnPostAsync(int id)
         {
-            MachinetoUpdate.MachineImage = _imageService.ConvertImageToByteArray(PictureToUpload);
+            MachinetoUpdate.MachineImage = _imageService.FormFileToByteArray(PictureToUpload);
             if (!ModelState.IsValid)
             {
                 return Page();

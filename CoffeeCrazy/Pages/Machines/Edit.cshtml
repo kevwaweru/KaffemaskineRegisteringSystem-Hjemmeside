@@ -5,61 +5,64 @@
     ViewData["Title"] = "Rediger Maskine";
 }
 
-<h1>Rediger Maskine</h1>
+<div class="card shadow p-4">
 
-<form method="post" enctype="multipart/form-data">
-    >
+    <h1>Rediger Maskine</h1>
 
-    <div class="form-group">
-        <label for="MachineId">Maskine ID</label>
-        <input type="text" class="form-control" id="MachineId" value="@Model.MachinetoUpdate.MachineId" readonly />
-    </div>
+    <form method="post" enctype="multipart/form-data">
+        >
 
-    <div class="form-group">
-        <label for="Placement">Placering</label>
-        <input type="text" class="form-control" id="Placement" asp-for="MachinetoUpdate.Placement" />
-    </div>
+        <div class="form-group">
+            <label for="MachineId">Maskine ID</label>
+            <input type="text" class="form-control" id="MachineId" value="@Model.MachinetoUpdate.MachineId" readonly />
+        </div>
 
-    <div class="form-group">
-        <label for="Campus">Campus</label>
-        <select asp-for="MachinetoUpdate.Campus" class="form-control">
-            @foreach (var campus in Enum.GetValues(typeof(CoffeeCrazy.Models.Enums.Campus)))
+        <div class="form-group">
+            <label for="Placement">Placering</label>
+            <input type="text" class="form-control" id="Placement" asp-for="MachinetoUpdate.Placement" />
+        </div>
+
+        <div class="form-group">
+            <label for="Campus">Campus</label>
+            <select asp-for="MachinetoUpdate.Campus" class="form-control">
+                @foreach (var campus in Enum.GetValues(typeof(CoffeeCrazy.Models.Enums.Campus)))
+                {
+                    <option value="@((int)campus)">@campus</option>
+                }
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="Status">Status</label>
+            <select asp-for="MachinetoUpdate.Status" class="form-control">
+                <option value="true" selected="@(Model.MachinetoUpdate.Status)">Aktiv</option>
+                <option value="false" selected="@(!Model.MachinetoUpdate.Status)">Inaktiv</option>
+            </select>
+        </div>
+        <div>
+            @if (Model.MachinetoUpdate.MachineImage != null)
             {
-                <option value="@((int)campus)">@campus</option>
+                <td>
+                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.MachinetoUpdate.MachineImage)" alt="Machine Image" style="max-width:80px;max-height:80px;" />
+                </td>
             }
-        </select>
-    </div>
+            else
+            {
+                <td class="text-danger">
+                    No Image
+                </td>
+            }
+        </div>
 
-    <div class="form-group">
-        <label for="Status">Status</label>
-        <select asp-for="MachinetoUpdate.Status" class="form-control">
-            <option value="true" selected="@(Model.MachinetoUpdate.Status)">Aktiv</option>
-            <option value="false" selected="@(!Model.MachinetoUpdate.Status)">Inaktiv</option>
-        </select>
-    </div>
-    <div>
-        @if (Model.MachinetoUpdate.MachineImage != null)
-        {
-            <td>
-                <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.MachinetoUpdate.MachineImage)" alt="Machine Image" style="max-width:80px;max-height:80px;" />
-            </td>
-        }
-        else
-        {
-            <td class="text-danger">
-                No Image
-            </td>
-        }
-    </div>
 
-    
         <div>
             <label class="fs-3" for="inputGroupFile01">Maskine Billed</label> <br />
             <input asp-for="PictureToUpload" type="file" class="form-control" id="inputGroupFile01" />
             <span asp-validation-for="PictureToUpload" class="text-danger"></span>
         </div>
-    <button type="submit" class="btn btn-primary">Opdater Maskine</button>
-</form>
+        <button type="submit" class="btn btn-primary">Opdater Maskine</button>
+    </form>
 
-<a class="btn btn-secondary btn-sm" asp-page="Index">Tilbage til oversigt</a>
+    <a class="btn btn-secondary btn-sm" asp-page="Index">Tilbage til oversigt</a>
 
+</div>

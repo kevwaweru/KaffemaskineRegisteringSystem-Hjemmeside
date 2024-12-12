@@ -51,7 +51,6 @@ namespace CoffeeCrazy.Pages.Jobs
                 await _jobRepo.DeleteAsync(oldJob);
             }
 
-
             if (MachineNumber == null)
             {
                 MachineNumber = 1;
