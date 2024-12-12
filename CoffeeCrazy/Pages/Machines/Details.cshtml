@@ -2,20 +2,19 @@
 @using CoffeeCrazy.Models
 @model CoffeeCrazy.Pages.Machines.DetailsModel
 @{
-    ViewData["Title"] = "Machine Details";
+    ViewData["Title"] = "Opgaver til kaffemaskinen";
 }
 <div class="card shadow p-4">
 
     <div class="container mt-4">
-        <h1 class="text-primary">@ViewData["Title"]</h1>
+        <h2 class="text-dark">Kaffemaskinen ved @Model.Machine.Placement</h2>
 
         <section class="my-4">
             <div class="card border-0 shadow-sm" style="max-width: 600px; margin: auto;">
                 <div class="card-body">
-                    <h3 class="card-title text-dark">Machine ID: @Model.Machine.MachineId</h3>
                     <p>
                         <strong>Status:</strong> <span class="badge @(Model.Machine.Status ? "bg-success" : "bg-secondary")">
-                            @(Model.Machine.Status ? "Active" : "Inactive")
+                            @(Model.Machine.Status ? "Aktiv" : "Inaktiv")
                         </span>
                     </p>
                     <p><strong>Campus:</strong> @Model.Machine.Campus</p>
@@ -23,7 +22,7 @@
             </div>
         </section>
 
-        <h4 class="text-secondary mb-3">Jobs for this Machine</h4>
+        <h4 class="text-secondary mb-3">Opgaver for denne maskine</h4>
 
         <form method="post">
             <div class="row row-cols-1 row-cols-md-2 g-4">
