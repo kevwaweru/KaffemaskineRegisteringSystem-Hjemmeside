@@ -9,7 +9,7 @@ namespace CoffeeCrazy.Pages.Users
 {
     public class IndexModel : PageModel
     {
-        private readonly IUserRepo _userRepo;
+        private readonly ICRUDRepo<User> _userRepo;
         private readonly IAccessService _accessService;
         private readonly IImageService _imageService;
 
@@ -20,7 +20,7 @@ namespace CoffeeCrazy.Pages.Users
         [BindProperty(SupportsGet = true)]
         public Campus? CampusFilter { get; set; }
 
-        public IndexModel(IUserRepo userRepo, IAccessService accessService, IImageService imageService)
+        public IndexModel(ICRUDRepo<User> userRepo, IAccessService accessService, IImageService imageService)
         {
             _userRepo = userRepo;
             _accessService = accessService;

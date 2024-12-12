@@ -8,7 +8,7 @@ namespace CoffeeCrazy.Pages.Users
 {
     public class UpdateModel : PageModel
     {
-        private readonly IUserRepo _userRepo;
+        private readonly ICRUDRepo<User> _userRepo;
         private readonly IAccessService _accessService;
         private readonly IImageService _imageService;
 
@@ -16,7 +16,7 @@ namespace CoffeeCrazy.Pages.Users
         public User UserToBeUpdated { get; set; }
         public string? Base64StringUserImage { get; set; }
 
-        public UpdateModel(IUserRepo userRepo, IAccessService accessService, IImageService imageService)
+        public UpdateModel(ICRUDRepo<User> userRepo, IAccessService accessService, IImageService imageService)
         {
             _userRepo = userRepo;
             _accessService = accessService;

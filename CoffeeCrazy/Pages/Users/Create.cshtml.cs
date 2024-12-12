@@ -8,14 +8,14 @@ namespace CoffeeCrazy.Pages.Users
 {
     public class CreateModel : PageModel
     {
-        private readonly IUserRepo _userRepo;
+        private readonly ICRUDRepo<User> _userRepo;
         private readonly IAccessService _accessService;
         private IImageService _imageService;
 
         [BindProperty]
         public User NewUser { get; set; } = new User();
 
-        public CreateModel(IUserRepo userRepo, IImageService imageService, IAccessService accessService)
+        public CreateModel(ICRUDRepo<User> userRepo, IImageService imageService, IAccessService accessService)
         {
             _userRepo = userRepo;
             _imageService = imageService;

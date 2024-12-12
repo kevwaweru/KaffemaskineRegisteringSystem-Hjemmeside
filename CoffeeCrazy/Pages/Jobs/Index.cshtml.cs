@@ -9,7 +9,7 @@ namespace CoffeeCrazy.Pages.Jobs
     public class IndexModel : PageModel
     {
         private readonly ICRUDRepo<Job> _jobRepo;
-        private readonly IUserRepo _userRepo;
+        private readonly ICRUDRepo<User> _userRepo;
         private readonly ICRUDRepo<Machine> _machineRepo;
         private readonly IAccessService _accessService;
 
@@ -22,7 +22,7 @@ namespace CoffeeCrazy.Pages.Jobs
         [BindProperty(SupportsGet = true)]
         public int? MachineNumber { get; set; }
 
-        public IndexModel(ICRUDRepo<Job> jobRepo, IUserRepo userRepo, ICRUDRepo<Machine> machineRepo, IAccessService accessService)
+        public IndexModel(ICRUDRepo<Job> jobRepo, ICRUDRepo<User> userRepo, ICRUDRepo<Machine> machineRepo, IAccessService accessService)
         {
             _jobRepo = jobRepo;
             _userRepo = userRepo;

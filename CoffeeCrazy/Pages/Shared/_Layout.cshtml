@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -24,16 +25,22 @@
 
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav">
-                        @if (Context.Session.GetString("Email") != null)
+                        @if (Context.Session.GetString("FirstName") != null)
                         {
                             <li class="nav-item">
-                                <a class="nav-link" asp-page="/Index">Index</a>
+                                <a class="nav-link" asp-page="/Machines/Index">Kaffemaskine opgaver</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-page="/Index">Indux</a>
-                            </li>
-                        
-                            <!-- Tilføj flere links her -->
+
+                            @if (Context.Session.GetInt32("RoleId") == 2)
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-page="/Users/Index">Medarbejder Oversigt</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-page="/Jobs/Index">Opgave oversigt</a>
+                                </li>
+                            }
+                     
                         }
                     </ul>
                     <ul class="navbar-nav ms-auto">
@@ -48,24 +55,9 @@
                                 <a class="nav-link" asp-page="/Login/Logout">Logout</a>
                             </li>
                         }
-                        else
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link" asp-page="/Machines/Index">Machine Index</a>
-                            </li>
-
-                            <li class="nav-item">
-                                <a class="nav-link" asp-page="/Jobs/Index">Job Index</a>
-                            </li>
-
-
-                            <li class="nav-item">
-                                <a class="nav-link" asp-page="/Users/Create">Opret ny bruger</a>
-                            </li>
-                        }
                     </ul>
                 </div>
-             </div>
+            </div>
         </nav>
     </header>
     <div class="container">

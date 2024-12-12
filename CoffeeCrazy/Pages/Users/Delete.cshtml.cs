@@ -8,10 +8,10 @@ namespace CoffeeCrazy.Pages.Users
 {
     public class DeleteModel : PageModel
     {
-        private readonly IUserRepo _userRepo;
+        private readonly ICRUDRepo<User> _userRepo;
         private readonly IAccessService _accessService;
 
-        public DeleteModel(IUserRepo userRepo, IAccessService accessService)
+        public DeleteModel(ICRUDRepo<User> userRepo, IAccessService accessService)
         {
             _userRepo = userRepo;
             _accessService = accessService;

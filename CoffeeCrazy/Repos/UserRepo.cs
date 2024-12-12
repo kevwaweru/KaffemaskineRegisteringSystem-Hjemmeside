@@ -7,7 +7,7 @@ using Microsoft.Data.SqlClient;
 
 namespace CoffeeCrazy.Repos
 {
-    public class UserRepo : IUserRepo
+    public class UserRepo : ICRUDRepo<User>
     {
         private readonly string _connectionString;
         private readonly IImageService _imageService;
@@ -250,42 +250,6 @@ namespace CoffeeCrazy.Repos
                 // Other Errors
                 Console.Error.WriteLine($"Mistakes has happened: {ex.Message}");
                 throw;
-            }
-        }
-        // der er 2 delete metoder??
-        public async Task<bool> DeleteUserAsync(int userId, int currentUserId)
-        {
-            try
-            {
-                if (userId == currentUserId)
-                {
-                    return false;
-                }
-
-
-                using (SqlConnection connection = new SqlConnection(_connectionString))
-                {
-                    string sqlQuery = "DELETE FROM Users WHERE UserId = @UserId";
-
-                    SqlCommand command = new SqlCommand(sqlQuery, connection);
-                    command.Parameters.AddWithValue("@UserId", userId);
-
-                    await connection.OpenAsync();
-                    int affectedRows = await command.ExecuteNonQueryAsync();
-
-                    // Check if any rows were deleted
-                    return affectedRows > 0;
-                }
-            }
-            catch (SqlException sqlEx)
-            {
-                Console.WriteLine("Error: " + sqlEx.Message);
-                return false;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error: " + ex.Message);
-                return false;
             }
         }
     }
