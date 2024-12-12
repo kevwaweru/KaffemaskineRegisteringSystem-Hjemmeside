@@ -18,12 +18,14 @@ namespace CoffeeCrazy.Pages.Machines
 
         [BindProperty]
         public Machine MachinetoUpdate { get; set; }
-        public IFormFile PictureToUpload { get; set; }
+        public string? Base64StringMachineImage { get; set; }
 
-    public async Task<IActionResult> OnGetAsync(int id)
+        public async Task<IActionResult> OnGetAsync(int id)
         {
             // Henter maskinen baseret på ID
             MachinetoUpdate = await _machineRepo.GetByIdAsync(id);
+            Base64StringMachineImage = _imageService.FormFileToBase64String(MachinetoUpdate.MachineImage);
+
             if (MachinetoUpdate == null)
             {
                 return NotFound();
@@ -33,7 +35,6 @@ namespace CoffeeCrazy.Pages.Machines
 
         public async Task<IActionResult> OnPostAsync(int id)
         {
-            MachinetoUpdate.MachineImage = _imageService.FormFileToByteArray(PictureToUpload);
             if (!ModelState.IsValid)
             {
                 return Page();

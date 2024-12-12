@@ -1,6 +1,7 @@
 ﻿using CoffeeCrazy.Interfaces;
 using CoffeeCrazy.Models;
 using CoffeeCrazy.Models.Enums;
+using CoffeeCrazy.Services;
 using Microsoft.Data.SqlClient;
 using System.Collections;
 using System.Data;
@@ -11,10 +12,11 @@ namespace CoffeeCrazy.Repos
     {
         private readonly string _connectionString;
         //private readonly ValidateDataRepo _validateDatabaseRepo;
-
-        public MachineRepo(IConfiguration configuration)
+        private readonly IImageService _imageService;
+        public MachineRepo(IConfiguration configuration, IImageService imageService)
         {
             _connectionString = configuration.GetConnectionString("DefaultConnection");
+            _imageService = imageService;
         }
 
         public async Task CreateAsync(Machine toBeCreatedMachine)
@@ -31,7 +33,8 @@ namespace CoffeeCrazy.Repos
                     SqlCommand command = new SqlCommand(SQLquery, connection);
                     command.Parameters.AddWithValue("@Placement", toBeCreatedMachine.Placement);
                     command.Parameters.AddWithValue("@CampusId", (int)toBeCreatedMachine.Campus);
-                    command.Parameters.AddWithValue("@MachineImage", (byte[]?)toBeCreatedMachine.MachineImage); //tilføjet MachineImage til Create.
+                    command.Parameters.AddWithValue("@MachineImage", toBeCreatedMachine.MachineImage != null ? _imageService.FormFileToByteArray(toBeCreatedMachine.MachineImage) : DBNull.Value);
+
 
                     await connection.OpenAsync();
                     await command.ExecuteNonQueryAsync();
@@ -79,8 +82,7 @@ namespace CoffeeCrazy.Repos
                                 Status = (bool)reader["Status"],
                                 Placement = reader["Placement"] as string,
                                 Campus = (Campus)reader["CampusId"],
-                                MachineImage = reader["MachineImage"] != DBNull.Value ? (byte[])reader["MachineImage"] : null                               
-
+                                MachineImage = reader["MachineImage"] != DBNull.Value ? _imageService.ByteArrayToFormFile((byte[])reader["MachineImage"]) : null
                             };
 
                             machines.Add(machine);
@@ -132,7 +134,7 @@ namespace CoffeeCrazy.Repos
                                 Status = (bool)reader["Status"],
                                 Placement = reader["Placement"] as string,
                                 Campus = (Campus)reader["CampusId"],
-                                MachineImage = reader["MachineImage"] != DBNull.Value ? (byte[])reader["MachineImage"] : null
+                                MachineImage = reader["MachineImage"] != DBNull.Value ? _imageService.ByteArrayToFormFile((byte[])reader["MachineImage"]) : null
                             };
                         }
                         else
@@ -182,14 +184,27 @@ namespace CoffeeCrazy.Repos
                                     WHERE
                                         MachineId = @MachineId";
 
+                    var existingMachine = await GetByIdAsync(toBeUpdatedMachine.MachineId);
+
                     SqlCommand command = new SqlCommand(query, connection);
 
-                    command.Parameters.AddWithValue("@Status", toBeUpdatedMachine.Status);
-                    command.Parameters.AddWithValue("@Placement", toBeUpdatedMachine.Placement);
-                    command.Parameters.AddWithValue("@CampusId", (int)toBeUpdatedMachine.Campus);
+                    command.Parameters.AddWithValue("@Status", toBeUpdatedMachine.Status != true ? toBeUpdatedMachine.Status : existingMachine.Status);
+                    command.Parameters.AddWithValue("@Placement", toBeUpdatedMachine.Placement ?? existingMachine.Placement);
+                    command.Parameters.AddWithValue("@CampusId", toBeUpdatedMachine.Campus != 0 ? (int)toBeUpdatedMachine.Campus : (int)existingMachine.Campus);
                     command.Parameters.AddWithValue("@MachineId", toBeUpdatedMachine.MachineId);
-                    command.Parameters.AddWithValue("@MachineImage", (byte[]?)toBeUpdatedMachine.MachineImage);
 
+                    if (toBeUpdatedMachine.MachineImage != null)
+                    {
+                        command.Parameters.AddWithValue("@MachineImage", _imageService.FormFileToByteArray(toBeUpdatedMachine.MachineImage));
+                    }
+                    else if (existingMachine.MachineImage != null)
+                    {
+                        command.Parameters.AddWithValue("@MachineImage", _imageService.FormFileToByteArray(existingMachine.MachineImage));
+                    }
+                    else
+                    {
+                        command.Parameters.AddWithValue("@MachineImage", DBNull.Value);
+                    }
 
                     await connection.OpenAsync();
                     await command.ExecuteNonQueryAsync();

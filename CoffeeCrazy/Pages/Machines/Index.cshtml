@@ -24,7 +24,7 @@
                     <a href="@Url.Page("Details", new { id = machine.MachineId })" class="card-link">
                         <div class="card square-card @GetCardClass(machine, Model.Jobs)"
                              style="@(machine.MachineImage != null ?
-                            "background-image: url('data:image/jpeg;base64," + Convert.ToBase64String(machine.MachineImage) + "'); background-size: cover; background-position: center;" :
+                            "background-image: url('data:image/jpeg;base64," + Model.MachineImageBase64Strings[machine.MachineId] + "'); background-size: cover; background-position: center;" :
                             "background-color: #f0f0f0;")">
                         </div>
                     </a>

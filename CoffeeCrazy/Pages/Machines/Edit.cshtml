@@ -38,26 +38,24 @@
                 <option value="false" selected="@(!Model.MachinetoUpdate.Status)">Inaktiv</option>
             </select>
         </div>
-        <div class="mb-2">
-            @if (Model.MachinetoUpdate.MachineImage != null)
-            {
-                <td>
-                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.MachinetoUpdate.MachineImage)" alt="Machine Image" style="max-width:80px;max-height:80px;" />
-                </td>
-            }
-            else
-            {
-                <td class="text-danger">
-                    No Image
-                </td>
-            }
-        </div>
+        @if (Model.MachinetoUpdate.MachineImage != null)
+        {
+            <div class="mb-2">
+                <img src="data:image/jpeg;base64,@Model.Base64StringMachineImage" alt="Machine Image" style="max-width:150px; max-height:150px;" />
+            </div>
+        }
+        else
+        {
+            <div class="mb-2 text-danger">
+                Ingen Billede
+            </div>
+        }
 
 
         <div class="mb-2">
             <label class="fs-3" for="inputGroupFile01">Maskine Billed</label> <br />
-            <input asp-for="PictureToUpload" type="file" class="form-control" id="inputGroupFile01" />
-            <span asp-validation-for="PictureToUpload" class="text-danger"></span>
+            <input asp-for="@Model.MachinetoUpdate.MachineImage" type="file" class="form-control" id="inputGroupFile01" />
+            <span asp-validation-for="@Model.MachinetoUpdate.MachineImage" class="text-danger"></span>
         </div>
         <button type="submit" class="btn btn-success">Opdater Maskine</button>
         <a class="btn btn-dark" asp-page="Index">Tilbage til oversigt</a>
