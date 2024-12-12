@@ -13,14 +13,14 @@ namespace CoffeeCrazy.Pages.Jobs
         private readonly ICRUDRepo<Machine> _machineRepo;
         private readonly IAccessService _accessService;
 
-
-        public List<Frequency> Frequencies = new List<Frequency>();
-
+        private List<Job> OlderThan6MonthsJobs { get; set; }
         public List<Job> Jobs { get; set; }
         public List<User> Users { get; set; }
         public List<Machine> Machines { get; set; }
+        public List<Job> FilteredJobs { get; private set; } = new List<Job>();
 
-        private List<Job> OlderThan6MonthsJobs { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public int? MachineNumber { get; set; }
 
         public IndexModel(ICRUDRepo<Job> jobRepo, IUserRepo userRepo, ICRUDRepo<Machine> machineRepo, IAccessService accessService)
         {
@@ -34,7 +34,13 @@ namespace CoffeeCrazy.Pages.Jobs
         public async Task<IActionResult> OnGetAsync()
         {
             if (!_accessService.IsUserLoggedIn(HttpContext))
+            {
                 return RedirectToPage("/Login/Login");
+            }
+            if (!_accessService.IsAdmin(HttpContext))
+            {
+                return RedirectToPage("/Errors/AccessDenied");
+            }
 
             //Finder jobs som er ældre end 6 måneder
             OlderThan6MonthsJobs = _jobRepo.GetAllAsync().Result.FindAll(parameter => parameter.Deadline < DateTime.UtcNow.AddMonths(-6));
@@ -45,14 +51,17 @@ namespace CoffeeCrazy.Pages.Jobs
                 await _jobRepo.DeleteAsync(oldJob);
             }
 
-            Jobs = await _jobRepo.GetAllAsync();
-            Users = await _userRepo.GetAllAsync();
-            Machines = await _machineRepo.GetAllAsync();
 
-            foreach (var item in Jobs)
+            if (MachineNumber == null)
             {
-                Frequencies.Add((Frequency)item.FrequencyId);
+                MachineNumber = 1;
             }
+
+            Jobs = await _jobRepo.GetAllAsync();
+            Machines = await _machineRepo.GetAllAsync();
+            Users = await _userRepo.GetAllAsync();
+            FilteredJobs = Jobs.Where(job => job.MachineId == MachineNumber).ToList();
+
             return Page();
         }
     }

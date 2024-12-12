@@ -18,7 +18,13 @@ namespace CoffeeCrazy.Pages.Jobs
         public async Task<IActionResult> OnGetAsync(int id)
         {
             if (!_accessService.IsUserLoggedIn(HttpContext))
+            {
                 return RedirectToPage("/Login/Login");
+            }
+            if (!_accessService.IsAdmin(HttpContext))
+            {
+                return RedirectToPage("/Errors/AccessDenied");
+            }
 
             await _jobRepo.DeleteAsync(await _jobRepo.GetByIdAsync(id));
 

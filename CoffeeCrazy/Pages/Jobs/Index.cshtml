@@ -1,130 +1,122 @@
 ﻿@page
 @using CoffeeCrazy.Models
-@using CoffeeCrazy.Models.Enums
 @model CoffeeCrazy.Pages.Jobs.IndexModel
-@{
 
-}
-<h1>Camillas Overblik Side</h1>
-
-<br />
-<p class="text-danger">Hvis deadline er overskredet og jobbet er ikke udført af nogen, så er rækken rød</p>
-<p class="text-success">Hvis jobbet er udført, er rækken grøn</p>
-<p>Hvis ingen af ovenstående er sand, er rækken bare hvid</p>
-<br />
-
-<a class="btn btn-primary btn-sm" asp-page="Create">Opret Job</a>
-<br />
-
-<div class="container">
+<div class="container-fluid card shadow p-4">
     <div class="row">
-        @foreach (var machine in Model.Machines)
-        {
-            <div class="col">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Maskine ID</th>
-                            <th>Opgave Titel</th>
-                            <th>Beskrivelse</th>
-                            <th>Kommentar</th>
-                            <th>Oprettet dato</th>
-                            <th>Deadline</th>
-                            <th>Hyppighed</th>
-                            <th>Medarbejder Navn</th>
-                            <th>Er Udført?</th>
-                            <th>Slet opgave</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (Job job in Model.Jobs)
-                        {
-                            if (machine.MachineId == job.MachineId)
-                            {
-                                Frequency frequency = Model.Frequencies.FirstOrDefault(frequencyParameter => (int)frequencyParameter == job.FrequencyId);
-                                User user = Model.Users.FirstOrDefault(userParameter => userParameter.UserId == job.UserId);
+        @* Venstre Sidebar til Filter *@
+        <div class="col-2">
+            <h5>Vælg Maskine</h5>
+            <div class="btn-group-vertical w-100" role="group">
+                @foreach (var machine in Model.Machines)
+                {
+                    string buttonClass;
 
+                    if (Model.MachineNumber == machine.MachineId || (!Model.MachineNumber.HasValue && machine.MachineId == 1))
+                    {
+                        buttonClass = "btn-dark";
+                    }
+                    else
+                    {
+                        buttonClass = "btn-outline-dark";
+                    }
 
-                                /*denne string holder en bootstrap klasse for table <tr>
-                                Jed godt vi ikke kommer til at bruge bootstrap men her ville vi fx. skrive en CSS klasse*/
-                                string rowClass =
-                                /*Hvis deadline er overskredet og jobbet er ikke udført af nogen, så er rækken rød*/
-                                job.Deadline < DateTime.Now && !job.IsCompleted ? "table-danger" :
-                                /*Hvis jobbet er udført, er rækken grøn*/
-                                job.IsCompleted ? "table-success" :
-                                /*Hvis ingen af ovenstående er sand, er rækken bare hvid*/
-                                "table-light";
-
-                                <tr class="@rowClass">
-                                    <td>@job.MachineId</td>
-
-                                    <td>@job.Title</td>
-
-                                    <td>@job.Description</td>
-
-                                    @if (job.Comment != null)
-                                    {
-                                        <td>@job.Comment</td>
-                                    }
-                                    else
-                                    {
-                                        <td>Ingen kommentar</td>
-                                    }
-
-                                    <td>@job.DateCreated</td>
-
-                                    <td>@job.Deadline</td>
-
-                                    <td>@frequency</td>
-
-                                    @if (job.UserId != null)
-                                    {
-                                        <td>@user.FirstName @user.LastName</td>
-                                    }
-                                    else if (job.UserId == null && job.Deadline > DateTime.Now)
-                                    {
-                                        <td class="text-warning">Venter på at blive udført</td>
-                                    }
-                                    else
-                                    {
-                                        <td class="text-danger">Ikke udført af nogen</td>
-                                    }
-                                    <td>@job.IsCompleted</td>
-                                    <td>
-                                        <a href="/Jobs/Update?id=@job.JobId">Update</a>
-                                        <a class="btn btn-danger btn-sm" asp-page="Update" asp-route-id="@job.JobId">Update</a>
-
-                                    </td>
-                                    <td>
-                                        <!-- Button trigger modal -->
-                                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#sletModal_@job.JobId">Slet</button>
-
-                                        <!-- Modal -->
-                                        <div class="modal fade" id="sletModal_@job.JobId" tabindex="-1" aria-labelledby="sletModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h1 class="modal-title fs-5" id="sletModalLabel" style="color:black;">Er du sikker på du vil slette denne job "@job.Title" på maskine @job.MachineId?</h1>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal">Fortryd</button>
-                                                        <a class="btn btn-danger btn-sm" asp-page="Delete" asp-route-id="@job.JobId">Slet</a>
-                                                    </div>
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            }
-                        }
-                    </tbody>
-
-                </table>
-
+                    <a href="?MachineNumber=@machine.MachineId" class="btn @buttonClass">
+                        Maskine: @machine.MachineId
+                    </a>
+                }
             </div>
-        }
+        </div>
 
+        @*Job oversigt*@
+        <div class="col-10">
+            <div class="d-flex justify-content-between align-items-center mt-2">
+                <h3>Opgaver for Maskine: @Model.MachineNumber</h3>
+                <a class="btn btn-success btn mb-2" asp-page="Create">Opret Opgave</a>
+            </div>
+
+            <div class="d-flex flex-nowrap overflow-auto">
+                @foreach (var group in Model.FilteredJobs.GroupBy(job => job.Title))
+                {
+                    <div class="card me-3" style="min-width: 300px; max-width: 300px; max-height: 80vh; overflow-y: auto;">
+                        <div class="card-header text-center">
+                            <h5>@group.Key</h5>
+                        </div>
+                        <div class="card-body">
+                            @foreach (Job job in group)
+                            {
+                                // Bestem css/bootstrap klassen baseret på status af jobbet
+                                string cardClass;
+                                if (job.IsCompleted)
+                                {
+                                    cardClass = "text-success";
+                                }
+                                else if (job.Deadline < DateTime.Now && !job.IsCompleted)
+                                {
+                                    cardClass = "text-danger";
+                                }
+                                else
+                                {
+                                    cardClass = "";
+                                }
+
+                                User user = Model.Users.FirstOrDefault(u => u.UserId == job.UserId);
+
+                                <div class="mb-3 p-2 border-bottom @cardClass">
+                                    <p class="mb-1"><strong>Oprettet Dato:</strong> @job.DateCreated.ToShortDateString()</p>
+
+                                    <p class="mb-1">
+                                        <strong>Udført:</strong>
+                                        @if (job.IsCompleted)
+                                        {
+                                            <span>Ja</span>
+                                        }
+                                        else
+                                        {
+                                            <span>Nej</span>
+                                        }
+                                    </p>
+
+                                    <p class="mb-1">
+                                        <strong>Medarbejder:</strong>
+                                        @if (user != null)
+                                        {
+                                            <span>@user.FirstName @user.LastName</span>
+                                        }
+                                        else
+                                        {
+                                            <span>Ingen</span>
+                                        }
+                                    </p>
+
+                                    <p class="mb-1">
+                                        <strong>Kommentar:</strong>
+                                        @if (string.IsNullOrEmpty(job.Comment))
+                                        {
+                                            <span>Ingen Kommentar</span>
+                                        }
+                                        else
+                                        {
+                                            <span>@job.Comment</span>
+                                        }
+                                    </p>
+                                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                        <a class="btn btn-warning btn-sm" asp-page="Update" asp-route-id="@job.JobId">Opdater</a>
+                                        <a class="btn btn-danger btn-sm" asp-page="Delete" asp-route-id="@job.JobId">Slet</a>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+
+                @* Opret Opgave-knap *@
+                <div class="card me-3" style="min-width: 300px; max-width: 300px; max-height: 80vh; overflow-y: auto;">
+                    <div class="card-body d-flex align-items-center justify-content-center">
+                        <a class="btn btn-success btn-lg" asp-page="Create">Opret Opgave</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
