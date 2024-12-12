@@ -12,8 +12,6 @@ namespace CoffeeCrazy.Pages.Users
         private readonly IAccessService _accessService;
         private IImageService _imageService;
 
-        public IFormFile PictureToBeUploaded { get; set; }
-
         [BindProperty]
         public User NewUser { get; set; } = new User();
 
@@ -31,7 +29,13 @@ namespace CoffeeCrazy.Pages.Users
         public async Task<IActionResult> OnPost()
         {
             if (!_accessService.IsUserLoggedIn(HttpContext))
+            {
                 return RedirectToPage("/Login/Login");
+            }
+            if (!_accessService.IsAdmin(HttpContext))
+            {
+                return RedirectToPage("/Errors/AccessDenied");
+            }
 
             //ModelState.Remove("PasswordSalt");
             //if (!ModelState.IsValid)
@@ -39,8 +43,6 @@ namespace CoffeeCrazy.Pages.Users
             //    return Page();
             //}
 
-            NewUser.UserImage = _imageService.ConvertImageToByteArray(PictureToBeUploaded);
-            
             await _userRepo.CreateAsync(NewUser);
             return RedirectToPage("Index");
         }

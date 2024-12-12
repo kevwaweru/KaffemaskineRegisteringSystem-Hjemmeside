@@ -33,7 +33,7 @@ namespace CoffeeCrazy.Pages.Machines
                 return Page();
             }
             
-            Machine.MachineImage = _imageService.ConvertImageToByteArray(PictureToBeUploaded);
+            Machine.MachineImage = _imageService.FormFileToByteArray(PictureToBeUploaded);
 
             await _machineRepo.CreateAsync(Machine);
             return RedirectToPage("./Index"); // Redirect to a list page

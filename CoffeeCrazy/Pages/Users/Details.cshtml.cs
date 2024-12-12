@@ -8,25 +8,33 @@ namespace CoffeeCrazy.Pages.Users
 {
     public class DetailsModel : PageModel
     {
-        public User User { get; set; }
-
         private readonly IUserRepo _userRepo;
         private readonly IAccessService _accessService;
+        private readonly IImageService _imageService;
 
-        public DetailsModel(IUserRepo userRepo, IAccessService accessService)
+        [BindProperty]
+        public User User { get; set; }
+
+        public string? Base64StringUserImage { get; set; }
+
+        public DetailsModel(IUserRepo userRepo, IAccessService accessService, IImageService imageService)
         {
             _userRepo = userRepo;
             _accessService = accessService;
+            _imageService = imageService;
         }
 
         public async Task<IActionResult> OnGetAsync(int id)
         {
 
             if (!_accessService.IsUserLoggedIn(HttpContext))
+            {
                 return RedirectToPage("/Login/Login");
 
+            }
 
             User = await _userRepo.GetByIdAsync(id);
+            Base64StringUserImage = _imageService.FormFileToBase64String(User.UserImageFile);
 
 
             if (User == null)
@@ -36,6 +44,29 @@ namespace CoffeeCrazy.Pages.Users
 
             return Page();
 
+        }
+        public async Task<IActionResult> OnPostAsync(int id)
+        {
+            ModelState.Remove("User.PasswordSalt");
+            ModelState.Remove("User.Password");
+            User existingUser = await _userRepo.GetByIdAsync(id);
+
+            if (!ModelState.IsValid)
+            {
+                Base64StringUserImage = _imageService.FormFileToBase64String(existingUser.UserImageFile);
+                return Page();
+            }
+
+            if (User.UserImageFile == null)
+            {
+                User.UserImageFile = existingUser.UserImageFile;
+            }
+
+            await _userRepo.UpdateAsync(User);
+
+            Base64StringUserImage = _imageService.FormFileToBase64String(User.UserImageFile);
+
+            return Page();
         }
     }
 }

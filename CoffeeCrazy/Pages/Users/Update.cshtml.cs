@@ -10,34 +10,50 @@ namespace CoffeeCrazy.Pages.Users
     {
         private readonly IUserRepo _userRepo;
         private readonly IAccessService _accessService;
-
-        public UpdateModel(IUserRepo userRepo, IAccessService accessService)
-        {
-            _userRepo = userRepo;
-            _accessService = accessService;
-        }
+        private readonly IImageService _imageService;
 
         [BindProperty]
         public User UserToBeUpdated { get; set; }
+        public string? Base64StringUserImage { get; set; }
 
-        public IActionResult OnGet(int id)
+        public UpdateModel(IUserRepo userRepo, IAccessService accessService, IImageService imageService)
+        {
+            _userRepo = userRepo;
+            _accessService = accessService;
+            _imageService = imageService;
+        }
+
+        public async Task<IActionResult> OnGetAsync(int id)
         {
             if (!_accessService.IsUserLoggedIn(HttpContext))
+            {
                 return RedirectToPage("/Login/Login");
+            }
+            if (!_accessService.IsAdmin(HttpContext))
+            {
+                return RedirectToPage("/Errors/AccessDenied");
+            }
+
+            UserToBeUpdated = await _userRepo.GetByIdAsync(id);
+            Base64StringUserImage = _imageService.FormFileToBase64String(UserToBeUpdated.UserImageFile);
 
             return Page();
         }
 
-        public IActionResult OnPost()
+        public async Task<IActionResult> OnPostAsync()
         {
-          
+            ModelState.Remove("UserToBeUpdated.PasswordSalt");
+            ModelState.Remove("UserToBeUpdated.Password");
+            ModelState.Remove("UserToBeUpdated.UserImage");
+
             if (!ModelState.IsValid)
             {
                 return Page();
             }
 
-            _userRepo.UpdateAsync(UserToBeUpdated);
-            return RedirectToPage("ResidentOverview");
+            await _userRepo.UpdateAsync(UserToBeUpdated);
+            return RedirectToPage("Index");
         }
+       
     }
 }

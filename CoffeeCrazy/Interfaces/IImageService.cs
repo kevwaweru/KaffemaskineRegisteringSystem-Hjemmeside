@@ -2,8 +2,10 @@
 {
     public interface IImageService
     {
-        byte[] ConvertImageToByteArray(IFormFile imageFile);
+        byte[] FormFileToByteArray(IFormFile imageFile);
 
-        IFormFile ConvertArrayToIFormFile(byte[] imageByte);
+        IFormFile ByteArrayToFormFile(byte[] imageByte);
+
+        string? FormFileToBase64String(IFormFile imageFile);
     }
 }

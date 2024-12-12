@@ -1,11 +1,13 @@
 ﻿@page
 @model CoffeeCrazy.Pages.Users.DetailsModel
 
-<h1>Bruger Detaljer</h1>
+<div class="card shadow p-4">
+    <div class="mb-2">
+        <h1>Bruger Detaljer</h1>
+        <h3>@Model.User.FirstName @Model.User.LastName</h3>
+    </div>
 
-<div>
-    <h3>@Model.User.FirstName @Model.User.LastName</h3>
-    <dl class="row">
+    <div class="row mb-2">
         <dt class="col-sm-2">Email:</dt>
         <dd class="col-sm-10">@Model.User.Email</dd>
 
@@ -16,10 +18,10 @@
         <dd class="col-sm-10">@Model.User.Campus</dd>
 
         <dt class="col-sm-2">Billede:</dt>
-        @if (Model.User.UserImage != null)
+        @if (Model.User.UserImageFile != null)
         {
             <dd class="col-sm-10">
-                <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.User.UserImage)" alt="User Image" style="max-width:200px;max-height:200px;" />
+                <img src="data:image/jpeg;base64,@Model.Base64StringUserImage" alt="Billede af @Model.User.FirstName" style="max-width: 25rem; max-height: 25rem;" />
             </dd>
         }
         else
@@ -27,7 +29,28 @@
             <dd class="col-sm-10 text-danger">
                 Ingen Billede
             </dd>
-
         }
-    </dl>
+    </div>
+    <form method="post" enctype="multipart/form-data">
+        <input asp-for="User.UserId" type="hidden" />
+        <input asp-for="User.FirstName" type="hidden" />
+        <input asp-for="User.LastName" type="hidden" />
+        <input asp-for="User.Email" type="hidden" />
+        <input asp-for="User.Role" type="hidden" />
+        <input asp-for="User.Campus" type="hidden" />
+
+        <div class="mb-2">
+            <label for="UserImage" class="form-label">Skift Profilbillede</label>
+            <input asp-for="User.UserImageFile" type="file" class="form-control" id="UserImage">
+            <span asp-validation-for="User.UserImageFile" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-success">Update</button>
+
+    </form>
+
+    <div class="mt-2 d-grid gap-2 d-md-flex justify-content-md-end">
+        <a class="btn btn-warning" asp-page="/Login/Password/ChangePassword">Skift Password</a>
+        <a class="btn btn-dark" asp-page="/Machines/Index">Tilbage</a>
+    </div>
+
 </div>
