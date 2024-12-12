@@ -5,49 +5,63 @@
     ViewData["Title"] = "Machine Details";
 }
 
-<h1>Machine Details</h1>
+<div class="container mt-4">
+    <h1 class="text-primary">@ViewData["Title"]</h1>
 
-<div>
-    <h3>Machine ID: @Model.Machine.MachineId</h3>
-    <p><strong>Placement:</strong> @Model.Machine.Placement</p>
-    <p><strong>Status:</strong> @(Model.Machine.Status ? "Active" : "Inactive")</p>
-    <p><strong>Campus:</strong> @Model.Machine.Campus</p>
-</div>
-
-<h4>Jobs for this Machine</h4>
-
-<form method="post">
-    @foreach (var job in Model.job)
-    {
-        <div class="mb-3">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">@job.Title</h5>
-                    <p>@job.Description</p>
-                    <p><strong>Deadline:</strong> @job.Deadline.ToString("d")</p>
-
-                  <div class="form-check">
-                        <input class="form-check-input"
-                               type="checkbox"
-                               asp-for="Job.IsCompleted"  
-                               id="job_@job.JobId" 
-                               value="true" />
-                        <label class="form-check-label" for="job_@job.JobId">Completed</label>
-                    </div>
-
-                    <div class="mt-2">
-                        <label for="comment_@job.JobId">Comment</label>
-                        <textarea class="form-control"
-                                  id="comment_@job.JobId"
-                                  asp-for="Job.Comment"  
-                                  placeholder="Write a comment..."></textarea>
-                    </div>
-                </div>
+    <section class="my-4">
+        <div class="card border-0 shadow-sm" style="max-width: 600px; margin: auto;">
+            <div class="card-body">
+                <h3 class="card-title text-dark">Machine ID: @Model.Machine.MachineId</h3>
+                <p>
+                    <strong>Status:</strong> <span class="badge @(Model.Machine.Status ? "bg-success" : "bg-secondary")">
+                        @(Model.Machine.Status ? "Active" : "Inactive")
+                    </span>
+                </p>
+                <p><strong>Campus:</strong> @Model.Machine.Campus</p>
             </div>
         </div>
-    }
+    </section>
 
-    <button type="submit" class="btn btn-primary mt-3">Update Jobs</button>
-</form>
+    <h4 class="text-secondary mb-3">Jobs for this Machine</h4>
 
-<a class="btn btn-secondary btn-sm mt-3" asp-page="Index">Back to Overview</a>
+    <form method="post">
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+            @foreach (var job in Model.job)
+            {
+                <div class="col">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body">
+                            <h5 class="card-title text-dark">@job.Title</h5>
+                            <p class="text-muted" style="font-size: 0.9rem;">@job.Description</p>
+                            <p class="text-secondary" style="font-size: 0.85rem;">
+                                <strong>Deadline:</strong> @job.Deadline.ToString("d")
+                            </p>
+
+                            <div class="form-check mt-2">
+                                <input class="form-check-input" type="checkbox" asp-for="Job.IsCompleted" id="job_@job.JobId" value="true" />
+                                <label class="form-check-label" for="job_@job.JobId">Completed</label>
+                            </div>
+
+                            <div class="mt-3">
+                                <label for="comment_@job.JobId" class="form-label">Comment</label>
+                                <textarea class="form-control"
+                                          id="comment_@job.JobId"
+                                          asp-for="Job.Comment"
+                                          placeholder="Write a comment..."
+                                          style="resize: none; height: 100px;"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="text-center mt-4">
+            <button type="submit" class="btn btn-primary">Update Jobs</button>
+        </div>
+    </form>
+
+    <div class="text-center mt-3">
+        <a class="btn btn-secondary btn-sm" asp-page="Index">Back to Overview</a>
+    </div>
+</div>
