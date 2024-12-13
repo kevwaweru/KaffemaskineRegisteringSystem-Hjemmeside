@@ -46,7 +46,7 @@ namespace CoffeeCrazy.Pages.Login.Password
                     ErrorMessage = "An error occurred while changing the password. SQL related";
                 }
             }
-            return Page();
+            return RedirectToPage("/Machines/Index");
 
         }
     }

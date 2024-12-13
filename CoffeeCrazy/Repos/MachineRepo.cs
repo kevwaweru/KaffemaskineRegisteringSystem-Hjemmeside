@@ -10,7 +10,6 @@ namespace CoffeeCrazy.Repos
     public class MachineRepo : ICRUDRepo<Machine>
     {
         private readonly string _connectionString;
-        //private readonly ValidateDataRepo _validateDatabaseRepo;
 
         public MachineRepo(IConfiguration configuration)
         {
@@ -20,7 +19,6 @@ namespace CoffeeCrazy.Repos
         public async Task CreateAsync(Machine toBeCreatedMachine)
         {
 
-            //validate input from parameter kunne blive sat ind her.
             try
             {
                 using (SqlConnection connection = new SqlConnection(_connectionString))
