@@ -22,6 +22,7 @@ namespace CoffeeCrazy.Pages.Machines
         
         public List<Machine> Machines { get; set; } = new();
         public List<Job> Jobs { get; set; } = new();
+        public Dictionary<int, string?> MachineImageBase64Strings { get; private set; } = new();
 
         public async Task<IActionResult> OnGetAsync(int? Id)
         {
@@ -35,7 +36,12 @@ namespace CoffeeCrazy.Pages.Machines
             
             // Henter alle maskiner fra databasen
             Machines = await _machineRepo.GetAllAsync();
-            
+
+            foreach (Machine machine in Machines)
+            {
+                MachineImageBase64Strings.Add(machine.MachineId, _imageService.FormFileToBase64String(machine.MachineImage));
+            }
+
             return Page();
         }
 
