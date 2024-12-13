@@ -12,12 +12,14 @@ namespace CoffeeCrazy.Pages.Machines
         private readonly ICRUDRepo<Machine> _machineRepo;
         private readonly ICRUDRepo<Job> _jobRepo;
         private readonly IAccessService _accessService;
+        IImageService _imageService;
 
-        public IndexModel(ICRUDRepo<Machine> machineRepo, ICRUDRepo<Job> jobRepo, IAccessService accessService)
+        public IndexModel(ICRUDRepo<Machine> machineRepo, ICRUDRepo<Job> jobRepo, IAccessService accessService, IImageService imageService)
         {
             _machineRepo = machineRepo;
             _jobRepo = jobRepo;
             _accessService = accessService;
+            _imageService = imageService;
         }
         
         public List<Machine> Machines { get; set; } = new();
