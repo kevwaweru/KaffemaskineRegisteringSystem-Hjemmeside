@@ -1,6 +1,5 @@
 using CoffeeCrazy.Interfaces;
 using CoffeeCrazy.Models;
-using CoffeeCrazy.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -35,12 +34,6 @@ namespace CoffeeCrazy.Pages.Users
 
             User = await _userRepo.GetByIdAsync(id);
             Base64StringUserImage = _imageService.FormFileToBase64String(User.UserImageFile);
-
-
-            if (User == null)
-            {
-                return NotFound("Brugeren blev ikke fundet.");
-            }
 
             return Page();
 

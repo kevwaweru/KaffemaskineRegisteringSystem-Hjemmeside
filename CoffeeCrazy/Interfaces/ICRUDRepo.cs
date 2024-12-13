@@ -1,6 +1,4 @@
-﻿using CoffeeCrazy.Models;
-
-namespace CoffeeCrazy.Interfaces
+﻿namespace CoffeeCrazy.Interfaces
 {
     public interface ICRUDRepo<T>
     {
@@ -16,6 +14,5 @@ namespace CoffeeCrazy.Interfaces
 
         //Delete
         Task DeleteAsync(T toBeDeletedT);
-        
     }
 }

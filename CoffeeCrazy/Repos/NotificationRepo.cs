@@ -1,8 +1,4 @@
-﻿using CoffeeCrazy.Models;
-using Microsoft.Data.SqlClient;
-using System.Data;
-
-namespace CoffeeCrazy.Repos
+﻿namespace CoffeeCrazy.Repos
 {
     public class NotificationRepo
     {

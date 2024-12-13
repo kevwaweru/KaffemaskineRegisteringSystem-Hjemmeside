@@ -1,6 +1,5 @@
 using CoffeeCrazy.Interfaces;
 using CoffeeCrazy.Models;
-using CoffeeCrazy.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -12,7 +11,6 @@ namespace CoffeeCrazy.Pages.Machines
         private readonly IAccessService _accessService;
 
         public List<Machine> Machines { get; set; } = new();
-
         [BindProperty]
         public int? SelectedMachineId { get; set; } // Holds the ID of the selected machine.
 
@@ -55,7 +53,7 @@ namespace CoffeeCrazy.Pages.Machines
 
             await _machineRepo.DeleteAsync(machine);
 
-            return RedirectToPage("./Index"); // Redirect to a list or main page after deletion.
+            return RedirectToPage("Index"); // Redirect to a list or main page after deletion.
         }
     }
 }

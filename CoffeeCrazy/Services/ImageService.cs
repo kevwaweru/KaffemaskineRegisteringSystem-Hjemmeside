@@ -1,5 +1,4 @@
 ﻿using CoffeeCrazy.Interfaces;
-using Microsoft.Data.SqlClient;
 
 namespace CoffeeCrazy.Services
 {

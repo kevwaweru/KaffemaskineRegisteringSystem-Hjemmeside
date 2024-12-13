@@ -1,7 +1,5 @@
 using CoffeeCrazy.Interfaces;
 using CoffeeCrazy.Models;
-using CoffeeCrazy.Models.Enums;
-using CoffeeCrazy.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -12,9 +10,8 @@ namespace CoffeeCrazy.Pages.Machines
         private readonly ICRUDRepo<Machine> _machineRepo;
         private IImageService _imageService;
         private readonly IAccessService _accessService;
-
+        
         public IFormFile PictureToBeUploaded { get; set; }
-
         [BindProperty]
         public Machine Machine { get; set; }
 
@@ -47,7 +44,7 @@ namespace CoffeeCrazy.Pages.Machines
             }
             
             await _machineRepo.CreateAsync(Machine);
-            return RedirectToPage("./Index"); // Redirect to a list page
+            return RedirectToPage("Index"); // Redirect to a list page
         }
     }
 }

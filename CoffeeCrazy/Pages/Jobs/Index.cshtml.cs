@@ -1,6 +1,5 @@
 using CoffeeCrazy.Interfaces;
 using CoffeeCrazy.Models;
-using CoffeeCrazy.Models.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -18,7 +17,6 @@ namespace CoffeeCrazy.Pages.Jobs
         public List<User> Users { get; set; }
         public List<Machine> Machines { get; set; }
         public List<Job> FilteredJobs { get; private set; } = new List<Job>();
-
         [BindProperty(SupportsGet = true)]
         public int? MachineNumber { get; set; }
 
@@ -29,8 +27,6 @@ namespace CoffeeCrazy.Pages.Jobs
             _machineRepo = machineRepo;
             _accessService = accessService;
         }
-
-
         public async Task<IActionResult> OnGetAsync()
         {
             if (!_accessService.IsUserLoggedIn(HttpContext))

@@ -1,8 +1,6 @@
 using CoffeeCrazy.Interfaces;
-using CoffeeCrazy.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Dynamic;
 
 namespace CoffeeCrazy.Pages.Login.Password
 {

@@ -1,6 +1,5 @@
 using CoffeeCrazy.Interfaces;
 using CoffeeCrazy.Models;
-using CoffeeCrazy.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -58,7 +57,7 @@ namespace CoffeeCrazy.Pages.Machines
             await _machineRepo.UpdateAsync(MachinetoUpdate);
 
             // Redirecter til Index (oversigten)
-            return RedirectToPage("./Index");
+            return RedirectToPage("Index");
         }
     }
 }

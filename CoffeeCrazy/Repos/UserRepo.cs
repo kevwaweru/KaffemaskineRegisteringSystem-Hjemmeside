@@ -1,7 +1,6 @@
 ﻿using CoffeeCrazy.Interfaces;
 using CoffeeCrazy.Models;
 using CoffeeCrazy.Models.Enums;
-using CoffeeCrazy.Services;
 using CoffeeCrazy.Utilities;
 using Microsoft.Data.SqlClient;
 

@@ -1,10 +1,7 @@
 ﻿using CoffeeCrazy.Interfaces;
 using CoffeeCrazy.Models;
 using CoffeeCrazy.Models.Enums;
-using CoffeeCrazy.Services;
 using Microsoft.Data.SqlClient;
-using System.Collections;
-using System.Data;
 
 namespace CoffeeCrazy.Repos
 {
@@ -20,7 +17,6 @@ namespace CoffeeCrazy.Repos
 
         public async Task CreateAsync(Machine toBeCreatedMachine)
         {
-
             try
             {
                 using (SqlConnection connection = new SqlConnection(_connectionString))

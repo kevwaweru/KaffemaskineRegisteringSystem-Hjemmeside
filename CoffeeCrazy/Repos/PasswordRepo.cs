@@ -1,9 +1,7 @@
 ﻿using CoffeeCrazy.Interfaces;
 using CoffeeCrazy.Models.Enums;
-using CoffeeCrazy.Services;
 using CoffeeCrazy.Utilities;
 using Microsoft.Data.SqlClient;
-using System.Data.Common;
 
 namespace CoffeeCrazy.Repos
 {

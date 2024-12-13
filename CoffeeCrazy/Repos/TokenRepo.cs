@@ -1,6 +1,5 @@
 ﻿using CoffeeCrazy.Interfaces;
 using Microsoft.Data.SqlClient;
-using Microsoft.IdentityModel.Tokens;
 
 namespace CoffeeCrazy.Repos
 {

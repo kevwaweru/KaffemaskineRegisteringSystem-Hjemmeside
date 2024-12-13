@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CoffeeCrazy.Pages.Login
 {
-
     public class LogoutModel : PageModel
     {
         public IActionResult OnGet()

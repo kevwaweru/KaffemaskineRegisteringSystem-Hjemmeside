@@ -1,6 +1,5 @@
 using CoffeeCrazy.Interfaces;
 using CoffeeCrazy.Models;
-using CoffeeCrazy.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -36,12 +35,6 @@ namespace CoffeeCrazy.Pages.Users
             {
                 return RedirectToPage("/Errors/AccessDenied");
             }
-
-            //ModelState.Remove("PasswordSalt");
-            //if (!ModelState.IsValid)
-            //{
-            //    return Page();
-            //}
 
             await _userRepo.CreateAsync(NewUser);
             return RedirectToPage("Index");

@@ -1,10 +1,7 @@
 ﻿using CoffeeCrazy.Models.Enums;
-using System.ComponentModel.DataAnnotations;
-using System.Text.RegularExpressions;
 
 namespace CoffeeCrazy.Models
 {
-    //Kevin
     public class User
     {
         public int UserId { get; set; }

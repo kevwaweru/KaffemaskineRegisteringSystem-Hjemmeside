@@ -1,6 +1,5 @@
 using CoffeeCrazy.Interfaces;
 using CoffeeCrazy.Models;
-using CoffeeCrazy.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -10,6 +9,7 @@ namespace CoffeeCrazy.Pages.Jobs
     {
         private readonly ICRUDRepo<Job> _jobRepo;
         private readonly IAccessService _accessService;
+
         public DeleteModel(ICRUDRepo<Job> jobRepo, IAccessService accessService)
         {
             _jobRepo = jobRepo;

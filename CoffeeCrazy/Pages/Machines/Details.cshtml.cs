@@ -1,6 +1,5 @@
 using CoffeeCrazy.Interfaces;
 using CoffeeCrazy.Models;
-using CoffeeCrazy.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -49,10 +48,6 @@ namespace CoffeeCrazy.Pages.Machines
 
         public async Task<IActionResult> OnPostAsync(int id)
         {
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return Page();
-        //    }
 
             if (Jobs == null || !Jobs.Any())
             {
@@ -73,7 +68,7 @@ namespace CoffeeCrazy.Pages.Machines
                 }
             }
 
-            return RedirectToPage("./Index");
+            return RedirectToPage("Index");
         }
     }
 }
