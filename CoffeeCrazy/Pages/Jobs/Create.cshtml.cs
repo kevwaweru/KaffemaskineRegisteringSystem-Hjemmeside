@@ -10,7 +10,6 @@ namespace CoffeeCrazy.Pages.Jobs
     {
         private readonly ICRUDRepo<Job> _jobRepo;
         private readonly ICRUDRepo<Machine> _machineRepo;
-
         private readonly IAccessService _accessService;
 
         public List<Machine> Machines { get; set; } = new ();

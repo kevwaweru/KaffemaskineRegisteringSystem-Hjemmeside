@@ -15,6 +15,7 @@ namespace CoffeeCrazy.Pages.Machines
 
         [BindProperty]
         public int? SelectedMachineId { get; set; } // Holds the ID of the selected machine.
+
         public DeleteModel(ICRUDRepo<Machine> machineRepo, IAccessService accessService)
         {
             _machineRepo = machineRepo;
