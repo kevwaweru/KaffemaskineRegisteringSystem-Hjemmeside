@@ -96,10 +96,11 @@ namespace CoffeeCrazy.Services
                 <p>Din kode: {token}</p>
                 <p>Koden er gyldig i 30 min.</p>
                 <br/>
-                <p>Hvis du ikke har ansøgt om ny mail</p>
-                <p>kontakt JB på 112</p>
+                <p></p>
+                <p></p>
                 <p>Mvh.</p>
-                <p>Support.</p>";
+                <p>Support.</p>
+                <p>Denne mail kan bliver ikke besvaret</p>";
 
                 return await SendEmailAsync(email, subject, body);
             }
