@@ -32,13 +32,8 @@
 
                     <div class="d-flex justify-content-between mt-2">
 
-                        <div class="dropdown">
-                            <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Placement
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">@machine.Placement</a></li>
-                            </ul>
+                        <div>
+                            <span class="placement-display">@machine.Placement</span>
                         </div>
 
 
@@ -64,7 +59,7 @@
     <style>
         .square-card {
             width: 100%;
-            padding-top: 100%;
+            padding-top: 100%; /* Maintains a square aspect ratio */
             position: relative;
             color: white;
         }
@@ -79,17 +74,17 @@
             flex-direction: column;
             justify-content: space-between;
             z-index: 1;
-            background-color: rgba(0, 0, 0, 0.3);
+            background-color: rgba(0, 0, 0, 0.3); /* Semi-transparent overlay */
         }
 
         .dropdown {
             position: relative;
-            z-index: 2;
+            z-index: 2; /* Ensures dropdown appears above the overlay */
         }
 
         .card {
             position: relative;
-            overflow: hidden;
+            overflow: hidden; /* Ensures content doesn't spill outside the card */
         }
 
         .card-link {
@@ -98,21 +93,28 @@
         }
 
             .card-link:hover .card {
-                filter: brightness(1.1);
+                filter: brightness(1.1); /* Lightens the card on hover */
             }
 
         .border-success {
-            border: 3px solid green;
+            border: 3px solid green; /* Green border for success */
         }
 
         .border-danger {
-            border: 3px solid red;
+            border: 3px solid red; /* Red border for danger */
         }
 
         .border-secondary {
-            border: 3px solid gray;
+            border: 3px solid gray; /* Gray border for secondary */
+        }
+
+        .placement-display {
+            font-size: 14px; /* Adjusted size for placement display */
+            font-weight: bold; /* Bold text for emphasis */
+            color: #333; /* Dark gray color for text */
         }
     </style>
+
 
     @functions {
         private string GetCardClass(Machine machine, List<Job> jobs)
