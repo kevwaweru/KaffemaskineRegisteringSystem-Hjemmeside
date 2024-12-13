@@ -9,22 +9,20 @@ namespace CoffeeCrazy.Pages.Login.Password
         private readonly IPasswordRepo _passwordRepo;
         private readonly IAccessService _accessService;
 
+        [BindProperty]
+        public string CurrentPassword { get; set; }
+        [BindProperty]
+        public string NewPassword { get; set; }
+        [BindProperty]
+        public string RepeatNewPassword { get; set; }
+        public string ErrorMessage { get; set; }
+        public string SuccessMessage { get; set; }
+
         public ChangePasswordModel(IPasswordRepo passwordRepo, IAccessService accessService)
         {
             _passwordRepo = passwordRepo;
             _accessService = accessService;
         }
-
-        [BindProperty]
-        public string CurrentPassword { get; set; }
-
-        [BindProperty]
-        public string NewPassword { get; set; }
-        [BindProperty]
-        public string RepeatNewPassword { get; set; }
-
-        public string ErrorMessage { get; set; }
-        public string SuccessMessage { get; set; }
 
         public async Task<IActionResult> OnPostAsync()
         {

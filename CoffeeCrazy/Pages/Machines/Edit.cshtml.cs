@@ -12,16 +12,16 @@ namespace CoffeeCrazy.Pages.Machines
         private readonly IImageService _imageService;
         private readonly IAccessService _accessService;
 
+        [BindProperty]
+        public Machine MachinetoUpdate { get; set; }
+        public string? Base64StringMachineImage { get; set; }
+
         public EditModel(ICRUDRepo<Machine> machineRepo, IImageService imageService, IAccessService accessService)
         {
             _machineRepo = machineRepo;
             _imageService = imageService;
             _accessService = accessService;
         }
-
-        [BindProperty]
-        public Machine MachinetoUpdate { get; set; }
-        public string? Base64StringMachineImage { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int id)
         {

@@ -22,7 +22,7 @@ namespace CoffeeCrazy.Pages.Jobs
             _accessService = accessService;
         }
 
-        public async Task <IActionResult> OnGetAsync(int Id)
+        public async Task<IActionResult> OnGetAsync(int Id)
         {
             if (!_accessService.IsUserLoggedIn(HttpContext))
             {
@@ -35,13 +35,13 @@ namespace CoffeeCrazy.Pages.Jobs
 
             JobToUpdate = await _jobRepo.GetByIdAsync(Id);
             Machines = await _machineRepo.GetAllAsync();
-         
+
             if (JobToUpdate == null)
             {
                 return NotFound();
             }
             return Page();
-            
+
         }
         public async Task<IActionResult> OnPostAsync(int Id)
         {

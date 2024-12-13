@@ -12,12 +12,7 @@ namespace CoffeeCrazy.Pages.Login.Password
         private readonly IPasswordRepo _passwordRepo;
         private readonly ITokenRepo _tokenGeneratorRepo;
         private readonly IAccessService _accessService;
-        public ResetPasswordModel(IPasswordRepo passwordRepo, ITokenRepo tokenGeneratorRepo, IAccessService accessService)
-        {
-            _passwordRepo = passwordRepo;
-            _tokenGeneratorRepo = tokenGeneratorRepo;
-            _accessService = accessService;
-        }
+
         [BindProperty]
         public string Token { get; set; }
 
@@ -33,8 +28,15 @@ namespace CoffeeCrazy.Pages.Login.Password
         public string ConfirmPassword { get; set; }
         [BindProperty]
         [TempData]
-        public bool IsTokenValidated { get; set; } = false; 
-        public string Message { get; set; }       
+        public bool IsTokenValidated { get; set; } = false;
+        public string Message { get; set; }
+
+        public ResetPasswordModel(IPasswordRepo passwordRepo, ITokenRepo tokenGeneratorRepo, IAccessService accessService)
+        {
+            _passwordRepo = passwordRepo;
+            _tokenGeneratorRepo = tokenGeneratorRepo;
+            _accessService = accessService;
+        }      
         
         public IActionResult OnGet()
         {

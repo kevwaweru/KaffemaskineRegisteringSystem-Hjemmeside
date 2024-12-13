@@ -11,16 +11,15 @@ namespace CoffeeCrazy.Pages.Login.Password
         private readonly IEmailService _emailService;
         private readonly IAccessService _accessService;
 
+        [BindProperty]
+        public string Email { get; set; }
+        public string Message { get; set; }
+
         public ForgotPasswordModel( IEmailService emailService, IAccessService accessService)
         {
             _emailService = emailService;
             _accessService = accessService;
         }
-
-        [BindProperty]
-        public string Email { get; set; }
-
-        public string Message { get; set; }
 
         public IActionResult OnGet()
         {

@@ -10,12 +10,6 @@ namespace CoffeeCrazy.Pages.Login
         private readonly IPasswordRepo _PasswordRepo;
         private readonly IAccessService _accessService;
 
-        public LoginModel(IPasswordRepo passwordRepo, IAccessService accessService)
-        {
-            _PasswordRepo = passwordRepo;
-            _accessService = accessService;
-        }
-
         [BindProperty]
         public string Email { get; set; }
 
@@ -23,6 +17,12 @@ namespace CoffeeCrazy.Pages.Login
         public string Password { get; set; }
 
         public string ErrorMessage { get; set; }
+
+        public LoginModel(IPasswordRepo passwordRepo, IAccessService accessService)
+        {
+            _PasswordRepo = passwordRepo;
+            _accessService = accessService;
+        }
 
         public IActionResult OnGet()
         {

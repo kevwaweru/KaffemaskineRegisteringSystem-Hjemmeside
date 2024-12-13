@@ -10,14 +10,13 @@ namespace CoffeeCrazy.Pages.Users
     {
         private readonly ICRUDRepo<User> _userRepo;
         private readonly IAccessService _accessService;
+        public int Message { get; set; }
 
         public DeleteModel(ICRUDRepo<User> userRepo, IAccessService accessService)
         {
             _userRepo = userRepo;
             _accessService = accessService;
         }
-
-        public int Message { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int id)
         {
