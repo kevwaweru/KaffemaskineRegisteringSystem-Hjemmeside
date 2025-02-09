@@ -1,9 +1,11 @@
 ﻿using CoffeeCrazy.Models.Enums;
+using CoffeeCrazy.Services;
 
 namespace CoffeeCrazy.Models
 {
     public class User
     {
+
         public int UserId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -13,6 +15,20 @@ namespace CoffeeCrazy.Models
         public Role Role { get; set; }
         public Campus Campus { get; set; }
         public IFormFile? UserImageFile { get; set; }
+
+        public User(int userId, string firstName, string lastName, string email, Role role, Campus campus, byte[]? userImageFile)
+        {
+            UserId = userId;
+            FirstName = firstName;
+            LastName = lastName;
+            Email = email;
+            Role = role;
+            Campus = campus;
+            if (userImageFile != null)
+            {
+                UserImageFile = ImageService.ByteArrayToFormFile(userImageFile);
+            }
+        }
     }
 }
     

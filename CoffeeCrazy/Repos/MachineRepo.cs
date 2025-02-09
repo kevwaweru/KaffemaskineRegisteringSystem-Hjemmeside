@@ -70,14 +70,14 @@ namespace CoffeeCrazy.Repos
                     {
                         while (await reader.ReadAsync())
                         {
-                            Machine machine = new Machine
-                            {
-                                MachineId = (int)reader["MachineId"],
-                                Status = (bool)reader["Status"],
-                                Placement = reader["Placement"] as string,
-                                Campus = (Campus)reader["CampusId"],
-                                MachineImage = reader["MachineImage"] != DBNull.Value ? _imageService.ByteArrayToFormFile((byte[])reader["MachineImage"]) : null
-                            };
+                            Machine machine = new Machine(
+                            
+                                (int)reader["MachineId"],
+                                (bool)reader["Status"],
+                                reader["Placement"] as string,
+                                (Campus)reader["CampusId"],
+                                reader["MachineImage"] != DBNull.Value ? (byte[])reader["MachineImage"] : null
+                            );
 
                             machines.Add(machine);
                         }
@@ -122,14 +122,14 @@ namespace CoffeeCrazy.Repos
                     {
                         if (await reader.ReadAsync())
                         {
-                            return new Machine
-                            {
-                                MachineId = (int)reader["MachineId"],
-                                Status = (bool)reader["Status"],
-                                Placement = reader["Placement"] as string,
-                                Campus = (Campus)reader["CampusId"],
-                                MachineImage = reader["MachineImage"] != DBNull.Value ? _imageService.ByteArrayToFormFile((byte[])reader["MachineImage"]) : null
-                            };
+                            return new Machine(
+
+                                (int)reader["MachineId"],
+                                (bool)reader["Status"],
+                                reader["Placement"] as string,
+                                (Campus)reader["CampusId"],
+                                reader["MachineImage"] != DBNull.Value ? (byte[])reader["MachineImage"] : null
+                            );
                         }
                         else
                         {

@@ -2,7 +2,7 @@
 
 namespace CoffeeCrazy.Services
 {
-    public class ImageService : IImageService
+    public class ImageService
     {
         // Convert IFormFile to byte array
         public byte[] FormFileToByteArray(IFormFile imageFile)
@@ -15,7 +15,7 @@ namespace CoffeeCrazy.Services
             }
         }
 
-        public IFormFile ByteArrayToFormFile(byte[] imageByte)
+        public static IFormFile ByteArrayToFormFile(byte[] imageByte)
         {
 
             FormFile file = new FormFile(new MemoryStream(imageByte), 0, imageByte.Length, "file", "image.jpg");

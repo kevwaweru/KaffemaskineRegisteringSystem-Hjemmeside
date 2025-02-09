@@ -27,7 +27,6 @@ namespace CoffeeCrazy
             builder.Services.AddTransient<IEmailService, EmailService>();
             builder.Services.AddScoped<ITokenGeneratorService, TokenGeneratorService>();
             builder.Services.AddScoped<IAccessService, AccessService>();
-            builder.Services.AddTransient<IImageService, ImageService>();
 
             // Session
             builder.Services.AddDistributedMemoryCache();

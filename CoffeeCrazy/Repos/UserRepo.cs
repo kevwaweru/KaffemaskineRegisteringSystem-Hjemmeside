@@ -85,16 +85,15 @@ namespace CoffeeCrazy.Repos
                     {
                         while (await reader.ReadAsync())
                         {
-                            User user = new User
-                            {
-                                UserId = (int)reader["UserId"],
-                                FirstName = (string)reader["FirstName"],
-                                LastName = (string)reader["LastName"],
-                                Email = (string)reader["Email"],
-                                Role = (Role)reader["RoleId"],
-                                Campus = (Campus)reader["CampusId"],
-                                UserImageFile = reader["UserImage"] != DBNull.Value ? _imageService.ByteArrayToFormFile((byte[])reader["UserImage"]) : null
-                            };
+                            User user = new User(
+                                (int)reader["UserId"],
+                                (string)reader["FirstName"],
+                                (string)reader["LastName"],
+                                (string)reader["Email"],
+                                (Role)reader["RoleId"],
+                                (Campus)reader["CampusId"],
+                                reader["UserImage"] != DBNull.Value ? (byte[])reader["UserImage"] : null
+                                );
 
                             users.Add(user);
                         }
@@ -136,16 +135,15 @@ namespace CoffeeCrazy.Repos
                     {
                         if (await reader.ReadAsync())
                         {
-                            return new User
-                            {
-                                UserId = (int)reader["UserId"],
-                                FirstName = (string)reader["FirstName"],
-                                LastName = (string)reader["LastName"],
-                                Email = (string)reader["Email"],
-                                Role = (Role)reader["RoleId"],
-                                Campus = (Campus)reader["CampusId"],
-                                UserImageFile = reader["UserImage"] != DBNull.Value ? _imageService.ByteArrayToFormFile((byte[])reader["UserImage"]) : null
-                            };
+                            return new User(
+                                (int)reader["UserId"],
+                                (string)reader["FirstName"],
+                                (string)reader["LastName"],
+                                (string)reader["Email"],
+                                (Role)reader["RoleId"],
+                                (Campus)reader["CampusId"],
+                                reader["UserImage"] != DBNull.Value ? (byte[])reader["UserImage"] : null
+                                );
                         }
                         else
                         {
@@ -203,7 +201,7 @@ namespace CoffeeCrazy.Repos
                         command.Parameters.AddWithValue("@UserImage", DBNull.Value);
                     }
 
-                    command.Parameters.AddWithValue("@UserId", toBeUpdatedUser.UserId); 
+                    command.Parameters.AddWithValue("@UserId", toBeUpdatedUser.UserId);
 
                     await connection.OpenAsync();
                     await command.ExecuteNonQueryAsync();

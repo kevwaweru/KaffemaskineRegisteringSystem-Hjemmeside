@@ -83,18 +83,18 @@ namespace CoffeeCrazy.Repos
                         while (await reader.ReadAsync())
                         {
                             Job job = new Job
-                            {
-                                JobId = (int)reader["JobId"],
-                                Title = (string)reader["Title"],
-                                Description = (string)reader["Description"],
-                                Comment = reader["Comment"] as string,
-                                IsCompleted = (bool)reader["IsCompleted"],
-                                DateCreated = (DateTime)reader["DateCreated"],
-                                Deadline = (DateTime)reader["Deadline"],
-                                FrequencyId = (int)reader["FrequencyId"],
-                                MachineId = (int)reader["MachineId"],
-                                UserId = reader["UserId"] != DBNull.Value ? (int?)reader["UserId"] : null
-                            };
+                            (
+                                (int)reader["JobId"],
+                                (string)reader["Title"],
+                                (string)reader["Description"],
+                                reader["Comment"] as string,
+                                (bool)reader["IsCompleted"],
+                                (DateTime)reader["DateCreated"],
+                                (DateTime)reader["Deadline"],
+                                (int)reader["FrequencyId"],
+                                (int)reader["MachineId"],
+                                reader["UserId"] != DBNull.Value ? (int?)reader["UserId"] : null
+                            );
 
                             jobs.Add(job);
                         }
@@ -133,18 +133,18 @@ namespace CoffeeCrazy.Repos
                         if (await reader.ReadAsync())
                         {
                             return new Job
-                            {
-                                JobId = (int)reader["JobId"],
-                                Title = (string)reader["Title"],
-                                Description = (string)reader["Description"],
-                                Comment = reader["Comment"] as string,
-                                IsCompleted = (bool)reader["IsCompleted"],
-                                DateCreated = (DateTime)reader["DateCreated"],
-                                Deadline = (DateTime)reader["Deadline"],
-                                FrequencyId = (int)reader["FrequencyId"],
-                                MachineId = (int)reader["MachineId"],
-                                UserId = reader["UserId"] != DBNull.Value ? (int?)reader["UserId"] : null
-                            };
+                            (
+                                (int)reader["JobId"],
+                                (string)reader["Title"],
+                                (string)reader["Description"],
+                                reader["Comment"] as string,
+                                (bool)reader["IsCompleted"],
+                                (DateTime)reader["DateCreated"],
+                                (DateTime)reader["Deadline"],
+                                (int)reader["FrequencyId"],
+                                (int)reader["MachineId"],
+                                reader["UserId"] != DBNull.Value ? (int?)reader["UserId"] : null
+                            );
                         }
                         else
                         {
@@ -286,18 +286,18 @@ namespace CoffeeCrazy.Repos
                         while (await reader.ReadAsync())
                         {
                             Job job = new Job
-                            {
-                                JobId = (int)reader["JobId"],
-                                Title = (string)reader["Title"],
-                                Description = (string)reader["Description"],
-                                Comment = reader["Comment"] as string,
-                                IsCompleted = (bool)reader["IsCompleted"],
-                                DateCreated = (DateTime)reader["DateCreated"],
-                                Deadline = (DateTime)reader["Deadline"],
-                                FrequencyId = (int)reader["FrequencyId"],
-                                MachineId = (int)reader["MachineId"],
-                                UserId = reader["UserId"] != DBNull.Value ? (int?)reader["UserId"] : null
-                            };
+                            (
+                                (int)reader["JobId"],
+                                (string)reader["Title"],
+                                (string)reader["Description"],
+                                reader["Comment"] as string,
+                                (bool)reader["IsCompleted"],
+                                (DateTime)reader["DateCreated"],
+                                (DateTime)reader["Deadline"],
+                                (int)reader["FrequencyId"],
+                                (int)reader["MachineId"],
+                                reader["UserId"] != DBNull.Value ? (int?)reader["UserId"] : null
+                            );
 
                             jobs.Add(job);
                         }
